@@ -93,8 +93,12 @@
             src = ./.;
             hooks = {
               nixpkgs-fmt.enable = true;
+
               shellcheck.enable = true;
               shfmt.enable = true;
+
+              # chktex.enable = true;
+              latexindent.enable = true;
             };
           };
         };

@@ -2,90 +2,58 @@
   description = "Project Poincaré";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    fltex = {
-      url = "github:flibrary/FLTeX";
+    utils.url = "github:numtide/flake-utils";
+    typst2nix = {
+      url = "github:LEXUGE/typst2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    utils.url = "github:numtide/flake-utils";
-    texutils.url = "github:Ninlives/texutils.nix";
+    dirac = {
+      url = "github:LEXUGE/dirac";
+      inputs.typst2nix.follows = "typst2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, utils, texutils, fltex, pre-commit-hooks }:
+  outputs = { self, nixpkgs, utils, typst2nix, dirac, pre-commit-hooks }:
     with utils.lib;
     with nixpkgs.lib;
+    with typst2nix.helpers;
     with builtins;
     eachSystem defaultSystems (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-
-        mkTexEnv = path:
-          texutils.lib.callTex2Nix {
-            pkgs = import nixpkgs {
-              inherit system;
-              overlays = [ fltex.overlays.default ];
-            };
-            srcs = builtins.filter
-              (p:
-                hasSuffix ".tex" p || hasSuffix ".cls" p || hasSuffix ".sty" p)
-              (nixpkgs.lib.filesystem.listFilesRecursive ./${
-                path});
-            # In case some dependencies fails to be detected
-            extraTexPackages = { inherit (texlive) ctex latex-bin latexmk collection-fontsrecommended tikzfill chinese-jfm; };
-          };
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ typst2nix.overlays.default dirac.overlays.default ];
+        };
 
         pathToName = path: (replaceStrings [ "/" ] [ "+" ] path);
         pathToRelative = level: path:
           strings.concatStrings (strings.intersperse "/"
             (lists.drop level (splitString "/" (toString path))));
 
-        listTexRecursive = dir:
+        listTypstRecursive = dir:
+          let
+            filtered = listToAttrs (filter ({ name, value }: value == "directory") (attrsToList (readDir dir)));
+          in
           (flatten (mapAttrsToList
             (name: type:
-              let path = dir + "/${name}";
+              let
+                path = dir + "/${name}";
               in
-              if type == "directory" then
-                if pathExists (path + "/main.tex") then
-                  [
-                    (nameValuePair (pathToName (pathToRelative 5 path))
-                      (pathToRelative 4 path))
-                  ]
-                else
-                  listTexRecursive path
+              if pathExists (path + "/main.typ") then
+                [ (nameValuePair (pathToName (pathToRelative 5 path)) path) ]
               else
-                [ ])
-            (readDir dir)));
-
-        mkTexPkg = path:
-          pkgs.stdenvNoCC.mkDerivation rec {
-            name = (pathToName (pathToRelative 1 path));
-            src = self;
-            # We need to make TeX env for both the doc and resources
-            buildInputs = [ pkgs.coreutils (mkTexEnv path) ];
-            phases = [ "unpackPhase" "buildPhase" "installPhase" ];
-            buildPhase = ''
-              export PATH="${makeBinPath buildInputs}";
-              mkdir -p .cache/texmf-var
-              cd ${path}
-              env TEXMFHOME=.cache TEXMFVAR=.cache/texmf-var \
-                SOURCE_DATE_EPOCH=${toString self.lastModified} \
-                latexmk -bibtex -interaction=nonstopmode -pdf -lualatex \
-                main.tex
-            '';
-            installPhase = ''
-              mkdir -p $out
-              cp main.pdf $out/${name}.pdf
-            '';
-          };
+                listTypstRecursive path)
+            filtered));
       in
       rec {
         # nix develop
         devShells.default = pkgs.mkShell {
           inherit (self.checks.${system}.pre-commit-check) shellHook;
-          # Got to workaround the problem with ./. when it comes to /${path}
-          nativeBuildInputs = [ pkgs.coreutils (mkTexEnv "") ];
+          nativeBuildInputs = [ (mkWrappedTypst pkgs ./src) ];
         };
 
         checks = {
@@ -97,13 +65,24 @@
               shellcheck.enable = true;
               shfmt.enable = true;
 
-              # chktex.enable = true;
-              latexindent.enable = true;
+              typstfmt = {
+                enable = true;
+                name = "Typst Format";
+                entry = "${pkgs.typstfmt}/bin/typstfmt";
+                files = "\\.(typ)$";
+              };
             };
           };
-        };
+        } // packages;
 
-        packages = attrsets.mapAttrs (name: path: (mkTexPkg path))
-          (listToAttrs (listTexRecursive ./src));
+        packages = attrsets.mapAttrs
+          (n: p: (buildTypst rec {
+            inherit pkgs;
+            src = p;
+            path = "./main.typ";
+            version = "git";
+            pname = n;
+          }))
+          (listToAttrs (listTypstRecursive ./src));
       });
 }

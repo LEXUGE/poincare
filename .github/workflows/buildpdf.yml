@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: [ "notes+hilbert-space" ]
+        name: [ "notes+electrodynamics" ]
     if: (needs.create-release.outputs.log-num > 0)
     needs: create-release
     runs-on: ubuntu-latest

@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: [ "notes+electrodynamics" ]
+        name: [ "notes+electrodynamics", "notes+quantum-mechanics" ]
     if: (needs.create-release.outputs.log-num > 0)
     needs: create-release
     runs-on: ubuntu-latest

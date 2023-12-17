@@ -26,7 +26,21 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ typst2nix.overlays.default dirac.overlays.default ];
+          overlays = [
+            typst2nix.overlays.default
+            dirac.overlays.default
+            (final: prev: {
+              typst2nix.registery = recursiveUpdate (prev.typst2nix.registery or { }) {
+                lexuge.templates."0.1.0" = bundleTypstPkg
+                  {
+                    pkgs = final;
+                    path = ./src/templates;
+                    namespace = "lexuge";
+                  };
+              };
+            }
+            )
+          ];
         };
 
         pathToName = path: (replaceStrings [ "/" ] [ "+" ] path);
@@ -78,8 +92,8 @@
         packages = attrsets.mapAttrs
           (n: p: (buildTypst rec {
             inherit pkgs;
-            src = p;
-            path = "./main.typ";
+            src = ./src;
+            path = (pathToRelative 5 p) + "/main.typ";
             version = "git";
             pname = n;
           }))

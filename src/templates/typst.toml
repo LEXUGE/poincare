@@ -1,0 +1,9 @@
+[package]
+name = "templates"
+version = "0.1.0"
+description = "My templates"
+authors = ["Kanyang Ying <kanyang.ying@worc.ox.ac.uk>"]
+repository = "https://github.com/LEXUGE/poincare"
+compiler = "0.9.0"
+entrypoint = "main.typ"
+license = "MIT"

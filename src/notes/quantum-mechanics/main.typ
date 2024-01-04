@@ -1,7 +1,7 @@
-#import "@lexuge/templates:0.1.0": *
 #import "@preview/physica:0.9.0": *
 #import "@preview/gentle-clues:0.4.0": *
 #import "@preview/ctheorems:1.1.0": *
+#import "@lexuge/templates:0.1.0": *
 
 #show: simple.with(
   title: "Quantum Mechanics",

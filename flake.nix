@@ -79,7 +79,7 @@
               shellcheck.enable = true;
               shfmt.enable = true;
 
-              typstfmt = {
+              typstfmt = mkForce {
                 enable = true;
                 name = "Typst Format";
                 entry = "${pkgs.typstfmt}/bin/typstfmt";
@@ -92,11 +92,12 @@
         packages = attrsets.mapAttrs
           (n: p: (buildTypst rec {
             inherit pkgs;
-            src = ./src;
-            path = (pathToRelative 5 p) + "/main.typ";
+            # project root
+            src = p;
+            path = "main.typ";
             version = "git";
             pname = n;
           }))
-          (listToAttrs (listTypstRecursive ./src));
+          (listToAttrs (listTypstRecursive ./src/notes));
       });
 }

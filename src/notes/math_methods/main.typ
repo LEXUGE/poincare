@@ -1,4 +1,4 @@
-#import "@preview/physica:0.9.0": *
+#import "@preview/physica:0.9.2": *
 #import "@preview/gentle-clues:0.4.0": *
 #import "@lexuge/templates:0.1.0": *
 
@@ -13,7 +13,7 @@
 #let L1 = $cal(L)^1$
 #let L2 = $cal(L)^2$
 #let Lp = $cal(L)^p$
-#let tp = sym.times.circle
+#let caniso = sym.tilde.equiv
 
 #pagebreak()
 
@@ -235,6 +235,171 @@ We have a very beautiful (yet advanced to prove) result.
   #unproven
 ]
 
+== Dual Space
+<sec-dual-space>
+#def(
+  "Dual Space",
+)[
+  The dual space of vector space $V$ is defined as $V' equiv cal(L)(V, FF)$.
+
+  Vectors $f in V'$ are called dual vectors or linear functionals. The additive
+  identity is the $0(vb(v)):= vb(0) in V$.
+]
+
+#def(
+  "Dual Basis",
+)[
+  Given a basis ${ vb(v)_i }_(i=1)^N$ of $V$, its dual basis ${ vb(v)^i }_(i=1)^N$ are
+  defined by
+  $ vb(v)^i (vb(v)_j) = cases(0 "if" i eq.not j, 1 "if" i = j) $
+]<dual-basis>
+
+#info[
+  This $vb(v)^i (vb(v)_j)$ _is_ indeed the coordinate representation of the $(1,1)$ identity
+  tensor
+  $ II(vb(v), f) := f(vb(v)) $
+  under basis ${ vb(v)^j tp vb(v)_i }$. So in fact from the perspective of tensor
+  component we can also write
+  $ overbrace(
+    vb(v)_j tp vb(v)^i (II) = II(vb(v)_j tp vb(v)^i),
+    "think " II "as double dual",
+
+  ) = II(vb(v)_j, vb(v)^i) = vb(v)^i (vb(v)_j) = tensor(delta, -j, +i) $
+  where $delta equiv II$, and $tensor(delta, -j, +i)$ is its component.
+  #text(yellow)[Actually this is where the universal property kicks in?]
+]
+
+An important property
+#thm("Dual Basis gives coordinates")[
+  For any $vb(w) = sum_(i=1)^N w^i vb(v)_i $,
+  $ w^i = vb(v)^i (vb(w)) $
+]<dual-basis-give-coordinate>
+#proof[
+  Plug in the expansion of $vb(w)$ to the right-hand side and evaluate $vb(v)^i (vb(w))$ by
+  @dual-basis.
+]
+
+#thm[Dual Basis is a Basis of $V'$ when $V$ is finite-dimensional]<dual-basis-is-a-basis>
+#proof[
+  #pfstep[Dual Basis is linearly independent][
+    Consider the linear combination $sum_(i=1)^N a_i vb(v)^i = 0 in V'$, apply it to $vb(v)_k$ one
+    by one
+    $ 0 = sum_(i=1)^N a_i vb(v)^i (vb(v)_k) = sum_(i=1)^N a_i tensor(delta, +i, -k) = a_k =0 $
+    Thus $a_k = 0$ for all $k$.
+  ]
+  #pfstep[It spans $V'$][
+    #pfstep[For any $f in V'$, $f = sum_(i=1)^N f(vb(v)_i) vb(v)^i $][
+      (This is actually one example of the tensor contraction.) We verify by plugging
+      in. Expand an arbitrary $vb(w) equiv sum_(i=1)^N w^i vb(v)_i in V$. Then $ f(vb(w)) &= f(sum_(i=1)^N w^i vb(v)_i) \
+               &= sum_(i=1)^N w^i f(vb(v)_i) \
+               &= sum_(i=1)^N f(vb(v)_i) vb(v)^i (vb(w)) \
+               &= (sum_(i=1)^N f(vb(v)_i) vb(v)^i ) (vb(w)) $
+      where the second last line is by @dual-basis-give-coordinate.
+    ]
+  ]
+]
+
+=== Metric Dual
+#def(
+  "Metric Dual",
+)[
+  If $V$ has an non-degenerate Hermitian form, then we can define an _anti-linear_ mapping $L: V to V'$ by
+  $ tilde(vb(v))(vb(w) in V) equiv (L vb(v))(vb(w)) = H(vb(v), vb(w)) $
+]<metric-dual>
+
+Now $L$ has some important properties to make it work
+#thm[$L$ is injective]
+#proof[
+  We need to show $L(vb(v)) = L(vb(w)) arrow.double vb(v) = vb(w)$
+  #pfstep[$tilde(vb(v)) = tilde(vb(w)) arrow.double H(vb(v) - vb(w), vb(a)) = 0$ for all $vb(a)$][
+    #pfstep[For all $vb(a)$, $tilde(vb(v))(vb(a)) = tilde(vb(w))(vb(a))$][By definition of $tilde(vb(v)) = tilde(vb(w))$]
+    #pfstep[$H(vb(v) - vb(w), vb(a)) = 0$][
+      Expand $tilde(vb(v)) = tilde(vb(w))$ by definition and use anti-linearity in the
+      first argument of $H$
+    ]
+  ]
+  #pfstep(
+    finished: true,
+  )[$vb(v) = vb(w)$][
+    By non-degeneracy of $H$ (see @non-deg-hermitian), if $vb(v) - vb(w) eq.not vb(0)$,
+    then there exists $vb(a)$ such that $H(vb(v) - vb(w), vb(a))$. However, this is
+    not the vase by Claim 1. Thus contradictory.
+  ]
+]
+
+#thm[Metric Dual of a basis is its dual basis if and only if orthonormal][
+  Let $cal(B) = {vb(v)_i}$ be a basis, then its dual basis $cal(B)'$ is equal to
+  applying metric dual to each of its basis vector if and only if $cal(B)$ is
+  orthonormal.
+]
+#proof[
+  #pfstep[Orthonormal $arrow.double$ metric dual is dual basis][
+    We have#footnote[Only under such specific basis would the coordinate representation of $H$ be
+      evaluated according to Kronecker delta. In fact, there is no good definition of
+      (2,0) identity tensor, so $tensor(delta, -i, -j)$ should not be think of as a
+      coordinate representation of some tensor.]#footnote[We are _not_ raising the indices of $vb(v)$ to $tilde(vb(v))^i$ because this $i$ is
+      not the component of $vb(v)$, instead, it's a indices for basis.]
+    $ tilde(vb(v))_i (vb(v)_j) := H(vb(v)_i, vb(v)_j) = tensor(delta, -i, -j) $
+    Thus by definition of @dual-basis we know $tilde(vb(v))_i = vb(v)^i$.
+  ]
+  #pfstep(
+    finished: true,
+  )[Metric dual is dual basis $arrow.double$ orthonormal][
+    Metric dual is dual basis means#footnote[Again, as in previous footnotes, the indices positions etc doesn't match isn't
+      an issue as the underlying tensors ($H$ and $II$) are not of the same type and
+      are not equal.]
+    $ tilde(vb(v))_i (vb(v)_j) := H(vb(v)_i, vb(v)_j) = vb(v)^i (vb(v)_j) = tensor(delta, -j, +i) $
+    Thus $cal(B)$ is orthonormal.
+  ]
+]
+
+#thm[$L$ is surjective if $V$ is finite-dimensional]<metric-dual-is-surjective>
+#proof[
+  #pfstep[$dim V' = dim V$][
+    By @dual-basis-is-a-basis, the basis of $V'$ has the same number of elements as
+    basis of $V$.
+  ]
+  #pfstep(
+    finished: true,
+  )[$dim img L = dim V$][$dim img L = dim V - dim ker L = dim V = dim V'$]
+]
+
+Thus, if $V$ is finite-dimensional, then
+#thm[$V$ and $V'$ are canonically isomorphic if $V$ is finite-dimensional]
+#proof[
+  They are canonically isomorphic through the bijective map $L: V to V'$. Notice
+  how the definition of $L$ doesn't depends on choice of basis.
+]
+
+=== Double Dual
+We now have canonical identification of another space with $V$.
+
+#thm[$V''$ is canonically isomorphic to $V$ if $V$ is finite-dimensional][
+  We define the map $L: V to V''$#footnote[The $L$ here has nothing to do with the $L$ defined for metric dual] by
+  $ L(vb(v))(phi) := phi(vb(v)) $
+  Prove this is bijective if $V$ is finite-dimensional.
+]<double-dual-isomorphism>
+#proof[
+  #pfstep[$L$ is injective#footnote[The proof that we give actually applies even if $V$ is infinite dimensional. See
+      also @inf-dim-dual-vector-kernel]][This is equivalent to proving $L(vb(v)) = 0$ if and only if $vb(v) = vb(0)$. The
+    if part is evident, the only if part is as follows.
+    #pfstep[If $phi(vb(v)) = 0$ for all $phi in V'$, then $vb(v) = vb(0)$][
+      If $vb(v)$ is non-zero, then we can extend a basis $cal(B)$ of $V$ from it,
+      construct the dual basis of $cal(B)$. Then $vb(v)'(vb(v)) = 1 eq.not 0$
+      Thus $vb(v) = 0$
+    ]
+  ]
+
+  #pfstep[$L$ is surjective][
+    #pfstep[$dim V = dim V' = dim V''$ in finite-dimensional case][
+      By @dual-basis-is-a-basis, $dim V = dim V'$. Since $V'$ is also finite
+      dimensional, we have $dim V' = dim V''$ as $V''$ is just the dual of $V'$.
+    ]
+    by the same argument as @metric-dual-is-surjective, we have $L$ being surjective
+    as well.
+  ]
+]
+
 == $cal(L)^1, cal(L)^2$ Space
 Much of our problem and solution are set in the $cal(L)^1, cal(L)^2$ spaces. A
 lot of mathematical constructs is needed to arrive at a rigorous theory. We thus
@@ -348,10 +513,6 @@ $ braket(f, g) := integral_I overline(f) g $
 
 === Orthonormal basis in $L2$
 
-= Strum-Liouville Problem
-
-= Fourier Transform
-
 = Dirac Notation
 Dirac notation is an effective convention for writing linear algebra for quantum
 mechanics, relying on the following properties of the underlying space $V$:
@@ -359,181 +520,371 @@ mechanics, relying on the following properties of the underlying space $V$:
   complex inner product space)
 - The dual space $V'$ is canonically isomorphic to the $V$ through inner product
 
-Because of this, we thus first talk about dual space and its canonical
-identification.== Dual Space
-#def(
-  "Dual Space",
-)[
-  The dual space of vector space $V$ is defined as $V' equiv cal(L)(V, FF)$.
+These points are discussed in @sec-dual-space.
 
-  Vectors $f in V'$ are called dual vectors or linear functionals. The additive
-  identity is the $0(vb(v)):= vb(0) in V$.
+#def(
+  "Dirac notation - Basics",
+)[
+  Given a finite dimensional vector space $V$ with a non-degenerate Hermitian form $H$ (@non-deg-hermitian),
+  we write:
+  - $ket("something")$ to represent a vector in $V$,
+  - $bra("something")$ to represent the metric dual (@metric-dual) of the vector $ket("something")$.
+    In other words,
+  $ bra("something")(cdot) = H(ket("something"), cdot) $
 ]
 
-#def(
-  "Dual Basis",
-)[
-  Given a basis ${ vb(v)_i }_(i=1)^N$ of $V$, its dual basis ${ vb(v)^i }_(i=1)^N$ are
-  defined by
-  $ vb(v)^i (vb(v)_j) = cases(0 "if" i eq.not j, 1 "if" i = j) $
-]<dual-basis>
+Main advantages of Dirac notation compared to the usual $vb(v)$ notation
+includes:
+- Naming of the vector is very easy, and we can write $ket((n,l,m))$ to clearly
+  label the eigenstate of some particle, instead of resorting to $vb(e)_(n,l,m)$.
+- We don't need to write out the metric dual conversion mapping $L: V to V'$ explicitly
+  every time.
+
+In the light of this definition, we can translate
+$ bra(psi) (ket(phi)) &equiv L(ket(psi)) (ket(phi)) \
+                    &equiv H(ket(psi), ket(phi)) $
+and
+$ bra(psi) (A ket(phi)) &equiv L(ket(psi)) (A ket(phi)) \
+                      &equiv H(ket(psi), A ket(phi)) $
+where $A: V to V$ is any operator. And for brevity we introduce the shorthand:
+$ bra(psi) (ket(phi))   &to braket(psi, phi) \
+bra(psi) (A ket(phi)) &to braket(psi, A, phi) $
+
+And also short hand like
+$ ket(0) + ket(1) to ket(0+1) $
+
+However, you will also see use like $ ketbra(psi, phi), ket(psi) ket(phi) $
+This is actually understood as a tensor product
+$ ketbra(psi, phi) equiv ket(psi) tp bra(phi), ket(psi) ket(phi) equiv ket(psi) tp ket(phi) $
+which we will introduce now.
+
+#pagebreak()
+= Tensors
+There are two main concepts:
+- Tensor
+- Tensor Product $tp$
+The idea is that any (multi-)linear object is a tensor. And tensor product is an
+operation that helps us to build multi-linear object out of linear objects (e.g.
+vector spaces).
 
 #info[
-  This $vb(v)^i (vb(v)_j)$ _is_ indeed the coordinate representation of the $(1,1)$ identity
-  tensor
-  $ II(vb(v), f) := f(vb(v)) $
-  under basis ${ vb(v)^j tp vb(v)_i }$. So in fact from the perspective of tensor
-  component we can also write
-  $ overbrace(
-    vb(v)_j tp vb(v)^i (II) = II(vb(v)_j tp vb(v)^i),
-    "think " II "as double dual",
+  Without otherwise stated, in this section, all operator of the form $V_1 times V_2 times dots.c times V_n to W$ are
+  (multi-)linear.
+]<conv-all-multi-linear>
 
-  ) = II(vb(v)_j, vb(v)^i) = vb(v)^i (vb(v)_j) = tensor(delta, -j, +i) $
-  where $delta equiv II$, and $tensor(delta, -j, +i)$ is its component.
-  #text(yellow)[Actually this is where the universal property kicks in?]
-]
+== Tensors
 
-An important property
-#thm("Dual Basis gives coordinates")[
-  For any $vb(w) = sum_(i=1)^N w^i vb(v)_i $,
-  $ w^i = vb(v)^i (vb(w)) $
-]<dual-basis-give-coordinate>
-#proof[
-  Plug in the expansion of $vb(w)$ to the right-hand side and evaluate $vb(v)^i (vb(w))$ by
-  @dual-basis.
-]
-
-#thm[Dual Basis is a Basis of $V'$ when $V$ is finite-dimensional]<dual-basis-is-a-basis>
-#proof[
-  #pfstep[Dual Basis is linearly independent][
-    Consider the linear combination $sum_(i=1)^N a_i vb(v)^i = 0 in V'$, apply it to $vb(v)_k$ one
-    by one
-    $ 0 = sum_(i=1)^N a_i vb(v)^i (vb(v)_k) = sum_(i=1)^N a_i tensor(delta, +i, -k) = a_k =0 $
-    Thus $a_k = 0$ for all $k$.
-  ]
-  #pfstep[It spans $V'$][
-    #pfstep[For any $f in V'$, $f = sum_(i=1)^N f(vb(v)_i) vb(v)^i $][
-      (This is actually one example of the tensor contraction.) We verify by plugging
-      in. Expand an arbitrary $vb(w) equiv sum_(i=1)^N w^i vb(v)_i in V$. Then $ f(vb(w)) &= f(sum_(i=1)^N w^i vb(v)_i) \
-               &= sum_(i=1)^N w^i f(vb(v)_i) \
-               &= sum_(i=1)^N f(vb(v)_i) vb(v)^i (vb(w)) \
-               &= (sum_(i=1)^N f(vb(v)_i) vb(v)^i ) (vb(w)) $
-      where the second last line is by @dual-basis-give-coordinate.
-    ]
-  ]
-]
-
-== Metric Dual
 #def(
-  "Metric Dual",
+  "Tensor",
 )[
-  If $V$ has an non-degenerate Hermitian form, then we can define an _anti-linear_ mapping $L: V to V'$ by
-  $ tilde(vb(v))(vb(w) in V) equiv (L vb(v))(vb(w)) = H(vb(v), vb(w)) $
+  Let $V_1, V_2, dots V_n$ be finite dimensional vector spaces over the same field $FF$.
+  A tensor is a multi-linear functional
+  $ tau: V_1 times V_2 times dots.c times V_n to FF $
+  If in particular,
+  $ V_1 times V_2 times dots.c times V_n = overbrace(V times V times dots.c times V, r "times") times underbrace(V' times V' times dots.c times V', s "times") $
+  where $r+s = n$ of course, then we call $tau$ a *type $(r,s)$ tensor on vector
+  space $V$*.
+]<def-tensor>
+
+#thm(
+  "Tensors of the same signature form a vector space",
+)[
+  This means,
+  $ cal(L)(V_1, V_2, dots.c, V_n) := \{ tau| tau: V_1 times V_2 times dots.c times V_n to FF \} $
+  is a vector space (with addition and scalar multiplication properly defined). We
+  call such space tensor space.
+
+  In particular, tensors of the type $(r,s)$ over the same vector space $V$ forms
+  a space. We denote such space as
+  $ tau^r_s (V) $
+  as we use such space a lot.
+]<tensors-form-space>
+#proof[
+  We define the $+, cdot$ operator as usually defined for functions. It's
+  straightforward to verify multi-linearity is preserved under these operations
+  and all axioms are satisfied.
 ]
 
-Now $L$ has some important properties to make it work
-#thm[$L$ is injective]
+== Tensor Products
+Now, much of the ink will be devoted to define the tensor product $tp$ and how
+this operator gives a unified way to construct tensor spaces.
+#def[Tensor product of two vectors][
+  Given $vb(v) in V, vb(w) in W$, define
+  $ vb(v) tp vb(w): V' times W' &to FF\
+  (h, g)                      &sendto vb(v)(h) vb(w)(g) equiv h(vb(v)) g(vb(w)) $
+  where $vb(v)(h) vb(w)(g) equiv h(vb(v)) g(vb(w))$ is due to
+  @double-dual-isomorphism.
+]
+
+By @def-tensor, $vb(v) tp vb(w)$ is a tensor. And indeed it lives in the tensor
+space $cal(L)(V', W')$.
+
+We now are set to explore the dimension and basis for $cal(L)(V', W')$.
+
+#thm[Basis of tensor space][
+  Let $n = dim V, m = dim W$, ${vb(a)_i}_(i=1)^n$ be a basis of $V$, ${vb(b)_j}_(j=1)^m$ be
+  a basis of $W$, the set
+  $ { vb(a)_i tp vb(b)_j in cal(L)(V', W')} $
+  is a basis of the vector space $cal(L)(V', W')$
+]<basis-of-tensor-space>
 #proof[
-  We need to show $L(vb(v)) = L(vb(w)) arrow.double vb(v) = vb(w)$
-  #pfstep[$tilde(vb(v)) = tilde(vb(w)) arrow.double H(vb(v) - vb(w), vb(a)) = 0$ for all $vb(a)$][
-    #pfstep[For all $vb(a)$, $tilde(vb(v))(vb(a)) = tilde(vb(w))(vb(a))$][By definition of $tilde(vb(v)) = tilde(vb(w))$]
-    #pfstep[$H(vb(v) - vb(w), vb(a)) = 0$][
-      Expand $tilde(vb(v)) = tilde(vb(w))$ by definition and use anti-linearity in the
-      first argument of $H$
+  Let ${vb(a)^i}, {vb(b)^j}$ be the dual basis (@dual-basis) of ${vb(a)_i}, {vb(b)_j}$.
+  #pfstep[${ vb(a)_i tp vb(b)_j}$ is linearly independent][
+    Let $sum_(i,j) c_(i,j) vb(a)_i tp vb(b)_j = 0$.
+    #pfstep[$c_(i,j) = 0$ for all $i,j$][
+      $
+        0 = (sum_(i,j) c_(i,j) vb(a)_i tp vb(b)_j) (vb(a)^k, vb(b)^l) &= sum_(i,j) c_(i,j) vb(a)_i tp vb(b)_j (vb(a)^k, vb(b)^l) \
+                                                                      &= sum_(i,j) c_(i,j) vb(a)^k (vb(a)_i) vb(b)^l (vb(b)_j) \
+                                                                      &= c_(k,l)
+      $
     ]
+    By definition of linear independence, ${ vb(a)_i tp vb(b)_j}$ is linearly
+    independent.
+  ]
+
+  #pfstep(
+    finished: true,
+  )[${ vb(a)_i tp vb(b)_j}$ spans $cal(L)(V', W')$][
+    Let $tau in cal(L)(V', W')$.
+    #pfstep[$tau = sum_(i,j) tau(vb(a)^i, vb(b)^j) vb(a)_i tp vb(b)_j$ ][
+      For all $h = sum_i h_i vb(a)^i, g = sum_j g_j vb(b)^j$, we have
+      $ (sum_(i,j) tau(vb(a)^i, vb(b)^j) vb(a)_i tp vb(b)_j) (h,g) &= sum_(i,j) tau(vb(a)^i, vb(b)^j) vb(a)_i tp vb(b)_j (h,g) \
+                                                                 &= sum_(i,j) tau(vb(a)^i, vb(b)^j) vb(a)_i (h) vb(b)_j (g) \
+                                                                 &= sum_(i,j) tau(vb(a)^i, vb(b)^j) h_i g_j \
+                                                                 &= tau(sum_i h_i vb(a)^i, sum_j g_j vb(b)^j) = tau(h, g) $
+    ]
+    where we used @dual-basis-give-coordinate in the third line.
+  ]
+]
+
+#remark[This proves that $dim cal(L)(V', W') = dim V' dim W' = dim V dim W$ for
+  finite-dimensional $V, W$.]
+
+#remark[By switching $V'$ and $V$ and etc., we have also got $dim cal(L)(V, W) = dim V dim W$.]
+
+Now, we define the tensor product for two vector spaces.
+
+#def[Tensor Product for Two Vector Spaces][
+  Define
+  $ V tp W := span { vb(v) tp vb(w) | vb(v) in V, vb(w) in W } $
+]
+
+And indeed
+
+#thm[$V tp W = cal(L)(V', W')$]<tp-gives-tensor-space>
+#proof[
+  #pfstep[$V tp W subset.eq cal(L)(V', W')$][
+    $vb(v) tp vb(w) in cal(L)(V', W')$ and $cal(L)(V', W')$ is a vector space, thus
+    linear combinations of $vb(v) tp vb(w)$ still lives in $cal(L)(V', W')$.
   ]
   #pfstep(
     finished: true,
-  )[$vb(v) = vb(w)$][
-    By non-degeneracy of $H$ (see @non-deg-hermitian), if $vb(v) - vb(w) eq.not vb(0)$,
-    then there exists $vb(a)$ such that $H(vb(v) - vb(w), vb(a))$. However, this is
-    not the vase by Claim 1. Thus contradictory.
+  )[$cal(L)(V', W') subset.eq V tp W$][
+    Clearly, ${ vb(a)_i tp vb(b)_j } subset V tp W$ where $vb(a)_i, vb(b)_j$ are
+    defined as in @basis-of-tensor-space. By @basis-of-tensor-space, we know
+    $ cal(L)(V', W') = span { vb(a)_i tp vb(b)_j } subset.eq span { vb(v) tp vb(w) | vb(v) in V, vb(w) in W } equiv V tp W $
   ]
 ]
 
-#thm[Metric Dual of a basis is its dual basis if and only if orthonormal][
-  Let $cal(B) = {vb(v)_i}$ be a basis, then its dual basis $cal(B)'$ is equal to
-  applying metric dual to each of its basis vector if and only if $cal(B)$ is
-  orthonormal.
+#remark[Similarly,
+  $ V' tp W' = cal(L)(V, W) $
 ]
+
+This means, at least in the bilinear case, all tensors can be completely
+reconstructed from tensor product operation!
+
+Now, as it would later prove to be useful, we want to:
+- Define the dual of the tensor space.
+- Use tensor product to construct $cal(L)(V, W, Z)$.
+- For $tau^r_s (V)$ and $V$ with non-degenerate Hermitian Form $H$ (or inner
+  product), we want to define inner product on $tau^r_s (V)$
+
+== Universal Property
+Universal Property will be a promising tool that allows us to show
+$ (V tp W)' caniso V' tp W' $
+in @dual-is-commutative-with-tp and
+$ (V tp W) tp Z caniso V tp (W tp Z) caniso cal(L)(V', W', Z') $
+where $caniso$ means canonically isomorphic.
+
+#thm[Universal Property][
+  1. Let $tau in cal(L)(V, W)$, there exists a unique function $hat(tau) in (V tp W)'$ such
+    that
+  $ hat(tau)(vb(v) tp vb(w)) = tau(vb(v), vb(w)) $
+  for all $vb(v),vb(w)$.
+
+  2. Let $hat(tau) in (V tp W)'$, there exists a unique $tau in cal(L)(V, W)$ such
+    that
+  $ tau(vb(v), vb(w)) = hat(tau)(vb(v) tp vb(w)) $
+  for all $vb(v),vb(w)$.
+]<univ-prop-1>
+#proof[See @ladr[Theorem 9.79, page 375], though the actual proof is neither hard nor
+  long.]
+
+This is immediately yields
+
+#thm[$(V tp W)' caniso V' tp W'$]<dual-is-commutative-with-tp>
 #proof[
-  #pfstep[Orthonormal $arrow.double$ metric dual is dual basis][
-    We have#footnote[Only under such specific basis would the coordinate representation of $H$ be
-      evaluated according to Kronecker delta. In fact, there is no good definition of
-      (2,0) identity tensor, so $tensor(delta, -i, -j)$ should not be think of as a
-      coordinate representation of some tensor.]#footnote[We are _not_ raising the indices of $vb(v)$ to $tilde(vb(v))^i$ because this $i$ is
-      not the component of $vb(v)$, instead, it's a indices for basis.]
-    $ tilde(vb(v))_i (vb(v)_j) := H(vb(v)_i, vb(v)_j) = tensor(delta, -i, -j) $
-    Thus by definition of @dual-basis we know $tilde(vb(v))_i = vb(v)^i$.
+  We are basically showing that @univ-prop-1 gives us a canonical isomorphism
+  between $cal(L)(V, W)$ and $(V tp W)'$.
+  #pfstep[$dim cal(L)(V, W) = dim (V tp W)'$][
+    By @tp-gives-tensor-space, we have
+    $ dim cal(L)(V, W) = dim V tp W $
+    Since it's finite-dimensional, we have $dim (V tp W)' = dim V tp W$ as well.
   ]
+  Now universal property allows us to define a mapping $L: cal(L)(V, W) to (V tp W)'$.
+  Define
+  $ L tau = hat(tau) $
+  where $tau, hat(tau)$ are given in @univ-prop-1 part 1. This is well-defined as
+  part 1 asserts that for any $tau$, such $hat(tau)$ is unique.
+
+  #pfstep[$L$ is injective][
+    If $L tau = vb(0)$, then by definition of @univ-prop-1,
+    $ tau(vb(v), vb(w)) = vb(0)(vb(v) tp vb(w)) = 0 $ for all $vb(v), vb(w)$ This
+    means $tau = vb(0)$. Thus $ker L = {vb(0) in cal(L)(V, W)}$.
+  ]
+
+  Since dimension match and $L$ is injective, we can use the same technique as in
+  @metric-dual-is-surjective to prove $L$ is surjective as well.
+
+  #pfstep(finished: true)[$(V tp W)' caniso V' tp W'$][
+    By @tp-gives-tensor-space, $V' tp W' = cal(L)(V, W)$, thus we have
+    $ V' tp W' = cal(L)(V, W) caniso (V tp W)' $
+  ]
+]
+
+This isomorphism is indeed very explicit. We know $vb(a)^i tp vb(b)^j in cal(L)(V, W)$.
+By definition of @univ-prop-1,
+$ (L vb(a)^i tp vb(b)^j)( vb(a)_k tp vb(b)_l) &= vb(a)^i tp vb(b)^j (vb(a)_k, vb(b)_l) \
+                                            &= vb(a)^i (vb(a)_k) vb(b)^j (vb(b)_l) = tensor(delta, -k, +i) tensor(delta, -l, +j) $
+
+#idea[Therefore, _under isomorphism_, ${vb(a)^i tp vb(b)^j}$ is equivalent to the dual
+  basis of ${vb(a)_i tp vb(b)_j}$! This is not a direct result and we derived it!]
+
+#info[
+  This is not just mathematical nit picking. This is indeed the mechanism that
+  powers the following rule in Dirac notation:
+  $ (ketbra(psi, phi))^dagger = ketbra(phi, psi) $
+]
+
+We can extend the universal property a bit and prove the associativity as well!
+#thm[Universal Property - Extended][
+  1. Let $Gamma in cal(L)(V, W, Z)$, there exists a unique function $hat(Gamma) in cal(L)(V, W tp Z)$ such
+    that
+  $ hat(Gamma)(vb(v), vb(w) tp vb(z)) = Gamma(vb(v), vb(w), vb(z)) $
+  for all $vb(v),vb(w), vb(z)$.
+
+  2. Let $hat(Gamma) in cal(L)(V, W tp Z)$, there exists a unique $Gamma in cal(L)(V, W, Z)$ such
+    that
+  $ Gamma(vb(v), vb(w), vb(z)) = hat(Gamma)(vb(v),vb(w) tp vb(z)) $
+  for all $vb(v),vb(w), vb(z)$.
+]<univ-prop-2>
+#proof[
+  #pfstep[Part 1 is correct][
+    Fix $vb(v)$ first, then $Gamma (vb(v), cdot, cdot) in cal(L)(W, Z)$. By
+    @univ-prop-1 we can define an unique $hat(tau)_vb(v) in (W tp Z)'$ such that
+    $ hat(tau)_vb(v) (vb(w) tp vb(z)) := Gamma (vb(v), vb(w), vb(z)) $
+    for all $vb(w), vb(z)$. And we define $ hat(Gamma)(vb(v), vb(w) tp vb(z)) := hat(tau)_vb(v) (vb(w) tp vb(z)) $
+
+    We remain to prove that $hat(Gamma)$ is bilinear. Linearity in the second
+    argument (i.e. $W tp Z$ space) is easy as we know $hat(tau)_vb(v)$ is linear
+    provided by @univ-prop-1.
+
+    And for the second argument,
+    $ hat(Gamma)(vb(v)_1 + c vb(v)_2, vb(w) tp vb(z)) &:= hat(tau)_(vb(v)_1 + c vb(v)_2) (vb(w) tp vb(z)) \
+                                                    &= Gamma (vb(v)_1 + c vb(v)_2, vb(w), vb(z)) \
+                                                    &= Gamma (vb(v)_1, vb(w), vb(z)) + c Gamma(vb(v)_2, vb(w), vb(z)) \
+                                                    &= hat(tau)_(vb(v)_1) (vb(w) tp vb(z)) + c hat(tau)_(vb(v)_2) (vb(w) tp vb(z)) \
+                                                    &= hat(Gamma)(vb(v)_1, vb(w) tp vb(z)) + c hat(Gamma)(vb(v)_2, vb(w) tp vb(z)) $
+  ]
+
   #pfstep(
     finished: true,
-  )[Metric dual is dual basis $arrow.double$ orthonormal][
-    Metric dual is dual basis means#footnote[Again, as in previous footnotes, the indices positions etc doesn't match isn't
-      an issue as the underlying tensors ($H$ and $II$) are not of the same type and
-      are not equal.]
-    $ tilde(vb(v))_i (vb(v)_j) := H(vb(v)_i, vb(v)_j) = vb(v)^i (vb(v)_j) = tensor(delta, -j, +i) $
-    Thus $cal(B)$ is orthonormal.
+  )[Part 2 is correct][
+    We do the same construction as did in the above. Fix $vb(v)$ for the moment,
+    then $hat(Gamma) (vb(v), cdot) in (W tp Z)'$. By @univ-prop-1 we can define the
+    unique bilinear functional
+    $ tau_vb(v)(vb(w), vb(z)) := hat(Gamma) (vb(v), vb(w) tp vb(v)) $
+
+    And define $ Gamma (vb(v), vb(w), vb(z)) := tau_vb(v)(vb(w), vb(z)) $ This is
+    well defined as for each $vb(v)$, $tau_vb(v)$ is unique.
+
+    Now, to prove the trilinearity. The bilinearity in $W, Z$ argument is easy as $tau_vb(v)$ is
+    bilinear as provided by @univ-prop-1. The linearity in the first argument is
+    given by
+    $ Gamma (vb(v)_1 + c vb(v)_2, vb(w), vb(z)) &= tau_(vb(v)_1+ c vb(v)_2) (vb(w), vb(z)) \
+                                              &= hat(Gamma) (vb(v)_1 + c vb(v)_2, vb(w) tp vb(v)) \
+                                              &= hat(Gamma) (vb(v)_1, vb(w) tp vb(v)) + c hat(Gamma) (vb(v)_2, vb(w) tp vb(v)) \
+                                              &= tau_(vb(v)_1) (vb(w), vb(z)) + c tau_(vb(v)_2) (vb(w), vb(z)) \
+                                              &= Gamma (vb(v)_1, vb(w), vb(z)) + c Gamma (vb(v)_2, vb(w), vb(z)) $
   ]
 ]
+#remark[
+  The proof can be easily adapted into proving the statement $hat(Gamma) (V tp W, Z) dots$.
+  So where we tensor stuff together doesn't matter for this proof.
+]<univ-prop-2-remark>
 
-#thm[$L$ is surjective if $V$ is finite-dimensional]<metric-dual-is-surjective>
+We have an easy result
+
+#thm[$dim cal(L)(V, W, Z) = dim V dim W dim Z$]<trilinear-dimension>
+#proof[See @ladr[Theorem 9.87, page 378]]
+
+And this gives
+
+#thm[$(V tp (W tp Z))' caniso cal(L)(V, W, Z)$]<trilinear-caniso>
 #proof[
-  #pfstep[$dim V' = dim V$][
-    By @dual-basis-is-a-basis, the basis of $V'$ has the same number of elements as
-    basis of $V$.
+  Let $Gamma in cal(L)(V, W, Z)$, define $L: cal(L)(V, W, Z) to (V tp (W tp Z))'$ by
+  $ L Gamma = hat(Gamma) $
+  where $hat(Gamma)$ is given by @univ-prop-2.
+  #pfstep[$L$ is injective][
+    By exact analogue to @dual-is-commutative-with-tp Claim 2.
   ]
-  #pfstep(
-    finished: true,
-  )[$dim img L = dim V$][$dim img L = dim V - dim ker L = dim V = dim V'$]
+  #pfstep(finished: true)[$dim cal(L)(V, W, Z) = dim (V tp (W tp Z))'$][
+    By @trilinear-dimension, we have
+    $ dim cal(L)(V, W, Z) &= dim V dim W dim Z \
+                        &= dim V dim (W tp Z) \
+                        &= dim V tp (W tp Z) = dim (V tp (W tp Z))' $
+  ]
+  Since dimension match and $L$ is injective, we can use the same technique as in
+  @metric-dual-is-surjective to prove $L$ is surjective as well.
 ]
 
-Thus, if $V$ is finite-dimensional, then
-#thm[$V$ and $V'$ are canonically isomorphic if $V$ is finite-dimensional]
+#remark[By @univ-prop-2-remark, we can also prove that indeed
+  $ ((V tp W) tp Z)' caniso cal(L)(V, W, Z) $
+]<trilinear-caniso-remark>
+
+#thm[$V' tp (W' tp Z') caniso (V' tp W') tp Z' caniso cal(L)(V, W, Z)$]
 #proof[
-  They are canonically isomorphic through the bijective map $L: V to V'$. Notice
-  how the definition of $L$ doesn't depends on choice of basis.
-]
-
-== Double Dual
-We now have canonical identification of another space with $V$.
-
-#thm[$V''$ is canonically isomorphic to $V$ if $V$ is finite-dimensional][
-  We define the map $L: V to V''$#footnote[The $L$ here has nothing to do with the $L$ defined for metric dual] by
-  $ L(vb(v))(phi) := phi(vb(v)) $
-  Prove this is bijective if $V$ is finite-dimensional.
-]
-#proof[
-  #pfstep[$L$ is injective#footnote[The proof that we give actually applies even if $V$ is infinite dimensional. See
-      also @inf-dim-dual-vector-kernel]][This is equivalent to proving $L(vb(v)) = 0$ if and only if $vb(v) = vb(0)$. The
-    if part is evident, the only if part is as follows.
-    #pfstep[If $phi(vb(v)) = 0$ for all $phi in V'$, then $vb(v) = vb(0)$][
-      If $vb(v)$ is non-zero, then we can extend a basis $cal(B)$ of $V$ from it,
-      construct the dual basis of $cal(B)$. Then $vb(v)'(vb(v)) = 1 eq.not 0$
-      Thus $vb(v) = 0$
-    ]
+  #pfstep[$V' tp (W' tp Z') caniso (V tp (W tp Z))'$][
+    By @dual-is-commutative-with-tp, $V' tp (W' tp Z') caniso V' tp (W tp Z)'$.
+    Apply again we get the desired result.
   ]
-
-  #pfstep[$L$ is surjective][
-    #pfstep[$dim V = dim V' = dim V''$ in finite-dimensional case][
-      By @dual-basis-is-a-basis, $dim V = dim V'$. Since $V'$ is also finite
-      dimensional, we have $dim V' = dim V''$ as $V''$ is just the dual of $V'$.
-    ]
-    by the same argument as @metric-dual-is-surjective, we have $L$ being surjective
-    as well.
+  #pfstep(finished: true)[$(V tp (W tp Z))' caniso cal(L)(V, W, Z)$][
+    By @trilinear-caniso
   ]
+  Therefore, we have
+  $ V' tp (W' tp Z') caniso (V tp (W tp Z))' caniso cal(L)(V, W, Z) $
+
+  By @trilinear-caniso-remark, we have the same result for $(V' tp W') tp Z'$.
+  Thus,
+  $ V' tp (W' tp Z') caniso (V' tp W') tp Z' caniso cal(L)(V, W, Z) $
 ]
 
-== Introducing Dirac Notation
-Now with these preparatory works, we can introduce Dirac notation.
-
-#def("Dirac notation")[
-
+#idea[
+  Thus tensor product between vector spaces is indeed associative! We may write $V tp W tp Z$ which
+  is not ambiguous up to a canonical isomorphism. And they are all equivalent to $cal(L)(V, W, Z)$.
 ]
 
-= Tensors
+== Inner Product for Tensors
+
+== Contraction
+
+== Examples from Physics
 
 = Groups
+
+= Strum-Liouville Problem
+
+= Fourier Transform
 
 #pagebreak()
 

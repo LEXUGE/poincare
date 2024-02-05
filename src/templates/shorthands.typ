@@ -6,6 +6,8 @@
 
 #let eg = thmbox("example", "Example", fill: color.lighten(green, 85%))
 
+#let remark = thmplain("remark", "Remark", base: "theorem")
+
 #let proof = thmplain(
   "proof",
   "Proof",
@@ -26,4 +28,5 @@
 #let span = text("span")
 #let img = text("Im")
 #let ker = text("Ker")
-
+#let tp = sym.times.circle
+#let sendto = sym.arrow.r.bar

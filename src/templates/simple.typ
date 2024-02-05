@@ -1,6 +1,6 @@
 #import "@preview/ctheorems:1.1.0": *
 
-#let simple(title: "", authors: (), body) = {
+#let simple(title: "", authors: (), disp_content: true, body) = {
   // Set document metadata
   set document(author: authors.map(x => x.name), title: title)
   show: thmrules
@@ -31,7 +31,9 @@
     ]))
   ]
 
-  outline(fill: none, indent: true)
+  if disp_content { outline(fill: none, indent: true) }
+
+  set math.equation(numbering: "(1.1)")
 
   body
 }

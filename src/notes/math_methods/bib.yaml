@@ -1,0 +1,26 @@
+abdel:
+    type: Book
+    title: Sturm-Liouville Theory and its Applications
+    author: M. A. Al-Gwaiz
+    serial-number:
+      isbn: 978-1-84628-972-9
+
+nadir:
+    type: Book
+    title: An Introduction to Tensors and Group Theory for Physicists
+    author: Nadir Jeevanjee
+    serial-number:
+      isbn: 978-3-319-14794-9
+
+ladr:
+    type: Book
+    title: Linear Algebra Done Right
+    author: Sheldon Axler
+    isbn: 978-3-031-41026-0
+
+inf-dim-dual-vector-kernel:
+    type: Web
+    title: Can a non-zero vector have zero image under every linear functional?
+    author: Hagen von Eitzen
+    url: https://math.stackexchange.com/a/311918/1152910
+

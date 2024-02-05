@@ -1,3 +1,4 @@
+src/private
 /.pre-commit-config.yaml
 *.pdf
 result

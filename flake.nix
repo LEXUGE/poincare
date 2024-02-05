@@ -84,6 +84,7 @@
                 name = "Typst Format";
                 entry = "${pkgs.typstfmt}/bin/typstfmt";
                 files = "\\.(typ)$";
+                excludes = [ "CO25/main.typ" ];
               };
             };
           };
@@ -98,6 +99,6 @@
             version = "git";
             pname = n;
           }))
-          (listToAttrs (listTypstRecursive ./src/notes));
+          (listToAttrs ((listTypstRecursive ./src/notes) ++ (listTypstRecursive ./src/reports)));
       });
 }

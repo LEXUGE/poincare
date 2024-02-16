@@ -16,4 +16,10 @@ littlejohn:
     type: Web
     title: Physics 221AB, Quantum Mechanics
     author: Robert Littlejohn
-    url: https://bohr.physics.berkeley.edu/classes/221/2122/221.html
+    url: https://bohr.physics.berkeley.edu/classes/221/2122/221.HTML
+
+bowers:
+    type: Book
+    title: Lectures on Quantum Mechanics
+    author: Philip L. Bowers
+    isbn: 9781108555241

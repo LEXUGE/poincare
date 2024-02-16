@@ -1,0 +1,14 @@
+nadir:
+    type: Book
+    title: An Introduction to Tensors and Group Theory for Physicists
+    author: Nadir Jeevanjee
+    date: 2015
+    serial-number:
+      isbn: 978-3-319-14794-9
+
+ladr:
+    type: Book
+    title: Linear Algebra Done Right
+    author: Sheldon Axler
+    date: 2024
+    isbn: 978-3-031-41026-0

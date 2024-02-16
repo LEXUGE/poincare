@@ -1,6 +1,8 @@
 #import "@preview/physica:0.9.2": *
 #import "@preview/gentle-clues:0.4.0": *
 #import "@lexuge/templates:0.1.0": *
+#import shorthands: *
+#import pf3: *
 
 #show: simple.with(
   title: "Mathematical Methods",
@@ -9,11 +11,6 @@
 
 #let unproven = text(red)[This is not proven yet.]
 #let unfinished = text(red)[This is not finished yet.]
-
-#let L1 = $cal(L)^1$
-#let L2 = $cal(L)^2$
-#let Lp = $cal(L)^p$
-#let caniso = sym.tilde.equiv
 
 #pagebreak()
 
@@ -331,7 +328,7 @@ Now $L$ has some important properties to make it work
   Let $cal(B) = {vb(v)_i}$ be a basis, then its dual basis $cal(B)'$ is equal to
   applying metric dual to each of its basis vector if and only if $cal(B)$ is
   orthonormal.
-]
+]<metric-dual-is-dual-basis>
 #proof[
   #pfstep[Orthonormal $arrow.double$ metric dual is dual basis][
     We have#footnote[Only under such specific basis would the coordinate representation of $H$ be
@@ -513,52 +510,8 @@ $ braket(f, g) := integral_I overline(f) g $
 
 === Orthonormal basis in $L2$
 
-= Dirac Notation
-Dirac notation is an effective convention for writing linear algebra for quantum
-mechanics, relying on the following properties of the underlying space $V$:
-- The space is an inner product space ($V$ is a Hilbert space, which is a complete
-  complex inner product space)
-- The dual space $V'$ is canonically isomorphic to the $V$ through inner product
-
-These points are discussed in @sec-dual-space.
-
-#def(
-  "Dirac notation - Basics",
-)[
-  Given a finite dimensional vector space $V$ with a non-degenerate Hermitian form $H$ (@non-deg-hermitian),
-  we write:
-  - $ket("something")$ to represent a vector in $V$,
-  - $bra("something")$ to represent the metric dual (@metric-dual) of the vector $ket("something")$.
-    In other words,
-  $ bra("something")(cdot) = H(ket("something"), cdot) $
-]
-
-Main advantages of Dirac notation compared to the usual $vb(v)$ notation
-includes:
-- Naming of the vector is very easy, and we can write $ket((n,l,m))$ to clearly
-  label the eigenstate of some particle, instead of resorting to $vb(e)_(n,l,m)$.
-- We don't need to write out the metric dual conversion mapping $L: V to V'$ explicitly
-  every time.
-
-In the light of this definition, we can translate
-$ bra(psi) (ket(phi)) &equiv L(ket(psi)) (ket(phi)) \
-                    &equiv H(ket(psi), ket(phi)) $
-and
-$ bra(psi) (A ket(phi)) &equiv L(ket(psi)) (A ket(phi)) \
-                      &equiv H(ket(psi), A ket(phi)) $
-where $A: V to V$ is any operator. And for brevity we introduce the shorthand:
-$ bra(psi) (ket(phi))   &to braket(psi, phi) \
-bra(psi) (A ket(phi)) &to braket(psi, A, phi) $
-
-And also short hand like
-$ ket(0) + ket(1) to ket(0+1) $
-
-However, you will also see use like $ ketbra(psi, phi), ket(psi) ket(phi) $
-This is actually understood as a tensor product
-$ ketbra(psi, phi) equiv ket(psi) tp bra(phi), ket(psi) ket(phi) equiv ket(psi) tp ket(phi) $
-which we will introduce now.
-
 #pagebreak()
+
 = Tensors
 There are two main concepts:
 - Tensor
@@ -614,7 +567,7 @@ this operator gives a unified way to construct tensor spaces.
   (h, g)                      &sendto vb(v)(h) vb(w)(g) equiv h(vb(v)) g(vb(w)) $
   where $vb(v)(h) vb(w)(g) equiv h(vb(v)) g(vb(w))$ is due to
   @double-dual-isomorphism.
-]
+]<tp-vectors>
 
 By @def-tensor, $vb(v) tp vb(w)$ is a tensor. And indeed it lives in the tensor
 space $cal(L)(V', W')$.
@@ -667,7 +620,7 @@ Now, we define the tensor product for two vector spaces.
 #def[Tensor Product for Two Vector Spaces][
   Define
   $ V tp W := span { vb(v) tp vb(w) | vb(v) in V, vb(w) in W } $
-]
+]<tp-spaces>
 
 And indeed
 
@@ -731,20 +684,20 @@ This is immediately yields
     $ dim cal(L)(V, W) = dim V tp W $
     Since it's finite-dimensional, we have $dim (V tp W)' = dim V tp W$ as well.
   ]
-  Now universal property allows us to define a mapping $L: cal(L)(V, W) to (V tp W)'$.
+  Now universal property allows us to define a mapping $L_1: cal(L)(V, W) to (V tp W)'$.
   Define
-  $ L tau = hat(tau) $
+  $ L_1 tau = hat(tau) $
   where $tau, hat(tau)$ are given in @univ-prop-1 part 1. This is well-defined as
   part 1 asserts that for any $tau$, such $hat(tau)$ is unique.
 
-  #pfstep[$L$ is injective][
-    If $L tau = vb(0)$, then by definition of @univ-prop-1,
+  #pfstep[$L_1$ is injective][
+    If $L_1 tau = vb(0)$, then by definition of @univ-prop-1,
     $ tau(vb(v), vb(w)) = vb(0)(vb(v) tp vb(w)) = 0 $ for all $vb(v), vb(w)$ This
-    means $tau = vb(0)$. Thus $ker L = {vb(0) in cal(L)(V, W)}$.
+    means $tau = vb(0)$. Thus $ker L_1 = {vb(0) in cal(L)(V, W)}$.
   ]
 
-  Since dimension match and $L$ is injective, we can use the same technique as in
-  @metric-dual-is-surjective to prove $L$ is surjective as well.
+  Since dimension match and $L_1$ is injective, we can use the same technique as
+  in @metric-dual-is-surjective to prove $L_1$ is surjective as well.
 
   #pfstep(finished: true)[$(V tp W)' caniso V' tp W'$][
     By @tp-gives-tensor-space, $V' tp W' = cal(L)(V, W)$, thus we have
@@ -752,10 +705,10 @@ This is immediately yields
   ]
 ]
 
-This isomorphism is indeed very explicit. We know $vb(a)^i tp vb(b)^j in cal(L)(V, W)$.
-By definition of @univ-prop-1,
-$ (L vb(a)^i tp vb(b)^j)( vb(a)_k tp vb(b)_l) &= vb(a)^i tp vb(b)^j (vb(a)_k, vb(b)_l) \
-                                            &= vb(a)^i (vb(a)_k) vb(b)^j (vb(b)_l) = tensor(delta, -k, +i) tensor(delta, -l, +j) $
+#remark[This isomorphism is indeed very explicit. We know $vb(a)^i tp vb(b)^j in cal(L)(V, W)$.
+  By definition of @univ-prop-1,
+  $ (L_1 vb(a)^i tp vb(b)^j)( vb(a)_k tp vb(b)_l) &= vb(a)^i tp vb(b)^j (vb(a)_k, vb(b)_l) \
+                                                &= vb(a)^i (vb(a)_k) vb(b)^j (vb(b)_l) = tensor(delta, -k, +i) tensor(delta, -l, +j) $]<explicit-dual-basis>
 
 #idea[Therefore, _under isomorphism_, ${vb(a)^i tp vb(b)^j}$ is equivalent to the dual
   basis of ${vb(a)_i tp vb(b)_j}$! This is not a direct result and we derived it!]
@@ -830,27 +783,67 @@ We have an easy result
 
 And this gives
 
-#thm[$(V tp (W tp Z))' caniso cal(L)(V, W, Z)$]<trilinear-caniso>
+#thm[$V' tp (W tp Z)' caniso cal(L)(V, W, Z)$]<trilinear-caniso>
 #proof[
-  Let $Gamma in cal(L)(V, W, Z)$, define $L: cal(L)(V, W, Z) to (V tp (W tp Z))'$ by
-  $ L Gamma = hat(Gamma) $
+  Let $Gamma in cal(L)(V, W, Z)$, define $L_2: cal(L)(V, W, Z) to V' tp (W tp Z)'$ by
+  $ L_2 Gamma = hat(Gamma) $
   where $hat(Gamma)$ is given by @univ-prop-2.
-  #pfstep[$L$ is injective][
+  #pfstep[$L_2$ is injective][
     By exact analogue to @dual-is-commutative-with-tp Claim 2.
   ]
-  #pfstep(finished: true)[$dim cal(L)(V, W, Z) = dim (V tp (W tp Z))'$][
+  #pfstep(finished: true)[$dim cal(L)(V, W, Z) = dim V' tp (W tp Z)'$][
     By @trilinear-dimension, we have
     $ dim cal(L)(V, W, Z) &= dim V dim W dim Z \
                         &= dim V dim (W tp Z) \
-                        &= dim V tp (W tp Z) = dim (V tp (W tp Z))' $
+                        &= dim V' tp (W tp Z)' $
   ]
-  Since dimension match and $L$ is injective, we can use the same technique as in
-  @metric-dual-is-surjective to prove $L$ is surjective as well.
+  Since dimension match and $L_2$ is injective, we can use the same technique as
+  in @metric-dual-is-surjective to prove $L_2$ is surjective as well.
 ]
 
 #remark[By @univ-prop-2-remark, we can also prove that indeed
+  $ (V tp W)' tp Z' caniso cal(L)(V, W, Z) $
+]<trilinear-caniso-remark-pre>
+
+Now, we can post-compose $L_2$ with $L_1$ to get another canonical isomorphism:
+#thm[For all $tau in cal(L)(V, W, Z)$, we have the canonical isomorphism
+  $ L_1 L_2: cal(L)(V, W, Z) &to (V tp (W tp Z))' \
+  tau                      &sendto hat(tau) $
+  where $L_1, L_2$ are defined in @dual-is-commutative-with-tp, @trilinear-caniso
+  respectively, such that
+  $ hat(tau)(vb(v) tp (vb(w) tp vb(z))) = tau(vb(v), vb(w), vb(z)) $ for all $vb(v) in V, vb(w) in W, vb(z) in Z$.
+]<explicit-trilinear-caniso>
+#remark[Similar to @trilinear-caniso-remark-pre, we can also prove that indeed
   $ ((V tp W) tp Z)' caniso cal(L)(V, W, Z) $
 ]<trilinear-caniso-remark>
+#remark[
+  This theorem gives us an explicit candidate for dual basis of ${vb(a)_i tp (vb(b)_j tp vb(c)_k)}$ where ${vb(a)_i}, {vb(b)_j}, {vb(c)_k}$ are
+  basis of $V, W, Z$.
+
+  If we define
+  $ vb(a)^i tp vb(b)^j tp vb(c)^k (cdot, cdot, cdot) := vb(a)^i (cdot) vb(b)^j (cdot) vb(c)^k (cdot) $
+
+  Then you can verify ${ L_1 L_2 vb(a)^i tp vb(b)^j tp vb(c)^k }$ is a dual basis
+  for ${vb(a)_i tp (vb(b)_j tp vb(c)_k)}$
+
+  To see why:
+  $ (L_1 L_2 vb(a)^i tp vb(b)^j tp vb(c)^k) (vb(a)_l tp (vb(b)_m tp vb(c)_n)) &= (L_2 vb(a)^i tp vb(b)^j tp vb(c)^k) (vb(a)_l, (vb(b)_m tp vb(c)_n)) \
+                                                                            &= vb(a)^i tp vb(b)^j tp vb(c)^k (vb(a)_l, (vb(b)_m, vb(c)_n))\
+                                                                            &= tensor(delta, +i, -l) tensor(delta, +j, -m) tensor(delta, +k, -n) $
+  Alternatively, ${ L_1 vb(a)^i tp (L_1 vb(b)^j tp vb(c)^k) }$ is also the dual
+  basis of ${vb(a)_i tp (vb(b)_j tp vb(c)_k)}$:
+  $ overbrace(
+    L_1 underbrace(
+      vb(a)^i tp overbrace((L_1 underbrace(vb(b)^j tp vb(c)^k, W' tp Z')), (W tp Z)'),
+      V' tp (W tp Z)' = cal(L)(V, W tp Z),
+
+    ), (V tp (W tp Z))',
+
+  ) (vb(a)_l tp (vb(b)_m tp vb(c)_n)) &= vb(a)^i tp (L_1 vb(b)^j tp vb(c)^k) (vb(a)_l, vb(b)_m tp vb(c)_n)\
+                                                                                                                                                                                                                          &= vb(a)^i (vb(a)_l) (L_1 vb(b)^j tp vb(c)^k)(vb(b)_m tp vb(c)_n) \
+                                                                                                                                                                                                                          &= tensor(delta, +i, -l) vb(b)^j tp vb(c)^k(vb(b)_m, vb(c)_n) \
+                                                                                                                                                                                                                          &= tensor(delta, +i, -l) tensor(delta, +j, -m) tensor(delta, +k, -n) $
+]<explicit-construction-of-trilinear-dual>
 
 #thm[$V' tp (W' tp Z') caniso (V' tp W') tp Z' caniso cal(L)(V, W, Z)$]
 #proof[
@@ -869,16 +862,189 @@ And this gives
   $ V' tp (W' tp Z') caniso (V' tp W') tp Z' caniso cal(L)(V, W, Z) $
 ]
 
+#remark[
+  Equivalently, we have
+  $ V tp (W tp Z) caniso (V tp W) tp Z caniso cal(L)(V', W', Z') $
+]
+
 #idea[
   Thus tensor product between vector spaces is indeed associative! We may write $V tp W tp Z$ which
-  is not ambiguous up to a canonical isomorphism. And they are all equivalent to $cal(L)(V, W, Z)$.
+  is not ambiguous *up to a canonical isomorphism*. And they are all equivalent to $cal(L)(V', W', Z')$ under
+  this canonical isomorphism.
+]
+
+After having associativity, we can extend these results to "fourth order"
+$ ((V tp W) tp Y) tp Z caniso (V tp W) tp (Y tp Z) caniso V tp (W tp (Y tp Z)) $<eq-fourth-order-tp>
+
+And by analogue to @univ-prop-2, we could indeed show
+$ cal(L)(V' tp W', Y', Z') caniso cal(L)(V', W', Y', Z') $
+and by @univ-prop-2, $ cal(L)(V' tp W', Y', Z') caniso cal(L)(V' tp W', Y' tp Z')$
+and by @univ-prop-1, $ cal(L)(V' tp W', Y' tp Z') caniso ((V' tp W') tp (Y' tp Z'))' $
+where by applying @dual-is-commutative-with-tp repeatedly,
+$ ((V' tp W') tp (Y' tp Z'))' caniso (V tp W) tp (Y tp Z) $
+So all of the tensor product spaces in @eq-fourth-order-tp is indeed canonically
+isomorphic to $cal(L)(V', W', Y', Z')$
+
+#conclusion[
+  So how to think about and _use these_ all of these after all?
+
+  A few take-aways:
+  - Canonical Isomorphism here are all powered by universal properties @univ-prop-1,
+    @univ-prop-2 which gives @dual-is-commutative-with-tp, @trilinear-caniso
+    respectively.
+  - Canonical isomorphism basically gives us a natural, unambiguous way to specify
+    items. *At the end of the day, you can just ignore the parenthesis and commute
+    dual and
+    the tensor product, and plug in the things as you expect them to.*
+
+  It's not useful to write out all the canonical identification that makes e.g. ${vb(a)^i tp (vb(b)^j tp vb(c)^k)}$ a
+  dual basis as in @explicit-construction-of-trilinear-dual. And this is the
+  reason why people even just define $V_1 tp dots.c tp V_n$ as $cal(L)(V_1, dots.c, V_n)$.
+  However, our treatment is arguably better:
+  - We only defined tensor product once (@tp-vectors and @tp-spaces) and built up
+    all the later laws henceforth.
+  - We explicitly demonstrated that associativity and commutativity with dual works.
 ]
 
 == Inner Product for Tensors
+We want to define inner product for tensor product spaces (because we want to do
+quantum mechanics for composite systems!)
+
+#thm[The Natural Non-degenerate Hermitian Form for Tensor Product Spaces][
+  There exists an unique non-degenerate Hermitian form (@non-deg-hermitian) $H_(V tp W)$ on $V tp W$ such
+  that
+  $ H_(V tp W) (vb(v)_1 tp vb(w)_1, vb(v)_2 tp vb(w)_2) = H_V (vb(v)_1, vb(v)_2) H_W (vb(w)_1, vb(w)_2) $
+  where $H_V, H_W$ are the forms defined for $V, W$.
+
+  We call this $H_(V tp W)$ *the natural form*.
+]<natural-form-on-tp>
+#proof[See @ladr[Theorem 9.80, page 376]]
+#remark[This of course also works for inner product as inner product is just a special
+  case for Hermitian form]
+#remark[Do see the remark after @ladr[Theorem 9.80, page 376] on why you cannot just
+  define the value of $H_(V tp W) (cdot, cdot)$ on separable tensors and use
+  linearity from there]
+
+This theorems shows us that we can meaningfully talk about _the_ Hermitian form $H_(V tp W)$ such
+that
+$ H_(V tp W) (vb(v)_1 tp vb(w)_1, vb(v)_2 tp vb(w)_2) = H_V (vb(v)_1, vb(v)_2) H_W (vb(w)_1, vb(w)_2) $
+
+And to do any practical calculation, we just expand the vector into separable
+tensor and use the sesquilinearity of the form.
+
+Now, using @natural-form-on-tp, we have the natural form on $V tp (W tp Z)$ satisfying #footnote[We drop subscript on $H$ to avoid cluttering.]:
+$ H (vb(v)_1 tp (vb(w)_1 tp vb(z)_1), vb(v)_2 tp (vb(w)_2 tp vb(z)_2)) &= H (vb(v)_1, vb(v)_2) H (vb(w)_1 tp vb(z)_1, vb(w)_2 tp vb(z)_2) \
+                                                                     &= H (vb(v)_1, vb(v)_2) H (vb(w)_1, vb(w)_2) H (vb(z)_1, vb(z)_2) $
+
+And actually for the natural form on $(V tp W) tp Z$, we have
+$ H ((vb(v)_1 tp vb(w)_1) tp vb(z)_1, (vb(v)_2 tp (vb(w)_2) tp vb(z)_2) = H (vb(v)_1, vb(v)_2) H (vb(w)_1, vb(w)_2) H (vb(z)_1, vb(z)_2) $
+So indeed from the point of view of the natural form, $(V tp W) tp Z$ and $V tp (W tp Z)$ are
+the same space.
+
+And indeed ${ vb(a)_i tp vb(b)_j }$ is orthonormal in $V tp W$ if and only if ${vb(a)_i}, {vb(b)_j}$ are
+orthonormal in $V,W$.
+
+=== Metric Dual for Tensors
+Since we have Hermitian form, we can define a canonical isomorphism between $V tp W$ and $(V tp W)'$ much
+like @metric-dual.
+
+There is not much to discuss here actually, everything works similarly as $V tp W$ is
+a vector space. However, one thing to point out is: as
+@metric-dual-is-dual-basis dictates, the metric duals of ${vb(a)_i tp vb(b)_j}$ is
+its dual basis. As pointed out in @explicit-dual-basis, this is equivalent to ${vb(a)^i tp vb(b)^j}$.
+
+== Change of Coordinates
+
+=== Some "coordinates" are not the coordinates of a tensor
 
 == Contraction
+Contraction is probably the most important concept in this formalism that has
+practical use. Whenever we are manipulating tensors, we are manipulating
+multilinear functionals by applying / composing different them together.
+
+For the sake of discussion, we will stay in the special case $tau^r_s (V)$ where
+things are formulated most easily. However, this concept of contraction can
+easily be generalized.
+
+#def[Self-Contraction][
+  Given a tensor $Gamma in tau^r_s(V)$, define the contraction
+  $ cal(C)_(i,j): tau^r_s (V) &to tau^(r-1)_(s-1) (V) \
+  Gamma                     &sendto sum_k Gamma(
+    dots, underbrace(vb(a)_k, i"-th slot"),
+    dots, underbrace(vb(a)^k, j"-th slot"),
+    dots,
+
+  ) $
+  where ${vb(a)_k}$ is a (not necessarily orthonormal) basis of $V$ and $i$-th
+  slot accepts vector while $j$-th slot accepts dual vector.
+]<self-contraction>
+
+#thm[@self-contraction is well-defined][
+  The definition doesn't depend on our choice of basis ${vb(a)_k}$.
+]
+#proof[
+  Let ${vb(b)_l}$ be another basis, then we have some number ${A^l_k}, {A^k'_l'}$ for
+  conversion between these two basis such that
+  $ vb(a)_k = sum_l A^l_k vb(b)_l $
+  And $ vb(b)_l' = sum_k' A^k'_l' vb(b)_k' $
+
+  By multi-linearity,
+  $ Gamma(dots, vb(a)_k, dots, vb(a)^k, j, dots) &= Gamma(dots, sum_l A^l_k vb(b)_l, dots, sum_m A^k_m vb(b)^m, j, dots) $
+]
+
+Contraction can be understood as composition and/or partial composition.
+Specifically,
+
+== Metric Tensor and Rising/Lowering Indices
 
 == Examples from Physics
+
+= Dirac Notation
+Dirac notation is an effective convention for writing linear algebra for quantum
+mechanics, relying on the following properties of the underlying space $V$:
+- The space is an inner product space ($V$ is a Hilbert space, which is a complete
+  complex inner product space)
+- The dual space $V'$ is canonically isomorphic to the $V$ through inner product
+
+These points are discussed in @sec-dual-space.
+
+#def(
+  "Dirac notation - Basics",
+)[
+  Given a finite dimensional vector space $V$ with a non-degenerate Hermitian form $H$ (@non-deg-hermitian),
+  we write:
+  - $ket("something")$ to represent a vector in $V$,
+  - $bra("something")$ to represent the metric dual (@metric-dual) of the vector $ket("something")$.
+    In other words,
+  $ bra("something")(cdot) = H(ket("something"), cdot) $
+]
+
+Main advantages of Dirac notation compared to the usual $vb(v)$ notation
+includes:
+- Naming of the vector is very easy, and we can write $ket((n,l,m))$ to clearly
+  label the eigenstate of some particle, instead of resorting to $vb(e)_(n,l,m)$.
+- We don't need to write out the metric dual conversion mapping $L: V to V'$ explicitly
+  every time.
+
+In the light of this definition, we can translate
+$ bra(psi) (ket(phi)) &equiv L(ket(psi)) (ket(phi)) \
+                    &equiv H(ket(psi), ket(phi)) $
+and
+$ bra(psi) (A ket(phi)) &equiv L(ket(psi)) (A ket(phi)) \
+                      &equiv H(ket(psi), A ket(phi)) $
+where $A: V to V$ is any operator. And for brevity we introduce the shorthand:
+$ bra(psi) (ket(phi))   &to braket(psi, phi) \
+bra(psi) (A ket(phi)) &to braket(psi, A, phi) $
+
+And also short hand like
+$ ket(0) + ket(1) to ket(0+1) $
+
+However, you will also see use like $ ketbra(psi, phi), ket(psi) ket(phi) $
+This is actually understood as a tensor product
+$ ketbra(psi, phi) equiv ket(psi) tp bra(phi), ket(psi) ket(phi) equiv ket(psi) tp ket(phi) $
+which we will introduce now.
+
+#pagebreak()
 
 = Groups
 

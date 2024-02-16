@@ -99,6 +99,6 @@
             version = "git";
             pname = n;
           }))
-          (listToAttrs ((listTypstRecursive ./src/notes) ++ (listTypstRecursive ./src/reports)));
+          (listToAttrs ((listTypstRecursive ./src/notes) ++ (listTypstRecursive ./src/reports) ++ (listTypstRecursive ./src/slides)));
       });
 }

@@ -30,3 +30,7 @@
 #let ker = text("Ker")
 #let tp = sym.times.circle
 #let sendto = sym.arrow.r.bar
+#let L1 = $cal(L)^1$
+#let L2 = $cal(L)^2$
+#let Lp = $cal(L)^p$
+#let caniso = sym.tilde.equiv

@@ -1,0 +1,5 @@
+num-diff:
+  type: Web
+  title: "Numerical differentiation: finite differences"
+  author: "A. Yew"
+  url: https://www.dam.brown.edu/people/alcyew/handouts/numdiff.pdf

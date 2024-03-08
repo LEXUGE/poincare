@@ -1,0 +1,25 @@
+isham:
+    type: Book
+    title: Lectures on Quantum Theory
+    author: Chris J. Isham
+    serial-number:
+      isbn: 978-1-86094-001-9
+
+binney:
+    type: Book
+    title: The Physics of Quantum Mechanics
+    author: ["James Binney", "Daniel Skinner"]
+    serial-number:
+      isbn: 978-0199688579
+
+littlejohn:
+    type: Web
+    title: Physics 221AB, Quantum Mechanics
+    author: Robert Littlejohn
+    url: https://bohr.physics.berkeley.edu/classes/221/2122/221.HTML
+
+bowers:
+    type: Book
+    title: Lectures on Quantum Mechanics
+    author: Philip L. Bowers
+    isbn: 9781108555241

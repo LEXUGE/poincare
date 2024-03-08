@@ -12,7 +12,7 @@
 
 // FIXME: Title being funny
 #show: simple.with(
-  title: [#v(1em) Tensor and Quantum Information],
+  title: [#v(1em) Tensor and Physics],
   authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
   disp_content: false,
 )
@@ -27,10 +27,40 @@
 
 // Use #polylux-slide to create a slide and style it using your favourite Typst functions
 #polylux-slide[
+  == How Tensor is Used in Physics
+  - Quantum Mechanics: Symmetric and Asymmetric Tensors
+  - Special Relativity: Metric Tensor, Indices Lowering / Raising
+  - General Relativity: Tensor Fields, Tensor Calculus, Classical Differential
+    Geometry
+
+  == Also for mathematics
+  - Antisymmetric Tensors $becomes$ Differential Forms $becomes$ Calculus in $RR^n$
+]
+
+#polylux-slide[
+  = Example: Separation of Variable
+  #one-by-one[Wave equation
+    $ c^2 pdv(phi, x, 2) = pdv(phi, t, 2) $
+    With appropriate boundary condition, e.g.
+    $ "Fixed ends": phi(0, t) &= phi(L, t) = 0 "for all " t>= 0 \
+    "Periodic": phi(x, 0)   &= phi(x, L/c) "for all " x in [0,L] $][With separation of variable, we can find $phi(x, t) = F(x) G(t)$ with
+    $ F(x) &= sin((n pi) / L x) \
+    G(t) &= cos((c n pi) / L t), sin((c n pi) / L t) $]
+]
+
+#polylux-slide[
+  #one-by-one[Multiply together and do a linear combination
+    $ phi(x, t) = sum_(n=0)^oo sin((n pi) / L x) [A_n cos((c n pi) / L t) + B_n sin((c n pi) / L t)] $][*Why does it sufficiently gives the general solution?*][Tensor Product offer a different perspective.
+    $ cal(L)^2([0,L] times [0, T]) caniso cal(L)^2([0,L]) tp cal(L)^2([0,T]) $][- And ${sin((n pi) / L x)}, {cos((c n pi) / L t), sin((c n pi) / L t)}$ each form
+    a basis for their spaces.][- "Multiply" them together ${sin((n pi) / L x) cos((c n pi) / L t), sin((n pi) / L x) sin((c n pi) / L t)}$ *gives a basis* for $cal(L)^2([0,L]) tp cal(L)^2([0,T])$][- Any general solution can them be decomposed into basis.][Similar examples in quantum mechanics:
+    $ L2(RR^3) caniso L2(RR) tp L2(RR) tp L2(RR) \
+    L2(RR^3) caniso L2(RR) tp S^2([0, pi] times [-pi, pi]) $]
+]
+
+#polylux-slide[
   = What this talk is about?
-  We try to discuss and answer:
-  #one-by-one[- $V tp W$? $vb(v) tp vb(w)$?][- $V tp (W tp Z)? (V tp W) tp Z? V tp W tp Z?$][- Why $(ketbra(psi, phi))^dagger = ketbra(phi, psi)$?][- Why can $dagger$ in Dirac notation act on complex numbers, operators, and (dual)
-    vectors? What exactly is $dagger$?][*Can we find a unified way to understand all? Can we hear the music?*\ ][And
+  #one-by-one[- $V tp W$? $vb(v) tp vb(w)$?][- $V tp (W tp Z)? (V tp W) tp Z? V tp W tp Z?$][- Why can $dagger$ in Dirac notation act on complex numbers, operators, and (dual)
+    vectors? What exactly is $dagger$?][And
     - Quantum Steering and How tensor is used in proving No-Signaling Theorem.]
 ]
 
@@ -41,36 +71,21 @@
   )[#def(
       "Dual Space",
     )[
-      The dual space of vector space $V$ is defined as $V' equiv cal(L)(V,FF) equiv cal(L)(V)$.
+      A dual vector $f$ is roughly "a function that eats in a vector, spits out a
+      scalar".
 
-      Vectors $f in V'$ are called dual vectors or linear functionals. The additive
-      identity is the $0(vb(v)):= vb(0) in V$.
-    ]]#only(
-    2,
-  )[#def(
-      "Dual Basis",
-    )[
-      Given a basis ${ vb(v)_i }_(i=1)^N$ of $V$, its dual basis ${ vb(v)^i }_(i=1)^N$ are
-      defined by
-      $ vb(v)^i (vb(v)_j) = cases(0 "if" i eq.not j, 1 "if" i = j) $
+      The space they force is written as $V' equiv cal(L)(V,FF) equiv cal(L)(V)$.
     ]]
-
-  #only(
-    3,
-  )[
-    #def(
-      "Metric Dual",
-    )[
-      If $V$ has an inner product, then we can define an _anti-linear_ mapping $L: V to V'$ by
-      $ tilde(vb(v))(vb(w) in V) equiv (L vb(v))(vb(w)) = H(vb(v), vb(w)) $
-      where we call $tilde(vb(v))$ the metric dual of $vb(v)$.
+  #only(2)[
+    #def("Metric Dual")[
+      $ L: vb(v) in V sendto al vb(v), cdot ar $
     ]
     Can be proven: this $L$ is bijective if $V$ is finite-dimensional.
   ]
 
   #only(
-    4,
-  )[#thm[$V''$ is canonically isomorphic to $V$ if $V$ is finite-dimensional][
+    3,
+  )[#thm[$V''$ is#footnote[up to canonical isomorphism] $V$][
       We define the map $L: V to V''$#footnote[The $L$ here has nothing to do with the $L$ defined for metric dual] by
       $ L(vb(v))(phi) := phi(vb(v)) $
       $L$ is bijective if $V$ is finite-dimensional.
@@ -110,15 +125,27 @@
 ]
 
 #polylux-slide[
+  == Properties
+  1. Commutativity
+  $ V tp W caniso W tp V $
+  2. Commutativity with dual.
+  $ V' tp W' caniso (V tp W)' $
+  3. Associativity
+  $ (V tp W) tp Z caniso V tp (W tp Z) caniso cal(L)(V', W', Z') $
+  #one-by-one[*How to prove them?*][ _Universal Properties_ ]
+]
+
+#polylux-slide[
   = Universal Properties and Canonical Isomorphism
   Universal property is what we needed to understand why
   $ (V tp W)' "and" V' tp W' "are the same" $
   Now, $V' tp W' = cal(L)(V, W)$ by previous slide and $V'' = V$. So what we are
   really heading to is
-  #align(
-    center,
-  )[*Linear mappings that eats $V tp W$ are uniquely matched with bilinear mappings
-    that eats in $V times W$.*]
+  #one-by-one[#align(
+      center,
+    )[*Linear mappings that eats $V tp W$ are uniquely matched with bilinear mappings
+      that eats in $V times W$.*]][Indeed this is what universal property says!]
+
 ]
 
 #polylux-slide[
@@ -134,14 +161,107 @@
     $ tau(vb(v), vb(w)) = hat(tau)(vb(v) tp vb(w)) $
     for all $vb(v),vb(w)$.
   ]
-  #uncover(
-    2,
-  )[_However_, tensors are sort of more powerful than multilinear mappings, despite
-    the fact these two spaces have the same dimension.]
 ]
 
 #polylux-slide[
-  == So what?
+  = A detour on $dagger$
+  $dagger$ seems to acts on all sorts of things:
+  - Complex numbers: $(i)^dagger = -i$
+  - Operators: $A^dagger$
+  - Vectors and dual vectors: $ket(phi)^dagger = bra(phi)$
+  *What exactly is this then?*
+]
+
+#polylux-slide[
+  = A detour on $dagger$
+  $dagger$ is just taking *metric dual* of tensors!
+  #only(
+    1,
+  )[- $CC$ is a vector space over $CC$, and vector space is a tensor space. The inner
+    product is just $a^* b$ and the metric dual mapping is just taking $i$ to $i^*$!]
+  #only(
+    2,
+  )[- And for operators,
+    $ A = sum_(k,l) tensor(A, +k, -l) vb(e)_k tp vb(e)^l $
+    And
+    $ A^dagger = sum_(k,l) tensor(A, +k, -l)^* vb(e)^k tp vb(e)_l $
+    *Note: The dual basis is equal to the metric dual of a basis iff. the basis is
+    orthonormal.*
+
+    So indeed $tensor(A^dagger, -k, +l) = tensor(A, +k, -l)^*$. And taking dual of
+    an operator gives us the Hermitian!
+    - Vector: this is trivial.]
+]
+
+#polylux-slide[
+  = A detour on $dagger$
+  This is less like a mathematical nit-picking: We are accustomed to write
+  $ i hbar pdv(ket(phi), t) = hat(H) ket(phi) arrow.double -i hbar pdv(bra(phi), t) = hat(H) bra(phi) $
+  or
+  $ (pdv(ket(phi), t))^dagger = pdv(, t) ket(phi)^dagger = pdv(bra(phi), t) $
+  But how about
+  $ (pdv(, t) ket(phi))^dagger = ket(phi)^dagger compose (pdv(, t))^dagger $
+]
+
+#polylux-slide[
+  = A detour on $dagger$
+  Moreover, we know
+  $ (pdv(, x))^dagger = - pdv(, x) $
+  But then
+  $ (pdv(, x) ket(phi))^dagger = - bra(phi) compose pdv(, x) $
+  While with the same argument as before,
+  $ (pdv(, x) ket(phi))^dagger = pdv(, x) bra(phi) $
+]
+
+/*#polylux-slide[
+  = Writing Tensors Explicitly out in Quantum
+  #one-by-one[$ bra(phi), ket(psi) $][$ ketbra(psi, phi) becomes ket(psi) tp bra(phi) $][$ "contraction" braket(phi, psi) $][$ hat(H)_A tp hat(H)_B in cal(H)_A tp cal(H)_A ' tp cal(H)_B tp cal(H)_B ' caniso (cal(H)_A tp cal(H)_A ') tp (cal(H)_B tp cal(H)_B ') $]
+]*/
+
+#polylux-slide[
+  = Entanglement to Communicate?
+  #eg[Alice and Bob shares some entangled state $ket(chi)$. Alice can measure the
+    particle on her half in different basis. Can Bob detects (through measurement on
+    his half) which basis Alice measured against, or does Alice even measure?]
+]
+
+#polylux-slide[
+  #proof[
+    #pfstep[Marginal probability of Bob measuring some basis vector doesn't depends on
+      Alice's measurement.][
+      $ PP(ket(beta_n)) &= sum_m PP(ket(beta_n) and ket(alpha_m)) = sum_m |(bra(beta_n) tp bra(alpha_m)) ket(chi)|^2 \
+                      &= sum_m bra(chi) (ket(beta_n) tp ket(alpha_m)) (bra(beta_n) tp bra(alpha_m)) ket(chi) \
+                      &= sum_m bra(chi) (ket(beta_n) tp ket(alpha_m)) tp (bra(beta_n) tp bra(alpha_m)) ket(chi) \
+                      &= bra(chi) (ket(beta_n) tp bra(beta_n)) tp (sum_m ket(alpha_m) tp bra(alpha_m)) ket(chi) \
+                      &= bra(chi) (ket(beta_n) tp bra(beta_n) tp II) ket(chi) \ $
+    ]
+  ]
+]
+
+#polylux-slide[
+  == What I left out
+  - Contraction!
+  - Not all tuples of numbers are tensors. (_"Tensors transform like a tensor"_)
+  - Symmetric and asymmetric tensors
+  - Metric, Indices Raising / Lowering
+  - Einstein Notation, Penrose Abstract Indices
+  #bibliography("bib.yaml", full: true, style: "american-physics-society")
+]
+
+#polylux-slide[
+  = Contraction
+  #eg[
+    Consider the tensor $tau in V' tp V' = cal(L)(V, V)$, we can define a new tensor $f in V'$ through
+    $ f(cdot):= sum_k tau(vb(a)_k, cdot) vb(v)(vb(a)^k) $
+    (This is indeed well-defined) It's evident that this is equivalent to
+    $ f(cdot):= tau(vb(v), cdot) $
+  ]
+  This "annihilates" one set of spaces dual to each other (here $V, V'$). Thus the
+  name "contraction".
+]
+
+#polylux-slide[
+  == Explicit Example Demonstrating the Canonical Isomorphism
   This isomorphism is indeed very explicit. We know $vb(a)^i tp vb(b)^j in cal(L)(V, W)$.
   By definition of universal property,
   $ ( L_1 overbrace(vb(a)^i tp vb(b)^j, V' tp V') )( underbrace(vb(a)_k tp vb(b)_l, V tp V)) &= vb(a)^i tp vb(b)^j (vb(a)_k, vb(b)_l) \
@@ -150,13 +270,6 @@
   This actually shows us why
   $ underbrace((ket(psi) tp ket(phi)), V tp V)^dagger caniso underbrace(bra(psi) tp bra(phi), V' tp V') "and" (ket(psi) tp bra(phi))^dagger caniso ket(phi) tp bra(psi) $
   And we may just replace $caniso$ with $=$. _Why bother with $L_1$ if you know what to evaluate?_
-]
-
-#polylux-slide[
-  = Some Thoughts
-  #one-by-one[Canonical Isomorphism is Nice!\ ][Some cheap canonical isomorphism out there $ V tp W caniso W tp V $ *Commutativity!!!*\ ][Some not so cheap ones $ (V' tp W') tp Z' caniso V' tp (W' tp Z') caniso cal(L)(V, W, Z) $ To
-    prove this one, we need an extended#footnote[Not an official name] universal
-    property]
 ]
 
 #polylux-slide[
@@ -177,97 +290,11 @@
 ]
 
 #polylux-slide[
-  == Our Good Friends
-  1. Commutativity
-  $ V tp W caniso W tp V $
-  2. Commutativity with dual.
-  $ V' tp W' caniso (V tp W)' $
-  3. Associativity
-  $ (V tp W) tp Z caniso V tp (W tp Z) caniso cal(L)(V', W', Z') $
+  = "$dagger$ puzzle"
+  By writing in limit we can argue
+  $ pdv(, x) bra(phi) &= L(pdv(, x) ket(phi)) = -L((pdv(, x))^dagger ket(phi)) $
+  Now $A^dagger = L^(-1) A^t L$, $A^t compose f = f compose A$,
+  $ pdv(, x) bra(phi) &= -L compose L^(-1) (pdv(, x))^t L ket(phi) \
+                    &= (- pdv(, x))^t bra(phi) = ((pdv(, x))^dagger)^t bra(phi) \
+                    &= bra(phi) compose (pdv(, x))^dagger $
 ]
-
-#polylux-slide[
-  = Contraction
-  #eg[
-    Consider the tensor $tau in V' tp V' = cal(L)(V, V)$, we can define a new tensor $f in V'$ through
-    $ f(cdot):= sum_k tau(vb(a)_k, cdot) vb(v)(vb(a)^k) $
-    (This is indeed well-defined) It's evident that this is equivalent to
-    $ f(cdot):= tau(vb(v), cdot) $
-  ]
-  This "annihilates" one set of spaces dual to each other (here $V, V'$). Thus the
-  name "contraction".
-]
-
-#polylux-slide[
-  = Self-contraction
-  We could define something less obvious to ask a tensor to contract with itself.
-]
-
-#polylux-slide[
-  = A detour on $dagger$
-  #only(1)[
-    $dagger$ seems to acts on all sorts of things:
-    - Complex numbers: $(i)^dagger = -i$
-    - Operators: $A^dagger$
-    - Vectors and dual vectors: $ket(phi)^dagger = bra(phi)$
-    *What exactly is this then?*
-  ]
-  #only(
-    2,
-  )[$dagger$ is just taking *metric dual* of tensors!
-    - $CC$ is a vector space over $CC$, and vector space is a tensor space. The inner
-      product is just $a^* b$ and the metric dual mapping is just taking $i$ to $i^*$!
-      Alternatively, think of $i$ as $i II$.
-    - And for operators,
-    $ A = sum_(k,l) tensor(A, +k, -l) vb(e)_k tp vb(e)^l $
-    And
-    $ A^dagger = sum_(k,l) tensor(A, +k, -l)^* vb(e)^k tp vb(e)_l $
-    *Note: The dual basis is equal to the metric dual of a basis iff. the basis is
-    orthonormal.*
-
-    So indeed $tensor(A^dagger, -k, +l) = tensor(A, +k, -l)^*$. And taking dual of
-    an operator gives us the Hermitian!
-    - Vector: this is trivial.]
-]
-
-#polylux-slide[
-  = Writing Tensors Explicitly out in Quantum
-  #one-by-one[$ bra(phi), ket(psi) $][$ ketbra(psi, phi) becomes ket(psi) tp bra(phi) $][$ "contraction" braket(phi, psi) $][$ hat(H)_A tp hat(H)_B in cal(H)_A tp cal(H)_A ' tp cal(H)_B tp cal(H)_B ' caniso (cal(H)_A tp cal(H)_A ') tp (cal(H)_B tp cal(H)_B ') $]
-]
-
-#polylux-slide[
-  = Entanglement to Communicate?
-  #eg[Alice and Bob shares some entangled state $ket(chi)$. Alice can measure the
-    particle on her half in different basis. Can Bob detects (through measurement on
-    his half) which basis Alice measured against, or does Alice even measure?]
-]
-
-#polylux-slide[
-  = No-Signaling Theorem
-  #proof[
-    #pfstep[Marginal probability of Bob measuring some basis vector doesn't depends on
-      Alice's measurement.][
-      $ PP(ket(beta_n)) &= sum_m PP(ket(beta_n) and ket(alpha_m)) = sum_m |(bra(beta_n) tp bra(alpha_m)) ket(chi)|^2 \
-                      &= sum_m bra(chi) (ket(beta_n) tp ket(alpha_m)) tp (bra(beta_n) tp bra(alpha_m)) ket(chi) \
-                      &= bra(chi) (ket(beta_n) tp bra(beta_n)) tp (sum_m ket(alpha_m) tp bra(alpha_m)) ket(chi) \
-                      &= bra(chi) (ket(beta_n) tp bra(beta_n) tp II) ket(chi) \ $
-    ]
-  ]
-]
-
-#polylux-slide[
-  == What I left out
-  - Not all tuples of numbers are tensors. (_"Tensors transform like a tensor"_)
-  - Symmetric and Asymmetric Tensors
-  - Inner Product of the Tensor
-  - Metric Tensor, Indices Lowering / Raising
-  - Einstein Convention, Penrose's Abstract Indices Convention
-
-  == What Tensor can lead to
-  - Antisymmetric Tensors $becomes$ Differential Forms $becomes$ Calculus in $RR^n$
-  - Tensor Fields, Tensor Calculus, Classical Differential Geometry
-]
-
-#pagebreak()
-
-#bibliography("bib.yaml", full: true, style: "american-physics-society")

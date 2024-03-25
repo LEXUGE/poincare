@@ -1,0 +1,11 @@
+thess:
+  type: Book
+  title: The Entropy Principle
+  author: André Thess
+  isbn: 978-3-642-13349-7
+
+littlejohn:
+    type: Web
+    title: Physics 221AB, Quantum Mechanics
+    author: Robert Littlejohn
+    url: https://bohr.physics.berkeley.edu/classes/221/2122/221.HTML

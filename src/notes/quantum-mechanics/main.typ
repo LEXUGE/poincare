@@ -395,7 +395,7 @@ can infer commutativity of measurement from commutativity of the probability.
 
 Now, we fill in all the necessary gaps and theorems for the above procedure to
 work.
-#thm[Commutative Operators #iff share Eigenspaces][
+#thm[Commutative Operators #iff shared Eigenspaces][
   Let $op(A), op(B): V to V$ be two diagonalizable linear operators on
   finite-dimensional vector space $V$. $[op(A), op(B)] = 0$ if and only if there
   exists a complete set of subspaces ${V_i}_(i=1)^r$ that are eigenspaces to both $op(A)$ and $op(B)$.
@@ -560,11 +560,11 @@ their subspace projection is also orthogonal (and thus also Hermitian)!
 
 #caution[
   The condition "for any state $ket(phi)$" is necessary. Otherwise we could
-  falsely prove $op(S)_x$ commutes with $op(S)_z$ in Stern-Gerlach experiments.
+  falsely prove $op(S)_x$ commutes with $op(S)_z$ in Stern-Gerlach experiments. //Specifically, let initial state be $ket(+)$ (eigenvector of $op(S)_z$), then the
 ]
 
 And an extension to @commutative-sim-eigenspaces is
-#thm[Pairwise Commutative Operators #iff share Eigenspace][
+#thm[Pairwise Commutative Operators #iff shared Eigenspace][
   Let ${ op(O)_i: V to V }$ be a set of operators. They are pairwise commutative
   if and only if they share a complete set of eigenspaces.
 ]
@@ -580,7 +580,8 @@ And an extension to @commutative-sim-eigenspaces is
     $ (op(B) op(C) - op(C) op(B)) vb(v) = (op(A) - B_j II) op(C) vb(v) $
     But $op(P)_A_i V_B_j$ is the only eigenspace with eigenvalue $A_i, B_j$, thus $op(C) vb(v) in op(P)_A_i V_B_j$.
   ]
-  Then the rest of the steps are similar to @commutative-sim-eigenspaces.
+  Then the rest of the steps are similar to @commutative-sim-eigenspaces: prove ${op(P)_C_k op(P)_A_i B_j}$ are
+  linearly independent and spans $V$.
 
   This argument genenralizes to finite number of observables.
 ]

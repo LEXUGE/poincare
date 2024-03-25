@@ -62,7 +62,7 @@
         current_step_number + "." + h(0.25em),
         grid(
           rows: 2,
-          row-gutter: 0.25em,
+          row-gutter: 0.9em,
           pfclaim(claim),
           // show this step if the proof depth is <= pfhidelevel and it hasn't been hidden manually
           if (not hide_pf and current_step_array.len() < hide_level) {

@@ -11,6 +11,7 @@
 )
 
 #let op(body) = $hat(body)$
+#let vecop(body) = $underline(hat(body))$
 #let iff = $<==>$
 #let implies = $=>$
 
@@ -31,7 +32,8 @@ Specifically, my criterion for rigor is:
   have intuition and analogue developed from finite-dimensional counterparts.
 3. However, any algebraic picture should be made as much clear as possible. We
   should clearly define the algebraic structure and objects that we are
-  manipulating.
+  manipulating#footnote[However, we have to use intuition when necessary for, e.g. vector operator due
+    to lack of representation theory.].
 
 However, I shall come back later to fill out mathematical details in the long
 run (hope I do).
@@ -333,7 +335,9 @@ problems:
   into subspaces tensored together?
 
 But before answering these questions, we should first lay out the postulates of
-Quantum Mechanics.== Postulates
+Quantum Mechanics.
+
+== Postulates
 #def[Postulates of the Quantum Mechanics][
   We postulates:
   1. The states of the quantum system is described by some Hilbert space $cal(H)$.
@@ -372,8 +376,11 @@ referring to
 $ PP_ket(phi)(cdot), PP_ket(psi)(cdot) $
 
 Immediately upon the postulates, we are encountered with the question: _What Hilbert space?_ This
-is what we try to answer in the next section.== Complete Set of Commutative
-Operators The idea is simple. We can show that two commutative operators, say $op(A), op(B)$,
+is what we try to answer in the next section.
+
+== Complete Set of Commutative Operators
+<csco-procedure>
+The idea is simple. We can show that two commutative operators, say $op(A), op(B)$,
 has a set of simultaneous eigenspaces. And
 1. if we measure $op(A)$ on $ket(phi)$ first, then we will obtain a measurement
   outcome $A_i$, with state afterwards $ket(phi') = op(P)_A_i ket(phi)$.
@@ -560,7 +567,10 @@ their subspace projection is also orthogonal (and thus also Hermitian)!
 
 #caution[
   The condition "for any state $ket(phi)$" is necessary. Otherwise we could
-  falsely prove $op(S)_x$ commutes with $op(S)_z$ in Stern-Gerlach experiments. //Specifically, let initial state be $ket(+)$ (eigenvector of $op(S)_z$), then the
+  falsely prove $op(S)_x$ commutes with $op(S)_z$ in Stern-Gerlach experiments.
+  Specifically, let initial state be $ket(y+)$ (eigenvector of $op(S)_y$), then
+  measure $op(S)_x, op(S)_z$ in both order, we have all outcomes having the same
+  probability $1/4$.
 ]
 
 And an extension to @commutative-sim-eigenspaces is
@@ -586,39 +596,178 @@ And an extension to @commutative-sim-eigenspaces is
   This argument genenralizes to finite number of observables.
 ]
 
-#thm[Eigenspace is degenerate #iff There exists non-identity Commuting Operator][]
+== Tensor Product
+Some operators are nicer than others. For certain operators ${op(A), op(B), op(C)}$,
+it's possible that any of their individual eigenstates tensored together will
+give a set of mutual eigenstates for all operators. This is true for e.g. ${op(x), op(y), op(z)}$ and ${op(x), op(y), op(z), op(S)_z}$.
 
-== Separation of Variable and Tensor Product
-The short answer is, in many cases, the Hamiltonian can be written in simpler
-form (i.e. solvable with separation of variable) if we use some isomorphism to
-transform it into several subspaces tensored together. This is why we write it
-out like so.
+Apparently, the necessary condition for such thing to happen is that they should
+all be pairwise commutative. _However, this is not sufficient for such tensor product structure to happen._ For
+example, the spin magnitude operator $[op(S^2), op(S)_z] = 0$, but they don't
+exhibit such structure. Their mutual eigenstates are labeled collectively by $ket((s, m))$ with
+condition $-s lt.eq m lt.eq s$#footnote[More condition applies to what values $s,m$ can take.].
 
-An example we could but we didn't is $L2(RR^3) caniso L2(RR) tp L2(RR) tp L2(RR)$ This
-is because we don't need to exploit the structure to solve
-$ laplacian equiv op(p)_x^2 tp II tp II + II tp op(p)_y^2 tp II + II tp II tp op(p)_z^2 $
+#info[Hypothesis: if it happens that the individual eigenvalues used to label a (or
+  for all?) mutual eigenbasis are uncorrelated. Then such a basis is separable.]
 
-And often times we have different "factorization" scheme available, depending on
-the specific Hamiltonian we are considering.
+Sometimes a mutual eigenbasis exhibit _some_ tensor product structure. For
+example, for hydrogen atom gross structure or 3D harmonic oscillator model, we
+have mutual eigenbasis labeled as $ket((E, l, m))$#footnote[As later shown, $E$ is the eigenvalue for Hamiltonian (energy), $l,m$ are used
+  to label eigenvalues for $op(L^2), op(L)_z$.] where $E,m$ are only related
+through $l$. So we may re-identify our space and write such basis as $ket((E,l)) tp ket((l,m))$,
+but this basis is not the same as "${ket((E,l))} tp {ket((l,m))}$".
 
-For example,
-$ L2(RR^3) caniso L2([0, oo)) tp L2(S_2) $
-is useful for central potential problems.
+= Basic Dynamics
+== Position Operator
+Quantum theory is not building everything from ground up. The @postulates we
+have is more about mathematical framework of the theory but tells nothing about
+the _physics_ of quantum mechanics.
 
-= Theories
+As for physics, we don't forgo the classical description of space-time. In fact
+we will be working with non-relativistic space-time in this note. That means, we "postulate"
+(this is in principle experimentally verifiable).
+
+#def[Coordinate (Position) Operators][
+  There exists operators $op(x), op(y), op(z)$ on $L^2(RR^3)$#footnote[This is of course mathematically wrong. "$delta$-function" don't live in $L^2(RR^3)$.
+    But we will forgive this notation as we don't care about these issues in this
+    note.]. Defined as
+  $ (op(x) f)(x, y, z) = x f(x,y,z) $
+  And similarly for the others. From definition, they are mutually commutative.
+
+  The eigenvalues of these operators are continuous, and eigenvectors are $ket(x_0) = delta(x - x_0)$.
+  This is exemplified as for any test function $f$,
+  $ al f, x delta(x - x_0) ar = x_0 f(x_0) = x_0 al f, delta(x-x_0) ar $
+  Thus we identify $op(x) delta(x - x_0) = x delta(x-x_0) = x_0 delta(x-x_0)$.
+
+  By mutual commutativity, they have a mutual eigenbasis defined as $ket(vb(x_0)) = delta(vb(x) - vb(x)_0)$.
+  Or equivalently $delta(x - x_0) delta(y - y_0) delta(z - z_0)$ which sort of
+  shows the separable nature of their mutual eigenbasis.
+
+  As a convention, $ket(vb(x_0))$ where $vb(x_0)$ is a real vector, means a
+  position eigenstate with eigenvalue $vb(x_0)$.
+]
+
+#caution[
+  As you might already know, these eigenvectors are not square-integratable. That
+  is to say using integral, we cannot get $braket(x_0, x_0) = 1$. As
+  $ braket(x_0, x_1) = integral_(RR^3) delta(x - x_0) delta(x - x_1) $
+  is not well-defined.
+
+  The only thing we can "say" is to understand $braket(x_0, x_1) = delta(x_0 - x_1)$.
+]
+
+In the above, we think of vectors are functions in $L^2(RR^3)$ but
+alternatively, we can also think vector $ket(phi)$ lives in some other space.
+And $phi(vb(x)_0)$ as the "coordinate" for $ket(phi)$ obtained using $braket(vb(x_0), phi)$.
+In this way, $braket(vb(x_0), vb(x_1)) = delta(vb(x_0) - vb(x_1))$ then gives
+the coordinate for eigenvectors $ket(vb(x_1))$.
+
+Position operators are the easiest example of a vector operator.
+
+#def[Vector Operator][
+  Given three#footnote[Of course you may go to higher dimension. Generalization will require us to
+    think about 4D angular momentum and rotation.] operators $op(v)_1, op(v)_2, op(v)_3$,
+  we can apply them together on some state $ket(phi)$ and get a triplet of vector:
+  $ (op(v)_1 ket(phi), op(v)_2 ket(phi), op(v)_3 ket(phi)) in cal(H)^3 $
+
+  Or written succinctly as
+  $ vecop(v) ket(phi):= (op(v)_1 ket(phi), op(v)_2 ket(phi), op(v)_3 ket(phi)) $
+
+  We call $vecop(v)$ or the triplet $(op(v)_1, op(v)_2, op(v)_3)$ as vector
+  operator if we expect physically their measurements are component of some
+  vector. This implies they must change collectively under rotation, inversion
+  etc. And more is discussed on this later.
+
+  Vector operator can be defined to take "dot product", which is just defined as
+  $ vecop(v) cdot vecop(v) := op(v)_1 compose op(v)_1 + op(v)_2 compose op(v)_2 + op(v)_3 compose op(v)_3 $
+]<vecop>
+
+#warning[
+  Despite the fact that the components of $vecop(x)$ (and as we see later $vecop(p)$)
+  are mutually commutative, it's not true in general that a vector operator has
+  commutative components. An important example is angular momentum where it's
+  components satisfy
+  $ [op(J)_i, op(J)_j ] = ii epsilon_(i,j,k) op(J)_k $
+  where we used Einstein summation (and we will for the rest of note).
+]
+
+Since we expect position operators $op(x), op(y), op(z)$ to physically mean the
+components of a vector, they form a vector operator. And we write it as $vecop(x)$ or $vecop(r)$.
+
+We can define new operators using some $f: RR^3 to RR$.
+#def[Function of Position Operator][
+  Given suitable $f: RR^3 to RR$, we define $f(vecop(x)): L^2(RR^3) to L^2(RR^3)$ as
+  $ (f(vecop(x)) phi)(vb(x)) := f(vb(x)) phi(vb(x)) $
+
+  Of course $f$ has to be suitable in order for the resultant vector to still be
+  square-integrable.
+]
+#eg[Electrostatic Potential][
+  Electrostatic potential classically is defined as $V(vb(r)) = 1/(4 pi epsilon_0) Q/(|vb(r)|)$.
+  Quantum mechanically, we _guess_ the corresponding operator to be $V(vecop(x))$.
+
+  Notice it's hard to define what $sqrt(op(x)^2 + op(y)^2 + op(z)^2)$ as $sqrt(1+x^2)$'s
+  Taylor series would only converge over a finite domain of convergence.
+]
+
+== Momentum Operator
+#tip[$hbar$ is in unit of angular momentum. And it's a natural unit of angular
+  momentum eigenvalue.]
+
+Up till now, we cannot give a motivation for momentum operator other than just
+simply define it. We will have some more understanding once we introduced
+transformation.
+#def[Momentum Operator][
+  Momentum is also a vector operator as we expect the measurement outcome to be
+  components of some "momentum vector".
+
+  Denote the triplet as $op(p)_i: L^2(RR^3) to L^2(RR^3)$ where $i = x,y,z$ which
+  means measurement of $x,y,z$ component of momentum. They are defined for as for $phi in L^2(RR^3)$
+  $ (op(p)_i phi)(vb(x)) = - ii hbar pdv(phi, x_i) $
+
+  As partial derivative commutes, $op(p)_i$ are mutually commutative.
+
+  Note in the "other perspective" where $phi(vb(x))$ are seen as coordinate
+  instead of state itself, $(op(p)_i phi)(vb(x)) = bra(vb(x)) op(p)_i ket(phi)$.
+  We will use both perspective as we go on. Written in that perspective, $op(p)_i$ is
+  defined by
+  $ bra(vb(x)) op(p)_i ket(phi) = - ii hbar pdv(braket(vb(x), phi), x_i) $
+]
+
+It can be verified directly that
+$ [op(p)_i, op(x)_j] = -ii hbar delta_(i,j) $
+
+Up till now, we see#footnote[By in principle carrying out the procedure in @csco-procedure.] a
+possible CSCO (if we only work on spinless dynamics) is the position operator
+triplet. And the Hilbert space we work with is $L^2(RR^3)$.
+
+The eigenvector of $op(p)_i$ can be found by solving the definition equation.
+Let $ket(p)$ be the eigenvector with eigenvalue $p$.
+
+$ bra(vb(x)) op(p)_i ket(p) = - ii hbar pdv(braket(vb(x), op(p)), x_i) = p braket(vb(x), p) $
+
+And $ braket(vb(x), p) = exp() $
+
+Again, it's eigenvector are not normalizable.
+
 == Uncertainty Principle
-== Schro\u{308}dinger and Heisenberg Pictures
+== Ehrenfest Theorem and Virial Theorem
+
 == Probability Current
-== Continuous and Discrete Transformation, Symmetry
-== Angular Momentum
+= Continuous and Discrete Transformation, Symmetry
+== How to make sense of $ii$
+== Schro\u{308}dinger and Heisenberg Pictures
+= Angular Momentum
+== Common Commutation Relations and Spectrum
+== Spin and Orbital Angular Momentum
 
 = Simple Problems and Famous Examples
 == 1D Potential Problems
 == 1D Harmonic Oscillators
-== Central Potential Problem
+== Central Potential Problem, 3D Harmonic Oscillator
 == Hydrogen-like Atoms
 
-= Extra Frameworks
+= Further Frameworks
 == Perturbation Theory
 
 #pagebreak()

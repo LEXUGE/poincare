@@ -9,9 +9,13 @@
   title: "Quantum Mechanics",
   authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
+#show: super-plus-as-dagger
 
 #let op(body) = $hat(body)$
+#let conj(body) = $overline(body)$
 #let vecop(body) = $underline(hat(body))$
+#let ft(body, out) = $cal(F)[body](out)$
+#let invft(body, out) = $cal(F)^(-1)[body](out)$
 #let iff = $<==>$
 #let implies = $=>$
 
@@ -583,7 +587,9 @@ And an extension to @commutative-sim-eigenspaces is
 
   For the other direction, let $op(A), op(B), op(C)$ be pairwise commutative. Then ${ op(P)_A_i V_B_j }$ is
   a shared set of eigenspaces for $op(A), op(B)$. We have
-  #pfstep[$op(C) op(P)_A_i V_B_j subset op(P)_A_i V_B_j$][
+  #pfstep(
+    finished: true,
+  )[$op(C) op(P)_A_i V_B_j subset op(P)_A_i V_B_j$][
     We have $op(P)_A_i V_B_j subset V_A_i$, thus for all $vb(v) in op(P)_A_i V_B_j$, $[op(A), op(C)] = 0$ gives
     $ (op(A) op(C) - op(C) op(A)) vb(v) = (op(A) - A_i II) op(C) vb(v) $
     And similarly, $op(P)_A_i V_B_j subset V_B_j$, and for all $vb(v) in op(P)_A_i V_B_j$ with $[op(B), op(C)] = 0$ gives
@@ -673,14 +679,24 @@ Position operators are the easiest example of a vector operator.
   Or written succinctly as
   $ vecop(v) ket(phi):= (op(v)_1 ket(phi), op(v)_2 ket(phi), op(v)_3 ket(phi)) $
 
-  We call $vecop(v)$ or the triplet $(op(v)_1, op(v)_2, op(v)_3)$ as vector
-  operator if we expect physically their measurements are component of some
+  *Criterion*: We call $vecop(v)$ or the triplet $(op(v)_1, op(v)_2, op(v)_3)$ as
+  vector operator if we expect physically their measurements are component of some
   vector. This implies they must change collectively under rotation, inversion
   etc. And more is discussed on this later.
-
-  Vector operator can be defined to take "dot product", which is just defined as
-  $ vecop(v) cdot vecop(v) := op(v)_1 compose op(v)_1 + op(v)_2 compose op(v)_2 + op(v)_3 compose op(v)_3 $
 ]<vecop>
+
+#def[Notation Shorthands for Vector Operators][
+  - *Dot Product*: Vector operator can be defined to take "dot product", which is
+    just defined as
+    $ vecop(v) cdot vecop(v) := op(v)_1 compose op(v)_1 + op(v)_2 compose op(v)_2 + op(v)_3 compose op(v)_3 $
+  - *Eigenvalue*: _If_ the operators of each component (i.e. $op(v)_i$) of $vecop(v)$ are
+    mutually commutative, we have simultaneous eigenspaces for all components. And
+    thus we could write a vector eigenvalue:
+    $ vecop(v) ket(vb(a)) = vb(a) ket(vb(a)) := (a_1 ket(vb(a)), a_2 ket(vb(a)), a_3 ket(vb(a))) $
+  - *Rotation*: Let $R: RR^3 to RR^3$ be a 3D rotational matrix, we could define $R vecop(v)$,
+    the vector operator after rotation as
+    $ (R vecop(v))_i = sum_j R_(i,j) vecop(v)_j $
+]<shorthands-vecop>
 
 #warning[
   Despite the fact that the components of $vecop(x)$ (and as we see later $vecop(p)$)
@@ -689,6 +705,9 @@ Position operators are the easiest example of a vector operator.
   components satisfy
   $ [op(J)_i, op(J)_j ] = ii epsilon_(i,j,k) op(J)_k $
   where we used Einstein summation (and we will for the rest of note).
+
+  And a particular consequence of this is it's illegal to write $ket(vb(J))$, an
+  angular momentum eigenket with well-defined components for all three directions.
 ]
 
 Since we expect position operators $op(x), op(y), op(z)$ to physically mean the
@@ -742,21 +761,217 @@ possible CSCO (if we only work on spinless dynamics) is the position operator
 triplet. And the Hilbert space we work with is $L^2(RR^3)$.
 
 The eigenvector of $op(p)_i$ can be found by solving the definition equation.
-Let $ket(p)$ be the eigenvector with eigenvalue $p$.
+Because $op(p)_i$ are mutually commutative, we may actually find an eigenvector
+for the collective $vecop(p)$.
 
-$ bra(vb(x)) op(p)_i ket(p) = - ii hbar pdv(braket(vb(x), op(p)), x_i) = p braket(vb(x), p) $
+Let $ket(vb(p))$ be the eigenvector of $vecop(p)$ with eigenvalue $vb(p)$ (see
+@shorthands-vecop), we then have
 
-And $ braket(vb(x), p) = exp() $
+$ bra(vb(x)) op(p)_i ket(vb(p)) = - ii hbar pdv(braket(vb(x), vb(p)), x_i) = vb(p)_i braket(vb(x), vb(p)) $
 
-Again, it's eigenvector are not normalizable.
+for all $i=x,y,z$.
+
+And $ braket(vb(x), vb(p)) = exp(ii vb(p) cdot vb(x) /hbar) $
+
+Again, it's not normalizable. However, we could demand a normalization similar
+to $braket(vb(x), vb(x'))$, so we want
+
+$ braket(vb(p), vb(p')) = delta(vb(p) - vb(p')) $
+
+But $ integral_(RR^3) exp(-ii vb(p) cdot vb(x) /hbar) exp(ii vb(p') cdot vb(x) /hbar) dd(vb(x), 3) &= hbar^3 integral_(RR^3) exp(-ii vb(p) cdot vb(x) /hbar) exp(ii vb(p') cdot vb(x) /hbar) dd(vb(x)/hbar, 3) \
+                                                                                             &= hbar^3 ft(exp(ii vb(p') cdot vb(u)), vb(p)) $
+where $vb(u) = vb(x) / hbar$. Notice
+$ integral_RR^3 exp(ii vb(p) cdot vb(u)) delta(vb(p) - vb(p')) dd(vb(p), 3) &= exp(ii vb(p') cdot vb(u)) \
+                                                                          &= (2pi)^3 invft(delta(vb(p)- vb(p')), vb(u)) $
+So
+$ hbar^3 ft(exp(ii vb(p') cdot vb(u)), vb(p)) &= (2pi hbar)^3 ft(invft(delta(vb(p)- vb(p')), vb(u)), vb(p)) \
+                                            &= (h)^3 delta(vb(p)- vb(p')) $
+
+As $hbar:= h / (2pi)$. Therefore, we have could normalize
+$ ket(vb(p)) := h^(-3/2) exp(ii vb(p) cdot vb(x) / hbar) $
 
 == Uncertainty Principle
-== Ehrenfest Theorem and Virial Theorem
+For two non-commutative operators, we have a nice inequality
+#thm[(Heisenberg) Uncertainty Principle][
+  Let $op(P), op(Q)$ be two general Hermitian operator. Define $op(p) = op(P) - a, op(q) = op(Q) - b$ where $a,b in RR$.
+  Then, for a state $ket(phi)$,
+  $ sqrt(expval(op(p)^2) expval(op(q)^2)) gt.eq 1/2 |expval([op(P),op(Q)])| $
+
+  In particular, if $a = expval(op(p)), b = expval(op(Q))$ then $expval(op(p)^2) = expval(op(P)^2)- expval(op(P))^2$ is
+  the variance $(Delta P)^2$ of $op(P)$. Similar for $expval(op(q)^2)$. This then
+  means
+  $ (Delta P) (Delta Q) gt.eq 1/2 |expval([op(P), op(Q)])| $
+  And further, for $op(P) = op(p)_i, op(Q) = op(x)_j$,
+  $ (Delta p_i) (Delta x_j) gt.eq 1/2 delta_(i,j) hbar $
+]<heisenberg-inequality>
+#proof[
+  #pfstep[$op(p), op(q)$ are Hermitian as well.][
+    Since $a,b in RR$, $ op(p)^dagger = op(P)^dagger - a = op(P) - a = op(p) $
+    Similar for $op(q)$.
+  ]
+  #pfstep[$[op(P), op(Q)] = [op(p), op(q)]$][
+    $ [op(p), op(q)] = [op(P) - a, op(Q) - b] &= [op(P), op(Q)-b] - underbrace([a, op(Q) - b], "trivially 0") \
+                                            &= [op(P), op(Q) ] - underbrace([op(P), b], "trivially 0") \
+                                            &= [op(P), op(Q) ] $
+  ]
+  Now, since $op(p), op(q)$ are Hermitian,
+  $ expval(op(p)^2)expval(op(q)^2) &= expval(op(p)^dagger op(p)) expval(op(q)^dagger op(q)) \
+                                 &= norm(op(p) ket(phi))^2 norm(op(q) ket(phi))^2 $
+  And by Cauchy-Schwartz
+  $ norm(op(p) ket(phi)) norm(op(q) ket(phi)) gt.eq |expval(op(p)op(q), phi)| $ <c-s-uncertainty-1>
+  And
+  $ norm(op(p) ket(phi)) norm(op(q) ket(phi)) gt.eq |expval(op(q)op(p), phi)| $ <c-s-uncertainty-2>
+  Adding @c-s-uncertainty-1 and @c-s-uncertainty-2, and use triangular inequality
+  $ 2 norm(op(p) ket(phi)) norm(op(q) ket(phi)) &gt.eq |expval(op(q)op(p), phi)| + |expval(-op(q)op(p), phi)| \
+                                              &gt.eq |expval([op(p), op(q)], phi)| = |expval([op(P), op(Q)], phi)| $
+
+  Thus $ norm(op(p) ket(phi)) norm(op(q) ket(phi)) gt.eq 1/2 |expval([op(p), op(q)], phi)| $
+]
+
+The specialization of @heisenberg-inequality applied to $op(x), op(p)$ is
+actually also interpreted as inequality on Fourier Transform.
+
+Specifically, when we work in 1D, let $op(p)$ represent momentum operator again
+(but without $hbar$),
+$ braket(p, phi) = integral_RR exp(ii p x) phi(x) dd(x) = ft(phi(x), p) $
+And $ expval((op(p) - a)^2, phi) &= integral_RR mel(phi, (op(p)- a)^2, p) braket(p, phi) dd(p) \
+                           &= integral_RR (p- a)^2 braket(phi, p) braket(p, phi) dd(p) \
+                           &= integral_RR (p- a)^2 |ft(phi(x), p)|^2 dd(p) $
+So the @heisenberg-inequality is then about the variance of $phi(x)$ and its
+Fourier transform.
+
+== Time Evolution and Some Theorems
+#def[Schrödinger Equation][
+  Let $ket(phi(t)): RR to cal(H)$ describes the trajectory of some system with
+  Hamiltonian $op(H)$, then
+  $ ii hbar pdv(ket(phi(t)), t) = op(H) ket(phi(t)) $
+]<schroedinger-eqn>
+#remark[
+  It's sometimes confusing when we deal with derivative. A few points to make
+  - Since $ket(phi(t))$ is _only_ a function of $t$, it can only be differentiated
+    with respect to $t$. The _partial_ derivative appear more because of a
+    conventional reason. That is, we often work with position representation $phi(vb(x), t) := braket(vb(x), phi(t))$.
+    So a partial derivative is necessary.
+  - It can be verified that $(pdv(, x))^+ = - pdv(, x)$ _in Cartesian coordinate_#footnote[It's also *wrong* to naively assume this anti-Hermitian property holds in other
+      coordinate system (e.g. spherical coordinates). See @binney[Exercise 7.14] for
+      an example.]. However, it's *wrong* to write
+  $ (pdv(phi(vb(x), t), x_i))^+ = -phi(vb(x), t) pdv(, x_i) $
+  This is because $pdv(phi(vb(x), t), x_i)$ is not equivalent to $pdv(, x_i) compose phi(vb(x), t)$ as
+  the latter acts on some $f$ like
+  $ pdv(phi(vb(x), t) f(vb(x)), x_i) $
+  while the former is $ pdv(phi(vb(x), t), x_i) f(vb(x)) $
+  - The Hilbert Space $cal(H)$ is not defined to include $t$#footnote[Otherwise we are implying state to vanish at distant past and future.].
+    Scalar product is always taken at fixed $t$. So it *makes no sense* to write
+  $ (pdv(, t))^+ $
+  And adjoint on $cal(H)$ commutes with $pdv(, t)$ as basically $t$ has nothing to
+  do with $cal(H)$. Thus,
+  $ (pdv(ket(phi(t)), t))^+ = pdv(bra(phi(t)), t) $
+]
+
+#thm[Time-evolution of energy eigenstate][
+  Let $ket(phi_0)$ be an eigenstate of $op(H)$ with eigenvalue $E$. Let $ket(phi(0)) = ket(phi_0)$,
+  we have
+  $ ket(phi(t)) = exp(-ii E t/hbar) ket(phi(0)) $
+]<time-evolution-of-energy-eigenstate>
+#proof[
+  Plug in @schroedinger-eqn, we have
+  $ pdv(ket(phi(t)), t) &= -ii / hbar E ket(phi(t)) \
+  ket(phi(t))         &= exp(- ii E t /hbar) ket(phi(0)) $
+  assuming we have defined norms etc in $cal(H)$ so differentiating $ket(phi(t)): RR to cal(H)$ is
+  valid.
+]
+#remark[This means the eigenvector of $op(H)$ changes only phases over time. *And it
+  stays as an eigenvector of $op(H)$!*]
+
+#thm[Ehrenfest Theorem][
+  Ehrenfest Theorem states the time evolution of _expectation value_ of some
+  operator under certain Hamiltonian. For time-independent operator $op(Q)$,
+  $ ii hbar dv(expval(op(Q), phi(t)), t) = expval([op(Q), op(H)]) $
+]<ehrenfest-theorem>
+#proof[
+  By taking adjoint on @schroedinger-eqn, we have
+  $ -ii hbar pdv(bra(phi(t)), t) = bra(phi(t)) op(H) $
+  And $ ii hbar dv(expval(op(Q), phi(t)), t) &= (ii hbar pdv(bra(phi(t)), t)) op(Q) ket(phi) + bra(phi) op(Q) (ii hbar pdv(ket(phi(t)), t)) \
+                                       &= - expval(op(H)op(Q), phi) + expval(op(Q)op(H), phi) = expval([op(Q), op(H)]) $
+  where we assumed $op(Q)$ is time-independent.
+]
+#remark[Heisenberg's picture would give a similar statement.]
+
+We haven't said anything about how to construct Hamiltonian. The answer, at
+least at our stages, is to "guess" based on classical mechanics. So we think of
+Hamiltonian as "energy" and for example write kinetic energy as $vecop(p)^2/(2m)$ where $vecop(p)^2 equiv vecop(p) cdot vecop(p)$.
+
+#thm[Energy Eigenstates give stationary value for all operators][
+  Given an arbitrary energy eigenstate $ket(E)$, we get $expval(op(Q), E)$ stationary
+  over time for all $op(Q)$.
+]
+#proof[
+  By @time-evolution-of-energy-eigenstate, energy eigenstate only evolves their
+  phases.#footnote[$ket(E(t))$ means the evolution of $ket(E)$, not meaning the eigenvalue $E$ is
+    changing over time.]
+  $ ket(E(t)) = exp(-ii E t/hbar) ket(E(0)) $
+  So $ expval(op(Q), E(t)) = exp(-ii(E-E) t/hbar) expval(op(Q), E(0)) = expval(op(Q), E(0)) $
+  Alternatively, we can use @ehrenfest-theorem by plugging in $expval([op(Q), op(H)], E(t))$
+]
+
+#thm[Virial Theorem][See Binney]
 
 == Probability Current
+Consider now the special case when we are studying position and momentum so $cal(H) = L^2(RR^3)$.
+
+We have actually been implicitly assuming the interpretation that amplitude
+squared, $|phi(vb(x), t)|^2$, serves as the probability (density) function. And
+it's then natural to ask how probability shifts over time. This is also
+important for us to study 1D scattering problems (e.g. potential well problems)
+by giving interpretation about transmission and reflection.
+
+We further assume our Hamiltonian is simply#footnote[More complicated Hamiltonian will admit different probability current. For
+  example, Hamiltonian with a classical electromagnetic field will have a
+  probability current that transforms under gauge transformation correctly.]
+$ op(H) = vecop(p)^2 / (2m) + V(vecop(x)) $
+
+#thm[Probability Current For Simple System][
+  Let $ket(phi(t)) = |phi(vb(x), t)| exp(ii theta(vb(x), t))$ be a state, define $rho(vb(x), t) = |phi(vb(x), t)|^2$.
+  We have
+  $ pdv(rho, t) = - div vb(J) $
+  where $vb(J) = hbar / m rho grad theta $.
+]
+#proof[
+  By definition, $rho = braket(phi, vb(x)) braket(vb(x), phi)$. And by
+  @schroedinger-eqn,
+  $ ii hbar pdv(braket(vb(x), phi), t)   &= mel(vb(x), op(H), phi) \
+  - ii hbar pdv(braket(phi, vb(x)), t) &= mel(phi, op(H), vb(x)) $
+  By product rule,
+  $ ii hbar pdv(rho, t) &= ii hbar pdv(braket(vb(x), phi), t) braket(phi, vb(x)) + ii hbar pdv(braket(phi, vb(x)), t) braket(vb(x), phi) \
+                      &= mel(vb(x), op(H), phi) braket(phi, vb(x)) - mel(phi, op(H), vb(x)) braket(vb(x), phi) \
+                      &= 2ii Im mel(vb(x), op(H), phi) braket(phi, vb(x)) $
+  And $ mel(vb(x), op(H), phi) braket(phi, vb(x)) = - hbar^2 / (2m) (laplacian phi) conj(phi) + V(vb(x)) rho $
+  Since the second term is real,
+  $ ii hbar pdv(rho, t) = - hbar^2 / (m) ii Im (laplacian phi) conj(phi) \
+  pdv(rho, t) = - hbar / m Im (laplacian phi) conj(phi) $
+  Notice, $(laplacian phi) conj(phi) = (div grad phi) conj(phi)$, and $div (psi vb(F)) = vb(F) cdot grad(psi) + psi div vb(F)$.
+  Set $vb(F) = grad phi, psi = conj(phi)$, we have
+  $ Im (laplacian phi) conj(phi) = div(Im conj(phi) grad phi) - underbrace(grad phi cdot grad conj(phi), in RR) $
+  So we could identify $ vb(J) = hbar / m Im conj(phi) grad phi $
+  And let $phi = |phi| exp(i theta)$,
+  $ Im conj(phi) grad phi &= Im |phi| exp(-i theta) ((grad |phi|) exp(i theta) + |phi| i (grad theta ) exp(i theta)) \
+                        &= Im underbrace(|phi| grad |phi|, in RR) + i |phi|^2 grad theta \
+                        &= rho grad theta $
+  Thus $vb(J) = hbar / m rho grad theta$
+]
+#remark[
+  Since the particle has to be found somewhere in $RR^3$, surface integral with $vb(J)$ allows
+  us to work out how fast a particle moves out/in a particular region.
+
+  This is useful in analyzing 1D potential barrier problems. As for those problems
+  we have unnormalizable eigenstates, so we have to work with the rate of
+  particle's movement.
+]
+
 = Continuous and Discrete Transformation, Symmetry
 == How to make sense of $ii$
 == Schro\u{308}dinger and Heisenberg Pictures
+== Adding Electromagnetic Fields, Gauge Invariance
 = Angular Momentum
 == Common Commutation Relations and Spectrum
 == Spin and Orbital Angular Momentum

@@ -23,3 +23,9 @@ bowers:
     title: Lectures on Quantum Mechanics
     author: Philip L. Bowers
     isbn: 9781108555241
+
+babis:
+    type: Web
+    title: Quantum Mechanics 1
+    author: Babis Anastasiou
+    url: https://people.phys.ethz.ch/~babis/Teaching/QM1/qm1.pdf

@@ -903,7 +903,8 @@ isomorphic to $cal(L)(V', W', Y', Z')$
   However, our treatment is arguably better:
   - We only defined tensor product once (@tp-vectors and @tp-spaces) and built up
     all the later laws henceforth.
-  - We explicitly demonstrated that associativity and commutativity with dual works.
+  - We explicitly demonstrated that associativity of tensor product and
+    commutativity with dual works.
 ]
 
 == Inner Product for Tensors
@@ -948,7 +949,35 @@ orthonormal in $V,W$.
 Since we have Hermitian form, we can define a canonical isomorphism between $V tp W$ and $(V tp W)'$ much
 like @metric-dual.
 
-There is not much to discuss here actually, everything works similarly as $V tp W$ is
+#thm[Metric dual of $vb(a) tp vb(b)$][
+  Let $vb(a) in V, vb(b) in W$, then $L vb(a) tp vb(b) in (V tp W)'$ is equivalent
+  to $tilde(vb(a)) tp tilde(vb(b))$, where $L$ has the meaning in @metric-dual.
+]
+#proof[
+  By @metric-dual, we have
+  $
+    H_(V tp W)(vb(a) tp vb(b), vb(v) tp vb(w)) &= H(vb(a), vb(v)) H(vb(b), vb(w)) \
+                                               &= tilde(vb(a))(vb(v)) tilde(vb(b))(vb(w)) \
+                                               &= (L_1 tilde(vb(a)) tp tilde(vb(b))) (vb(v) tp vb(w))
+  $
+  for any $vb(v) in V, vb(w) in W$, where $L_1$ is defined in @univ-prop-1. That
+  is
+  $ (L vb(a) tp vb(b))(vb(v) tp vb(w)) = (L_1 tilde(vb(a)) tp tilde(vb(b))) (vb(v) tp vb(w)) $
+  Therefore, by taking linear combination of basis tensor of $V tp W$, any tensor $tau$ in $V tp W$ has
+  $ (L vb(a) tp vb(b))(tau) = (L_1 tilde(vb(a)) tp tilde(vb(b))) (tau) $
+]
+#remark[
+  The proof is evaluating instead of _defining_ value of $L vb(a) tp vb(b)$ on
+  separable tensors. So we don't suffer from the issue discussed in remark after
+  @ladr[Theorem 9.80, page 376].
+]
+#remark[
+  Since in Dirac notation, $dagger$ means taking metric dual of some tensor, we
+  see naturally
+  $ (ketbra(phi, psi))^dagger = ketbra(psi, phi) $
+]
+
+There is not much else to discuss here actually, everything works similarly as $V tp W$ is
 a vector space. However, one thing to point out is: as
 @metric-dual-is-dual-basis dictates, the metric duals of ${vb(a)_i tp vb(b)_j}$ is
 its dual basis. As pointed out in @explicit-dual-basis, this is equivalent to ${vb(a)^i tp vb(b)^j}$.

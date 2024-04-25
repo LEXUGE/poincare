@@ -16,6 +16,7 @@
 #let vecop(body) = $underline(hat(body))$
 #let ft(body, out) = $cal(F)[body](out)$
 #let invft(body, out) = $cal(F)^(-1)[body](out)$
+#let inv(body) = $body^(-1)$
 #let iff = $<==>$
 #let implies = $=>$
 
@@ -856,17 +857,22 @@ Fourier transform.
       coordinate system (e.g. spherical coordinates). See @binney[Exercise 7.14] for
       an example.]. However, it's *wrong* to write
   $ (pdv(phi(vb(x), t), x_i))^+ = -phi(vb(x), t) pdv(, x_i) $
-  This is because $pdv(phi(vb(x), t), x_i)$ is not equivalent to $pdv(, x_i) compose phi(vb(x), t)$ as
-  the latter acts on some $f$ like
-  $ pdv(phi(vb(x), t) f(vb(x)), x_i) $
-  while the former is $ pdv(phi(vb(x), t), x_i) f(vb(x)) $
+  Written clearly, we actually have $D_x$ defined as $mel(x, D_x, phi) = pdv(braket(x, phi), x)$.
+  And to find $(D_x ket(phi))^dagger in cal(H)'$, we act it on arbitrary $ket(psi)$,
+  that is
+  $ (D_x ket(phi))^dagger ket(psi) = mel(phi, D_x^dagger, psi) $
+  And $ mel(phi, D_x^dagger, psi) &= integral_RR dd(x) mel(phi, D_x^dagger, x) braket(x, psi) \
+                            &= integral_RR dd(x) overline(mel(x, D_x, phi)) psi(x) \
+                            &= integral_RR dd(x) pdv(overline(phi(x)), x) psi(x) \
+                            &= cancel(eval(phi(x)psi(x))_(-oo)^(oo)) - integral_RR dd(x) overline(phi(x)) pdv(psi(x), x) $
+  So the correct adjoint has no simple form but $-integral_RR compose overline(phi) compose pdv(, x)$.
   - The Hilbert Space $cal(H)$ is not defined to include $t$#footnote[Otherwise we are implying state to vanish at distant past and future.].
     Scalar product is always taken at fixed $t$. So it *makes no sense* to write
   $ (pdv(, t))^+ $
   And adjoint on $cal(H)$ commutes with $pdv(, t)$ as basically $t$ has nothing to
   do with $cal(H)$. Thus,
   $ (pdv(ket(phi(t)), t))^+ = pdv(bra(phi(t)), t) $
-]
+]<time-derivative-remark>
 
 #thm[Time-evolution of energy eigenstate][
   Let $ket(phi_0)$ be an eigenstate of $op(H)$ with eigenvalue $E$. Let $ket(phi(0)) = ket(phi_0)$,
@@ -968,13 +974,201 @@ $ op(H) = vecop(p)^2 / (2m) + V(vecop(x)) $
   particle's movement.
 ]
 
-= Continuous and Discrete Transformation, Symmetry
-== How to make sense of $ii$
+#pagebreak()
+= Transformation and Symmetry
+When we think of transformation, they actually form a group. That means there
+exists a set of transformation $G$ and $compose: G times G to G$ that applies
+one transformation after another. And they satisfy
+1. $G$ is closed under $compose$.
+2. $compose$ is associative.
+3. There exists a transformation $e in G$ that does nothing: $e compose g = g$ for
+  all $g in G$.
+4. For every $g in G$, there exists $inv(g) in G$ such that $inv(g) compose g = e$.
+
+These axioms are quite naturally required when we talk about any transformation
+(e.g. rotation, reflection) for some physical system. And this chapter is to
+basically find "representation" of these group elements $g$ as operators on the
+Hilbert $cal(H)$. We denote the representation of $g$ as $op(U)(g): cal(H) to cal(H)$.
+
+After some transformation, the probability for any measurement should remain the
+same. This is particularly evident for coordinate transformation: any physics
+should not be changed when we change coordinates. That is,
+$ |braket(phi, psi)| = |mel(phi, op(U)^+(g) op(U)(g), psi)| $
+
+Wigner's theorem says
+#thm[Wigner's theorem][
+  Any operator $op(U)$ such that
+  $ |braket(phi, psi)| = |mel(phi, op(U)^+ op(U), psi)| $
+  is either
+  - Linear and unitary:
+  $ op(U)(a ket(phi) + b ket(psi)) &= a op(U) ket(phi) + b op(U) ket(psi) \
+  mel(phi, op(U)^+ op(U), psi)   &= braket(phi, psi) $
+  or
+  - Anti-linear and anti-unitary:
+    $ op(U)(a ket(phi) + b ket(psi)) &= conj(a) op(U) ket(phi) + conj(b) op(U) ket(psi) \
+    mel(phi, op(U)^+ op(U), psi)   &= braket(psi, phi) $
+]
+
+We will not prove Wigner's theorem. And we will consider our representation as
+unitary and linear (i.e. ignore the other possibility).
+
+Now, naturally we should have
+$ op(U)(g_1 compose g_2) equiv op(U)(g_1) op(U)(g_2) $
+So these two operators differ by a phase when acting on different states. That
+is
+$ op(U)(g_1 compose g_2) ket(phi) = exp(ii theta(g_1, g_2, ket(phi))) op(U)(g_1) op(U)(g_2) ket(phi) $
+
+It can be proven @babis[Pg. 120] that this phase doesn't depend on $ket(phi)$,
+and we can do some trick to get rid of the phase, that is to get representation
+such that
+$ op(U)(g_1 compose g_2) = op(U)(g_1) op(U)(g_2) $
+
 == Schro\u{308}dinger and Heisenberg Pictures
+When we transform states $ket(phi) to op(U) ket(phi) = ket(phi')$, it is said we
+are using Schro\u{308}dinger picture. Transformation can also alternatively be
+viewed as acting on the operators. That is for all $ket(phi)$,
+$ expval(op(Q), phi') = expval(op(U)^+ op(Q) op(U), phi) $
+
+So we can define $ op(Q)' := op(U)^+ op(Q) op(U) $ and transform operators
+instead of states. This is the Heisenberg Picture.
+
+== Continuous Transformation
+Some transformation (e.g. rotation, displacement) can have uncountable elements,
+parameterized by some parameter $theta_a, a = 1, 2, 3, dots, N$.
+
+When $theta_a = 0$ for all $a$, we set $g(theta_a) = e$. This also naturally
+gives $op(U)(g(0)) = II$.
+
+We assume#footnote[This should be able to made rigorous, but that involves quite amount of math.
+  Better just take a leap of faith.] that their representation is differentiable
+with respect of parameters. That is, if the group is parameterized by a single
+continuous parameter $a$, then
+
+$ eval(dv(op(U)(g(a)), a))_(a=0) =: -ii op(T) op(U)(g(0)) = -ii op(T) $
+
+Here $-ii$ is taken by convention. $op(T)$ is called the generator.
+
+#def[Generator][
+  Let $g(theta_a)$ be parameterized by $theta_a, a = 1,2,3,dots, N$. Then define
+  generator $op(T)_a$ as
+  $ eval(pdv(op(U)(g(theta_a)), theta_a))_(theta_a = 0, forall a) =: -ii op(T)_a $
+]
+
+#thm[Generator is Hermitian]<generator-is-hermitian>
+#proof[
+  Since $op(U)$ is unitary, $ eval(pdv(op(U)^+ op(U), theta_a))_(theta_a = 0, forall a) = eval(pdv(II, theta_a))_(theta_a = 0, forall a) = 0 $ <eqn-generator-hermitian>
+  Just like differentiating state with respect to time (see
+  @time-derivative-remark), this differentiation on operator commutes with $dagger$,
+  we have
+  $ eval(pdv(op(U)^+, theta_a))_(theta_a = 0, forall a) =: ii op(T)_a^+ $
+  By product rule, @eqn-generator-hermitian gives (ommiting evaluation for
+  simplicity)
+  $ pdv(op(U)^+, theta_a) op(U) + op(U)^+ pdv(op(U), theta_a) = - ii op(T)_a + ii op(T)_a^+ = 0 $
+  thus $ op(T)_a = op(T)_a^+ $
+]
+#remark[
+  It follows
+  $ eval(pdv(op(U)^+, theta_a))_(theta_a = 0, forall a) =: ii op(T)_a $
+]
+
+If we assume $op(U)$ is nice, we can also "integrate" to get $op(U)(g(theta_a)) = exp(-i theta_a op(T)_a)$ where
+we used Einstein convention so $theta_a op(T)_a equiv sum_a theta_a op(T)_a$.
+
+=== Translation
+As an easy example, consider the translation transformation. This group would be
+parameterized naturally by some vector $vb(a) in RR^N$. For simplicity, we write
+$ op(U)(vb(a)) := op(U)(g(vb(a))) $
+
+*For any vector operator, we expect them to transform like an vector in
+components*. Since translation in ordinary vector space would mean $v_i to v_i + a_i$,
+in Heisenberg picture, we expect
+$ (op(x)_i)':= op(U)^+(vb(a)) op(x)_i op(U)(vb(a)) = op(x)_i + a_i $
+
+Let the generator of $U(vb(a))$ be $op(Gamma)_i$, we can differentiate the above
+equation with respect to $a_j$ and evaluate at $vb(a) = vb(0)$ to get
+$ ii op(Gamma)_j op(x)_i - ii op(x)_i op(Gamma)_j &= delta_(i,j) \
+-ii [op(x)_i, op(Gamma)_j]                      &= delta_(i,j) \
+[op(x)_i, op(Gamma)_j]                          &= ii delta_(i,j) $
+
+And we may#footnote[I am skeptical that this commutator relation would completely define $op(Gamma)_j$] identify
+$ op(Gamma)_j = op(p)_j / hbar $
+And
+$ op(U)(vb(a)) = exp(-ii a_j op(p)_j/hbar) equiv exp(-ii vb(a)/hbar cdot vecop(p)) $
+
+At this stage, we have two "definition" of $op(p)_i$. Set $ket(phi) = U(vb(a)) ket(phi_0)$ where $ket(phi_0)$ is
+a constant initial state.
+$ ii hbar pdv(ket(phi), a_i)           &= ii hbar (-i op(p)_i / hbar) ket(phi) = op(p)_i ket(phi) \
+ii hbar pdv(braket(vb(x), phi), a_i) &= mel(vb(x), op(p)_i, phi) $<alt-momentum-def>
+And
+$ -ii hbar pdv(braket(vb(x), phi), x_i) = mel(vb(x), op(p)_i, phi) $
+
+To reconcile this, notice,
+$ expval(vecop(x), op(U)(vb(a)) vb(x)) = expval(op(U)^+(vb(a))vecop(x) op(U)(vb(a)), vb(x)) = expval(vecop(x) + vb(a) II, vb(x)) = vb(x) + vb(a) $
+So $ op(U) (vb(a)) = ket(vb(x)+vb(a)) $
+And $ mel(vb(x), op(U)(vb(a)), phi_0) = braket(op(U)^+(vb(a)) vb(x), phi_0) = braket(op(U)(-vb(a)) vb(x), phi_0) = braket(vb(x) - vb(a), phi_0) $
+
+So @alt-momentum-def becomes
+$ ii hbar pdv(braket(vb(x)-vb(a), phi_0), a_i) &= mel(vb(x), op(p)_i, phi) \
+                                             &= -ii hbar pdv(braket(vb(x)-vb(a), phi_0), x_i) \
+                                             &= -ii hbar pdv(braket(vb(x), phi), x_i) $
+
+And these two formulation are thus equivalent.
+
+=== Rotation Transformation
+We parameterize rotation by the rotation axis vector $vb(alpha) in RR^3$. And
+for any vector operator component $op(v)_i$, we _expect_
+$ op(U)^+(vb(alpha)) op(v)_i op(U)(vb(alpha)) = R_(i,j) op(v)_j $<rotation-vector-op>
+where $R_(i,j)$ is the rotation matrix corresponding to the axis vector $vb(alpha)$.
+
+Remember the orthogonal matrix $R$ can be changed into a special basis
+$ R = O^TT A O $
+where $O$ is an orthogonal matrix that transforms $x$-axis to $hat(vb(alpha))$.
+So under that basis,
+$ A = mat(1, 0, 0;0, cos(alpha), -sin(alpha);0, sin(alpha), cos(alpha)) $
+where $alpha = |vb(alpha)|$.
+
+And we can differentiate $R$ with respect to $alpha$ and evaluate at $alpha = 0$,
+$ dv(R, alpha) = O^TT mat(0, 0, 0;0, 0, -1;0, 1, 0) O $
+
+And notice $ op(U)(vb(alpha)) = exp(-ii alpha hat(vb(alpha)) cdot vecop(J)) $ where $vecop(J)$ is
+the generator which we will expect to be a vector operator#footnote[It turns out to be proportional to angular momentum, so it's a expected to be a
+  vector.].
+
+Now, differentiate @rotation-vector-op with respect to $alpha$ and evaluate at $alpha = 0$,
+$ ii [hat(vb(alpha)) cdot vecop(J), op(v)_i] = (dv(R, alpha))_(i,j) op(v)_j $
+
+Now, set $hat(vb(alpha)) = hat(vb(x)), hat(vb(y)), hat(vb(z))$ one at a time
+gives the commutation relation (just plug in and verify)
+
+$ [op(J)_i, op(v)_j] = ii epsilon_(i,j,k) op(v)_k $
+
+#info[
+  The outline of a logical derivation for angular momentum is actually:
+  1. Parameterize rotation group $G$ by orthogonal matrix $R(vb(alpha))$ where $vb(alpha)$ is
+    the rotational axis with magnitude.
+  2. Write
+  $ inv(op(U))(R(vb(beta))) op(U)(R(vb(alpha))) op(U)(R(vb(beta))) = op(U)(inv(R)(vb(beta) R(vb(alpha)) R(vb(beta)))) $
+  and differentiate the expression with respect to parameters $alpha_k$ to get
+  $ inv(op(U))(R(vb(beta))) op(J)_k op(U)(R(vb(beta))) = R(vb(beta))_(k,l) op(J)_l $<transforms-like-vector>
+  where $op(J)_k$ are generator corresponding to $alpha_k$. These $op(J)_k$ as we
+  see later is components of a vector operator $vecop(J)$.
+  3. Now differentiate with respect to $beta_j$ and set certain $vb(beta)$ to get the
+    commutation relation for $op(J)_k$.
+  $ [op(J)_i, op(J)_j] = ii epsilon_(i,j,k) op(J)_k $
+  4. @transforms-like-vector has a nice explanation due to Heisenberg picture, it's
+    essentially that components $op(J)_k$ of $vecop(J)$ transforms like a vector
+    under rotation. And we use that equation as the criterion for any tuple of
+    operator to be called a vector operator.
+
+  However, going to @transforms-like-vector is not really trivial#footnote[See @babis[Pg. 128, Eqn. 10.65] for a proper derivation],
+  we will argue physically to arrive there#footnote[Follows the route of @binney[Chapter 4]]. _However, that inverts the proper logic._
+]
+
 == Adding Electromagnetic Fields, Gauge Invariance
 = Angular Momentum
 == Common Commutation Relations and Spectrum
 == Spin and Orbital Angular Momentum
+== Spherical Harmonics
 
 = Simple Problems and Famous Examples
 == 1D Potential Problems
@@ -982,8 +1176,13 @@ $ op(H) = vecop(p)^2 / (2m) + V(vecop(x)) $
 == Central Potential Problem, 3D Harmonic Oscillator
 == Hydrogen-like Atoms
 
-= Further Frameworks
-== Perturbation Theory
+= Perturbation Theory
+== Time-independent Perturbation Theory
+== Variation Approximation
+== Sudden Limits
+== Adiabatic Theorem
+== Time-dependent Perturbation Theory
+=== Selection Rule
 
 #pagebreak()
 

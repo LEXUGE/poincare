@@ -12,7 +12,6 @@
 #show: super-plus-as-dagger
 
 #let op(body) = $hat(body)$
-#let conj(body) = $overline(body)$
 #let vecop(body) = $underline(hat(body))$
 #let ft(body, out) = $cal(F)[body](out)$
 #let invft(body, out) = $cal(F)^(-1)[body](out)$
@@ -810,7 +809,9 @@ For two non-commutative operators, we have a nice inequality
     Since $a,b in RR$, $ op(p)^dagger = op(P)^dagger - a = op(P) - a = op(p) $
     Similar for $op(q)$.
   ]
-  #pfstep[$[op(P), op(Q)] = [op(p), op(q)]$][
+  #pfstep(
+    finished: true,
+  )[$[op(P), op(Q)] = [op(p), op(q)]$][
     $ [op(p), op(q)] = [op(P) - a, op(Q) - b] &= [op(P), op(Q)-b] - underbrace([a, op(Q) - b], "trivially 0") \
                                             &= [op(P), op(Q) ] - underbrace([op(P), b], "trivially 0") \
                                             &= [op(P), op(Q) ] $
@@ -1170,6 +1171,307 @@ $ [op(J)_i, op(v)_j] = ii epsilon_(i,j,k) op(v)_k $
 == Spin and Orbital Angular Momentum
 == Spherical Harmonics
 
+= Composite Systems and Identical Particles
+To model system of particles, we need the following postulate.
+#postl[Hilbert Space of Composite System][
+  Let quantum systems $A, B$ have Hilbert space $cal(H)_A, cal(H)_B$ respectively,
+  their collective state lives in the tensor product space
+  $ cal(H)_A tp cal(H)_B $
+]
+The idea for this postulate is rather simple: linear combination of state is
+important to quantum mechanics. And if $ket(phi_1), ket(phi_2) in cal(H)_A, ket(psi_1), ket(psi_2) in cal(H)_B$,
+and if systems are such that without interaction, then we should have collective
+state represented $ket(phi_1) tp ket(psi_2), ket(phi_2) tp ket(psi_1)$ etc.
+However, for linear combination of them to also be in the collective Hilbert
+space, we will be writing
+$ alpha ket(phi_1) tp ket(psi_2)+ beta ket(phi_2) tp ket(psi_1) $
+which is exactly what tensor product structure allows us to do.
+
+By the theory of tensor product, if ${ket(alpha_i)}, {ket(beta_j)}$ are basis of $cal(H)_A, cal(H)_B$ respectively, ${ket(alpha_i) tp ket(beta_j)}$ is
+a basis of $cal(H)_A tp cal(H)_B$. However, it should be noticed that _eigenbasis of individual systems tensored together doesn't necessarily give an
+eigenbasis of collective system's Hamiltonian_ if there are interaction betweeen
+systems.
+
+If we have three particles, we can go on and regard first two particles as a
+single quantum _system_, and apply the postulate again and arrive at
+$ (cal(H)_A tp cal(H)_B) tp cal(H)_C caniso cal(H)_A tp cal(H)_B tp cal(H)_C $
+
+Since we have got Hilbert space, Schro\u{308}dinger equation and measurement
+postulate generalizes.
+#caution[
+  With Symmetrization Postulate introduced later, we cannot use the same Hermitian
+  operators for individual system to represent the measurement on part of the
+  system (e.g. on one particle of the two particle system), we have to use the
+  symmetrization-preserving version of them.
+]
+
+Operators that act only on part of the system like $op(S)_z^(A): cal(H)_A to cal(H)_A$ are
+strictly speaking written as $op(S)_z^(A) tp II: cal(H)_A tp cal(H)_B to cal(H)_A tp cal(H)_B$.
+However, for simplicity, we omit this writing.
+
+For simplicity, we will also write product state without tensor product, that is
+$ ket(phi) tp ket(psi) equiv ket(phi) ket(psi) $
+
+== Identical and Indistinguishable Particles#footnote[Much of this section is inspired by @littlejohn[Notes 29]. I added
+  symmetrization of operator though.]
+Sometimes, the two quantum system we consider are *identical*#footnote[We will have different meaning for "indistinguishable" and "identical".],
+that is $cal(H)_A = cal(H)_B = cal(H)$.
+
+#def[Identical System][
+  Two quantum systems $A,B$ are identical if $cal(H)_A = cal(H)_B$.
+]<identical-system>
+
+Now, we introduce an exchange operator $op(Pi)$.
+#def[Exchange Operator][
+  Given two identical quantum system $A, B$, let ${ket(alpha_i)}$ be a basis for $cal(H)$ (remember $cal(H)_A =cal(H)_B$).
+
+  Define the exchange operator $op(Pi): cal(H) tp cal(H) to cal(H) tp cal(H)$ such
+  that
+  $ op(Pi) ket(alpha_i) tp ket(alpha_j) = ket(alpha_j) tp ket(alpha_i) $
+  for all $i,j$ and use linearity.
+]
+
+#thm[$op(Pi)$ is well defined][
+  The definition of $op(Pi)$ doesn't depend on basis ${ket(alpha_i)}$.
+]
+#proof[
+  Let ${ket(beta_j)}$ be another basis of $cal(H)$. Let $a_(j,i)$ be such that
+  $ ket(beta_j) = sum_i a_(j,i) ket(alpha_i) $
+
+  #pfstep(
+    finished: true,
+  )[$op(Pi) ket(beta_k) tp ket(beta_l) = ket(beta_l) tp ket(beta_k)$][
+    $ op(Pi) ket(beta_k) tp ket(beta_l) &= op(Pi) (sum_i a_(k,i) ket(alpha_i)) tp (sum_j a_(l,j) ket(alpha_j)) \
+                                      &= sum_i sum_j a_(k,i) a_(l,j) op(Pi) ket(alpha_i) tp ket(alpha_j) \
+                                      &= sum_i sum_j a_(k,i) a_(l,j) ket(alpha_j) tp ket(alpha_i) \
+                                      &= (sum_j a_(l,j) ket(alpha_j)) tp (sum_i a_(k,i) ket(alpha_i)) \
+                                      &= ket(beta_k) tp ket(beta_l) $
+  ]
+  Since $op(Pi)$ is linear, definition of $op(Pi)$ using ${ket(alpha_i)}$ is
+  equivalent to definition using ${ket(beta_j)}$.
+]
+
+#thm[$op(Pi)^2 = II$]
+#proof[By direct verification]
+
+#thm[$op(Pi)$ is unitary]
+#proof[
+  #pfstep(
+    finished: true,
+  )[$op(Pi)^dagger op(Pi) = II$][
+    We have $ (ket(alpha_j) tp ket(alpha_i))^+ = (op(Pi) ket(alpha_i) tp ket(alpha_j))^+ = bra(alpha_i) tp bra(alpha_j) op(Pi)^dagger $
+    And $ (bra(alpha_k) tp bra(alpha_l)) op(Pi)^dagger op(Pi) (ket(alpha_i) tp ket(alpha_j)) &= (op(Pi) ket(alpha_k) tp ket(alpha_l))^+ op(Pi) (ket(alpha_i) tp ket(alpha_j)) \
+                                                                                       &= bra(alpha_l) tp bra(alpha_k) (ket(alpha_j) tp ket(alpha_i)) \
+                                                                                       &= delta_(l,j) delta_(k,i) $
+    which means $op(Pi)^dagger op(Pi) = II$.
+  ]
+]
+
+#def[Indistinguishable System][
+  Two systems are indistinguishable if they are identical _and_ their Hamiltonian
+  commutes with $op(Pi)$. That is
+  $ [op(H), op(Pi)] = 0 $
+]<indistinguishable-system>
+
+#eg[
+  Consider two electrons, and their Hamiltonian being
+  $ op(H) = vecop(p_1)^2 / (2m) + vecop(p_2)^2 / (2m) + V(|vecop(x_1) - vecop(x_2)|) $
+  This is indistinguishable as the Hamiltonian commutes with $op(Pi)$.
+
+  Specifically, for any product state $ket(phi_1) tp ket(phi_2)$,
+  $ bra(vb(a)) tp bra(vb(b)) V(|vecop(x_1) - vecop(x_2)|) op(Pi) ket(phi_1) tp ket(phi_2) &= bra(vb(a)) tp bra(vb(b)) V(|vecop(x_1) - vecop(x_2)|) ket(phi_2) tp ket(phi_1) \
+                                                                                        &= V(|vb(a) - vb(b)|) bra(vb(a)) tp bra(vb(b)) (ket(phi_2) tp ket(phi_1)) \
+                                                                                        &= V(|vb(a) - vb(b)|) phi_2(vb(a)) phi_1(vb(b)) $
+  $ bra(vb(a)) tp bra(vb(b)) op(Pi) V(|vecop(x_1) - vecop(x_2)|) ket(phi_1) tp ket(phi_2) &= bra(vb(a)) tp bra(vb(b)) op(Pi)^+ V(|vecop(x_1) - vecop(x_2)|) ket(phi_1) tp ket(phi_2) \
+                                                                                        &= bra(vb(b)) tp bra(vb(a)) V(|vecop(x_1) - vecop(x_2)|) ket(phi_1) tp ket(phi_2) \
+                                                                                        &= V(|vb(b) - vb(a)|) bra(vb(b)) tp bra(vb(a)) (ket(phi_1) tp ket(phi_2)) \
+                                                                                        &= V(|vb(a) - vb(b)|) phi_2(vb(a)) phi_1(vb(b)) $
+  Thus the potential part commutes for basis elements in particular (use the
+  product basis constructed out of basis of individual system). And the kinetic
+  part also commutes for similar reason.
+]
+
+#eg[
+  Consider two electrons with Hamiltonian
+  $ op(H) = vecop(p_1)^2 / (2m) + vecop(p_2)^2 / (2m) + V(vecop(x_1)) + 2V(vecop(x_2)) $
+  This is *not* indistinguishable _despite two systems are identical (@identical-system)_ for
+  their individual Hilbert space.
+]<identical-but-distinguishable-eg>
+
+#eg[
+  Consider one spin-1 boson and one spin-$1/2$ fermion with Hamiltonian
+  $ op(H) = vecop(p_1)^2 / (2m) + vecop(p_2)^2 / (2m) $
+  This is *not* indistinguishable and Hamiltonian doesn't commute actually (*even
+  if it looks like so!*).
+
+  This is because bosons have integer spin while fermions have half integer spin,
+  and if we write out, for boson
+  $ cal(H)_1 = L^2(RR^3) tp CC^3 $
+  and for fermion
+  $ cal(H)_2 = L^2(RR^3) tp CC^2 $
+
+  And if we define exchange operators as before, $op(Pi): cal(H)_1 tp cal(H)_2 to cal(H)_2 tp cal(H)_1$,
+  And $op(H): cal(H)_1 tp cal(H)_2 to cal(H)_1 tp cal(H)_2$. So $[op(Pi), op(H)]$ doesn't
+  even make sense in terms of type.
+]
+
+Often it's easier to consider effect of exchange operator on other operators.
+
+Consider $vecop(x)_1 tp II$. We have for any product state $ket(phi_1) ket(phi_2)$ and $vb(a), vb(b)$,
+$ bra(vb(a)) bra(vb(b)) (vecop(x_1) tp II) compose op(Pi) (ket(phi_1) ket(phi_2)) &= bra(vb(a)) bra(vb(b)) (vecop(x_1) tp II) ket(phi_2) ket(phi_1)\
+                                                                                &= vb(a) phi_2(vb(a)) phi_1(vb(b)) \
+                                                                                &= bra(vb(a)) bra(vb(b)) op(Pi) compose (II tp vecop(x_2)) (ket(phi_1) ket(phi_2)) $
+
+So $vecop(x_1) compose op(Pi) = op(Pi) compose vecop(x_2)$.
+
+For a similar calculation (actually redundant),
+$ bra(vb(a)) bra(vb(b)) op(Pi) compose (vecop(x_1) tp II) (ket(phi_1) ket(phi_2)) &= bra(vb(b)) bra(vb(a)) (vecop(x_1) tp II) ket(phi_1) ket(phi_2)\
+                                                                                &= vb(b) phi_2(vb(a)) phi_1(vb(b)) \
+                                                                                &= bra(vb(a)) bra(vb(b)) (II tp vecop(x_2)) compose op(Pi) (ket(phi_1) ket(phi_2)) $
+
+So $op(Pi) compose vecop(x_1) = vecop(x_2) compose op(Pi) $.
+
+And by $op(Pi)^2 = II$ and $op(Pi)^+ = op(Pi)$, we have
+$ vecop(x_1) compose op(Pi) = op(Pi) compose vecop(x_2) implies vecop(x_1) = op(Pi)^+ compose vecop(x_2) compose op(Pi) $
+
+That is, $vecop(x_2)$ transforms $vecop(x_1)$ under symmetrization, as expected.
+
+Following the same argument, we have $vecop(p_1) = op(Pi)^+ compose vecop(p_2) compose op(Pi)$
+
+Moreover, $ op(Pi)^+ vecop(p_1)_x compose vecop(p_1)_x compose op(Pi) &= vecop(p_2)_x compose op(Pi) compose op(Pi) compose vecop(p_2)_x \
+                                                          &= vecop(p_2)_x compose II compose vecop(p_2)_x = vecop(p_2)_x^2 $
+
+This means $ op(Pi)^+ vecop(p_1)^2 op(Pi) = vecop(p_2)^2 $ as we would expect.
+
+As a rule of thumb, $op(Pi)^+ op(O) op(Pi)$ swaps the label $1,2$ in $op(O)$.
+
+== Symmetrization Postulate
+We are at the position to state the postulate
+#postl[Symmetrization Postulate][
+  Let the total system consists of $N$ (non-composite#footnote[Saying protons or nucleus being "non-composite" is sort of wrong as they consist
+    of quarks. But they are fundamental enough for us. In fact _it matters little_ as
+    we later discuss fermionic/bosonic property of composite particles.])
+  particles. #underline[Any] physically realizable state of the system must be
+  - symmetric under exchange operator of _any indistinguishable_ pair of bosons
+  - anti-symmetric under exchange operator of _any indistinguishable_ pair of
+    fermions
+
+  And any physically realizable operators must be invariant under the $cal(H)_"phys"$,
+  subspace of states with correct symmetry. That is, any physical operators cannot
+  map physical state into unphysical state.
+]<symmetrization-postulate>
+#info[
+  This postulate is used _in reverse_ to _define_ the fermionic or bosonic
+  property of two indistinguishable #underline[composite] particles. More on this
+  later.
+]
+
+#caution[
+  It should be clear about what this postulate actually applies to:
+  indistinguishable particles.
+
+  Consider the Hamiltonian in @identical-but-distinguishable-eg, the two electrons
+  are distinguishable and the symmetrization postulate is empty: it says nothing
+  about symmetry of physical states.
+]
+
+@symmetrization-postulate makes the physical Hilbert space a subspace $cal(H)_("phys")$ of
+the $cal(H)_1 tp dots.c tp cal(H)_N = cal(H)_"tot"$, and you can construct that
+subspace by taking eigenstates of individual particle and tensor them up while
+keeping in mind the symmetry (see also Slater determinant).
+
+One caveats is that the postulate cannot guarantee#footnote[Simultaneous diagonalization doesn't work if we have say $N=3$ indistinguishable
+  particles as $[op(Pi)_12, op(Pi)_23] eq.not 0$] (at least from what literally
+displayed) the existence of eigenstates of the total system with required
+symmetry.
+
+Nevertheless, it would be quite unphysical if we cannot. The reason is
+Hamiltonian as a physical operator should map physical state to physical state,
+which means it must be invariant under subspace $cal(H)_"phys"$, so we can write
+the restriction:
+$ op(H): cal(H)_"phys" subset.eq cal(H)_"tot" to cal(H)_"phys" $
+
+Now since $op(H)$ is Hermitian in the total space, it's Hermitian in the
+subspace as well, so it can be diagonalized in the subspace $cal(H)_"phys"$ and
+thus admit eigenstates of correct symmetry.
+
+We can now consider consequence of @symmetrization-postulate. For simplicity, we
+will mainly discuss $N=2$ case.
+
+== Pauli Exclusion Principle
+Consider two identical and indistinguishable fermions (say electrons) under
+Hamiltonian
+$ op(H) = op(H)_1 + op(H)_2 $
+where $op(H)_1, op(H)_2$ are actually the same except that they are acting on
+different space (one for each electron). Let ${ket(phi_i)}$ be the eigenstates
+of $op(H)_1, op(H)_2$, then Pauli exclusion principle is a consequence of
+@symmetrization-postulate, saying
+
+$ ket(phi_i) tp ket(phi_i) $
+is not a physical state because this state is symmetric under exchange operator
+of two indistinguishable _fermions_.
+
+One natural question is then what the eigenspaces of $op(H)$ under $cal(H)_"phys"$ restriction
+are. For this, let's construct the $cal(H)_"phys"$ explicitly first.
+
+#thm[Symmetric and Anti-symmetric subspace][
+  Given $cal(H) tp cal(H)$ and ${ket(alpha_i)}$ being basis fo $cal(H)$, the space $cal(H) tp cal(H)$ can
+  be decomposed into dirac sum of two subspaces
+  $ epsilon_"even" := span { cases(
+    ket(alpha_i) tp ket(alpha_j) "if" i=j,
+    1/sqrt(2) (ket(alpha_i) tp ket(alpha_j) + ket(alpha_j) tp ket(alpha_i)) "if" i eq.not j,
+
+  ) } $
+  and
+  $ epsilon_"odd" := span {
+  1/sqrt(2) (ket(alpha_i) tp ket(alpha_j) - ket(alpha_j) tp ket(alpha_i)), i eq.not j
+  } $
+]<construction-of-symmetry-subspace>
+#proof[
+  We can directly verify that $epsilon_"even"$ is exchange symmetric and $epsilon_"odd"$ is
+  anti-symmetric.
+
+  For the proof of being a basis, notice for any $i eq.not j$,
+  $ ket(alpha_i) tp ket(alpha_j) = 1/sqrt(2) (1/sqrt(2) (ket(alpha_i) tp ket(alpha_j) - ket(alpha_j) tp ket(alpha_i)) + 1/sqrt(2) (ket(alpha_i) tp ket(alpha_j) + ket(alpha_j) tp ket(alpha_i))) $
+
+  So these two spaces are generating, and their dimensions add up to the total
+  dimension.
+]
+
+With @construction-of-symmetry-subspace, we can just use the eigenstates of $op(H)_1$ as $ket(alpha_i)$.
+And since we are dealing with electron (fermion), we take the $epsilon_"odd"$ as $cal(H)_"phys"$.
+
+If the Hamiltonian commutes#footnote[Actually, on the ground of angular momentum conservation of the total system,
+  this must be the case.] with $op(J^2)^"tot", op(J_z)^"tot"$, then we can have
+a Hamiltonian eigenbasis:
+- of right symmetry
+- with well defined total angular momentum magnitude and $z$ component
+
+As $op(J^2)^"tot", op(J_z)^"tot"$ commutes with $op(Pi)$. In fact, the usual
+addition of angular momentum result for spin-1/2 particles (i.e. the "triplet" "singlet")
+are automatically having well-defined symmetry.
+
+To obtain such basis, just use the textbook-style "matching spatial symmetric
+with spin anti-symmetric" and "spatial anti-symmetric with spin symmetric". To
+prove we indeed have a basis, observe we have the right number of linearly
+independent vector.
+
+It should be stressed that *usually system are not in states with so much
+well-defined observables*. For example, consider an empty Hamiltonian and two
+electrons, then
+
+$ 1/sqrt(2) (ket(vb(a)) tp) $
+
+=== Entanglement or Not?
+
+#idea[
+  At the end of the day, all these formalism about identical particle basically
+  says our $cal(H)_1 tp dots.c tp cal(H)_N$ is too large. There should be a more
+  natural space to work with, and it's related to Fock's space and relativistic
+  quantum field theory.
+]
+
+== Composite Particle and Exchange Symmetry
 = Simple Problems and Famous Examples
 == 1D Potential Problems
 == 1D Harmonic Oscillators

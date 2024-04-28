@@ -1,5 +1,9 @@
 #import "@preview/ctheorems:1.1.0": *
 
+#let axiom = thmbox("axiom", "Axiom", stroke: red + 1pt)
+
+#let postl = thmbox("postulate", "Postulate", stroke: red + 1pt)
+
 #let def = thmbox("definition", "Definition", stroke: purple + 1pt)
 
 #let thm = thmbox("theorem", "Theorem", fill: color.lighten(orange, 70%))
@@ -34,3 +38,5 @@
 #let L2 = $cal(L)^2$
 #let Lp = $cal(L)^p$
 #let caniso = sym.tilde.equiv
+#let conj(body) = $overline(body)$
+#let inv(body) = $body^(-1)$

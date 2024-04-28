@@ -18,6 +18,8 @@
 #let inv(body) = $body^(-1)$
 #let iff = $<==>$
 #let implies = $=>$
+#let spinup = $arrow.t$
+#let spindown = $arrow.b$
 
 #pagebreak()
 
@@ -1460,9 +1462,120 @@ It should be stressed that *usually system are not in states with so much
 well-defined observables*. For example, consider an empty Hamiltonian and two
 electrons, then
 
-$ 1/sqrt(2) (ket(vb(a)) tp) $
+$ 1/sqrt(2) (underbrace((ket(vb(a)) tp ket(spinup)), "\"first\" electron") tp underbrace((ket(vb(b)) tp ket(spindown)), "\"second\" electron") - underbrace((ket(vb(b)) tp ket(spindown)), "\"first\" electron") tp underbrace((ket(vb(a)) tp ket(spinup)), "\"second\" electron")) $<non-entangled-state>
 
-=== Entanglement or Not?
+is a state satisfying the symmetrization postulate. I have added "first" "second"
+in quote to emphasize the notion of first or second is nominal and physical
+state space has symmetry between first and second.
+
+=== Entanglement or Not? Operator Symmetrization
+This state (@non-entangled-state) _seems to be_ a non-product space: we cannot
+write it into the form
+$ ket(phi) tp ket(psi), ket(phi) in cal(H) $
+
+But in fact it's not an entangled state _with respect to our usual measurement_.
+This again means our naive space $cal(H) tp cal(H)$ isn't really a very
+favorable one as it doesn't describe our physics obviously.
+
+The physical meaning of @non-entangled-state is quite simple: an#footnote[Notice saying _an_ electron instead of _first_ or _the_ electron is a
+  non-redundant description of the total system.] electron with $hbar/2$ in spin $z$ direction
+at position $vb(a)$ and another electron with spin $-hbar/2$ in spin $z$ direction
+at position $vb(b)$.
+
+We _expect_, because of such simple physical interpretation, that we should be
+able to measure the spin-$z$ of particle at $vb(a)$ and get a definite answer,
+irrespective of how particle at $vb(b)$ behaves -- after all their physical
+description look quite unentangled.
+
+So how to measure the spin-$z$ of the particle at $vb(a)$?
+
+For an operator to be physical, we demand it must be invariant under $cal(H)_"phys"$ by
+@symmetrization-postulate. A _sufficient_ condition for this to hold is
+#thm[$op(O)$ is physical if $[op(O), op(Pi)] = 0$]
+#proof[
+  #pfstep[$op(O)$ is physical $iff$ $op(Pi) op(O) ket(phi) = lambda op(O) ket(phi)$ for
+    all $ket(phi) in cal(H)_"phys"$ where $lambda = plus.minus 1$ depending $cal(H)_"phys"$.][
+    A state $ket(phi) in cal(H)_"phys"$ if and only if
+    $ op(Pi) ket(phi) = plus.minus ket(phi) $
+    where $plus.minus$ depends on whether symmetrical or anti-symmetrical state are
+    physical (c.f. @symmetrization-postulate).
+
+    So for $op(O) ket(phi) in cal(H)_"phys"$,
+    $ op(Pi) op(O) ket(phi) = plus.minus op(O) ket(phi) $
+  ]
+  #pfstep(
+    finished: true,
+  )[$[op(O), op(Pi)] = 0 implies op(Pi) op(O) ket(phi) = lambda op(O) ket(phi)$ for
+    all eigenvector $ket(phi)$ of $op(O)$][
+    $ op(Pi) op(O) ket(phi) &= op(O) op(Pi) ket(phi) \
+                          &= lambda op(O) ket(phi) $
+    for any eigenvector $ket(phi)$ of $op(Pi)$.
+  ]
+]
+#remark[If multiple exchange symmetry is required by @symmetrization-postulate, just
+  make $op(O)$ commutes with all of them.]
+
+Clearly
+$ (ketbra(vb(a), vb(a)) tp op(S_z)) tp overbrace(II, "on" cal(H)) $
+doesn't work because it's not of correct symmetry. We can verify that
+$ op(Pi)^+ (ketbra(vb(a), vb(a)) tp op(S_z)) tp II op(Pi) = II tp (ketbra(vb(a), vb(a)) tp op(S_z)) $
+
+However, the operator
+$ op(S_z^vb(a)) := (ketbra(vb(a), vb(a)) tp op(S_z)) tp II + II tp (ketbra(vb(a), vb(a)) tp op(S_z)) $ is
+exchange symmetric. And apply it on @non-entangled-state. Part by part:
+$ op(S_z^vb(a)) 1/sqrt(2) (ket(vb(a)) tp ket(spinup)) tp (ket(vb(b)) tp ket(spindown)) &= 1/sqrt(2) ((underbrace(braket(vb(a), vb(a)), 1) ket(vb(a)) tp hbar/2 ket(spinup)) tp (ket(vb(b)) tp ket(spindown)) \
+  & - cancel(
+  (ket(vb(a)) tp ket(spinup)) tp (underbrace(braket(vb(a), vb(b)), 0) ket(vb(a)) tp -hbar / 2ket(spindown))
+)) \
+                                                                                     &= hbar /2 1/sqrt(2) (ket(vb(a)) tp ket(spinup)) tp (ket(vb(b)) tp ket(spindown)) $
+
+Similar to the other half,
+$ op(S_z^vb(a)) 1/sqrt(2) (ket(vb(b)) tp ket(spindown)) tp (ket(vb(a)) tp ket(spinup)) = hbar/2 1/sqrt(2) (ket(vb(b)) tp ket(spindown)) tp (ket(vb(a)) tp ket(spinup)) $
+
+So together @non-entangled-state is an eigenstate of $op(S_z^vb(a))$ with
+eigenvalue $hbar /2$.
+
+Notice our operator works however $vb(b)$ changes (as long as $vb(a) eq.not vb(b)$)
+and the spin state of the other electron changes.
+
+#info[
+  This is why electron spin measurement at lab isn't influenced by
+  anti-symmetrization with some other random electron light years away. Despite
+  @non-entangled-state looks entangled.
+]
+
+To really have some entanglement, consider the following state (also an
+eigenstate of total angular momentum magnitude and component):
+$ ket(Psi):= 1/2 overbrace(
+  (underbrace(ket(vb(a)), "1st") underbrace(ket(vb(b)), "2nd") + ket(vb(b)) ket(vb(a))),
+  "spatial parts of two electrons",
+
+) tp (ket(spinup) tp ket(spindown) - ket(spindown) tp ket(spinup)) $
+
+Here I shifted position of different vectors when they get tensored together, so
+product state is now in the format
+$ ket("spatial of 1st") tp ket("spatial of 2nd") tp ket("spin of 1st") tp ket("spin of 2nd") $
+instead of
+$ ket("spatial of 1st") tp ket("spin of 1st") tp ket("spatial of 2nd") tp ket("spin of 2nd") $
+
+If we apply $op(S_z^vb(a))$ to this state, we find at the end
+$ 1/2 hbar /2 ket(vb(a)) ket(vb(b)) tp (ket(spinup) tp ket(spindown) + ket(spindown) tp ket(spinup)) &- 1/2 hbar /2 ket(vb(b)) ket(vb(a)) tp (ket(spinup) tp ket(spindown) + ket(spindown) tp ket(spinup)) \
+                                                                                                   &= 1/2 hbar /2 (ket(vb(a)) ket(vb(b)) - ket(vb(b)) ket(vb(a))) tp (ket(spinup) tp ket(spindown) + ket(spindown) tp ket(spinup)) $
+
+So it's not an eigenstate of $op(S_z^vb(a))$.
+
+The probability of measuring $spinup$ for the electron at $vb(a)$ is usually
+given by projecting to the subspace. However, here it's not really convenient to
+do this, we'd better proceed by using density operator.
+
+We know that $ expval(op(S_z^(a))) = Tr(op(rho) op(S_z^vb(a))) $
+
+#text(
+  red,
+)[It's getting actually not easy at this point. Partial tracing $op(rho)$ with "first"/"second"
+  subspace doesn't seem to be physically meaningful to me. Partial tracing out the
+  position subspace of the total system doesn't give very useful information about "spin
+  of particle at specific location" either. Can we get to an elegant solution?]
 
 #idea[
   At the end of the day, all these formalism about identical particle basically
@@ -1472,6 +1585,124 @@ $ 1/sqrt(2) (ket(vb(a)) tp) $
 ]
 
 == Composite Particle and Exchange Symmetry
+Consider two identical and indistinguishable composite system, say two hydrogen
+but _mutually not interacting_. Each hydrogen consists of one proton and one
+electron where within each hydrogen the proton and electron are apparently
+neither identical nor indistinguishable.
+
+The total Hilbert space of this case is $ underbrace((cal(H)^1_e tp cal(H)^1_p), "space of hydrogen 1") tp (cal(H)^2_e tp cal(H)^2_p) $
+
+Again "$1,2$" labeling here are nominal but not physical.
+
+And Hamiltonian for each Hydrogen is
+$ op(H)_"hydrogen" = (vecop(p)_p)^2 / (2m_p) + (vecop(p)_e)^2 / (2m_e) - 1/(4pi epsilon_0) e^2 /( |vecop(x)_p - vecop(x)_e|) $
+The total Hamiltonian is two copy of $op(H)_"hydrogen"$. Clearly it's commuting
+with:
+- exchanging electron of hydrogen 1 with electron of hydrogen 2, denote as $op(Pi)_e$
+- exchanging proton of hydrogen 1 with proton of hydrogen 2, denote as $op(Pi)_p$
+
+Since both proton and electron are fermion, by @symmetrization-postulate, we
+must have anti-symmetry on each of the above two exchanges.
+
+*The important thing* is we can define a composite exchange that exchange two
+hydrogen by performing $op(Pi)_e, op(Pi)_p$ at once. That is
+$ op(Pi)_H := op(Pi)_e compose op(Pi)_p $
+Clearly total Hamiltonian commutes with $op(Pi)_H$. So Hydrogen as a composite
+subsystem of the total system is identical and indistinguishable according to
+@indistinguishable-system.
+
+And since any physical state $ket(phi)$ must be anti-symmetric about $op(Pi)_e, op(Pi)_p$ separately,
+if we apply both, $ket(phi)$ will behave indeed symmetrically. And this means
+any physical state is symmetric under $op(Pi)_H$.
+
+By _reversing_ the @symmetrization-postulate, we _define_ Hydrogen to be a
+bosonic composite particle as it behaves like a boson upon $op(Pi)_H$.
+
+#conclusion[In general, for a composite system, we can just count the number of fermion $f$ in
+  the system and the particle has symmetry $(-1)^f$ and is bosonic if $f$ is even
+  and fermionic if $f$ is odd.]
+#eg[Helium-3 is a fermionic particle][
+  Helium-3 has 2 protons, 1 neutron, 2 electrons, which are all fermions. So it
+  has fermionic exchange symmetry.
+]
+
+== Applications to Statistical Mechanics
+Counting eigenstate correctly is important for statistical mechanics. We will
+work through a few common examples about how exchange symmetry affect how we
+count states. And in the framework of statistical mechanics, Gibbs paradox is
+inherently quantum#footnote[If chambers are filled with identical particles, then the direct reason entropy
+  doesn't increase is increased anti-symmetry of the final eigenstates (we can
+  swap particles between chamber as they are indistinguishable in the final
+  Hamiltonian).].
+
+=== Fermionic Harmonic Oscillator For the sake of simplicity,
+Consider $N=2$ case. We are considering two spin-$1/2$ particles each
+independently in a Harmonic potential. So individually the Hamiltonian is
+$ op(H)_"each" = vecop(p)^2 / (2m) + 1/2 m omega^2 |vecop(x) - vb(a)|^2 $
+where $vb(a)$ will be different for these two fermions as they are spatially
+localized.
+
+And we have two copy of this:
+$ op(H) = op(H)_1 + op(H)_2 $
+
+One important consequence of $vb(a)$ is that *two fermions are by definition
+distinguishable!* Hamiltonian doesn't commute with exchange operator because $vb(a)$ will
+be different for the two.
+
+And in this case, we have no Pauli-exclusion whatsoever at all as
+@symmetrization-postulate is empty. The whole space $cal(H)_1 tp cal(H)_2$ is
+all physical.
+
+Pauli-exclusion will take effect if two particles are in the _same_ potential
+well.
+
+=== Diatomic Gas#footnote[This example is partially studied in @littlejohn[Notes 29] as well.]
+Consider a "gas" consisting of two non-interacting "molecules" each consists of
+two identical spin-$1/2$ fermion. The Hilbert space of this problem is
+
+$ underbrace((cal(H) tp cal(H)), "of a molecule") tp cal(H) tp cal(H) $
+
+We will see despite in this problem all particles are identical, not all pairs
+of particles are indistinguishable.
+
+Each molecule has a Hamiltonian
+
+$ op(H)_"molecule" = vecop(p_1)^2 / (2m) + vecop(p_2)^2 / (2m) + V(|vecop(x_1) -vecop(x_2)|) $
+
+And total Hamiltonian is two copies of each molecule. Notice Hamiltonian
+commutes with:
+- exchanging two particles in molecule 1, denote as $op(Pi)_1$
+- exchanging two particles in molecule 2, denote as $op(Pi)_2$
+- exchanging two molecules, denote as $op(Pi)_m$
+
+Commuting with $op(Pi)_m$ is ubiquitous in any ideal gas problem (this is the
+origin of $N!$ in derivation of classical ideal gas partition function).
+
+We could temporarily assume the exchange symmetry $op(Pi)_m$ doesn't exist, then
+all we need to consider is eigenstates situation of each individual molecule and
+multiply them together (essentially squared as they are the same). And apply
+then the $N!$ approximation at the outcast.
+
+The essential idea is we could deal with each level of symmetry individually.
+
+Within the molecule, the symmetry is explained in more detail in
+@littlejohn[Notes 29]. The result is different $l$ will give different
+multiplicity#footnote[See also "spin isomer" of Hydrogen, and different multiplicity gives so-called "parahydrogen"
+  or "orthohydrogen".], odd $l$ state will have an additional degeneracy of $3$ and
+even $l$ only has $1$. This wouldn't be the case if two particles in the
+molecule are non-identical (thus distinguishable) or distinguishable in
+Hamiltonian.
+
+This affects the thermodynamic property of the molecule gas, for detail, #link(
+  "https://en.wikipedia.org/wiki/Spin_isomers_of_hydrogen",
+)[see this Wikipedia page].
+
+Just one thing to notice, $2l+1$ degeneracy we usually write is due to the
+molecule rotation or due to $m$, whereas the degeneracy difference from exchange
+symmetry is due to the spin triplet/singlet. So they are completely different,
+despite all depends on $l$.
+
+=== Gibbs Paradox
 = Simple Problems and Famous Examples
 == 1D Potential Problems
 == 1D Harmonic Oscillators

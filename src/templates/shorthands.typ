@@ -8,7 +8,7 @@
 
 #let thm = thmbox("theorem", "Theorem", fill: color.lighten(orange, 70%))
 
-#let eg = thmbox("example", "Example", fill: color.lighten(green, 85%))
+#let eg = thmbox("example", "Example", fill: color.lighten(green, 85%), breakable: true)
 
 #let remark = thmplain("remark", "Remark", base: "theorem")
 

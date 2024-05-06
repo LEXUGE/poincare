@@ -1,13 +1,13 @@
 #import "@preview/physica:0.9.2": *
-#import "@preview/gentle-clues:0.4.0": *
+#import "@preview/gentle-clues:0.8.0": *
 #import "@lexuge/templates:0.1.0": *
 #import shorthands: *
 #import pf3: *
 
 #show: simple.with(
-  title: "Statistical Mechanics, Thermodynamics, and Kinetic Theory",
-  authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
+  title: "Statistical Mechanics, Thermodynamics, and Kinetic Theory", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
+#show: gentle-clues.with(breakable: true)
 #set page(margin: (y: 1cm))
 
 #let op(body) = $hat(body)$
@@ -290,7 +290,7 @@ we get $p_alpha = 1/W$, plug in
 
 $ S = -k_B ln W $
 
-#caution[
+#warning[
   These two approaches will not give the exact same number for $S$. However, for
   large enough system, the value will be approximately. This actually highlights
   that "mean" or "expectation" doesn't really play a big difference compared to
@@ -341,7 +341,7 @@ and add together.
 
 This can be extended to grand canonical potential as well.
 
-#idea[
+#conclusion[
   In general we see *all Lagrange multiplier should be the same for subsystems
   when their total
   non-interacting system is in thermal equilibrium*.
@@ -358,7 +358,7 @@ $ Z("Lagrange Multipliers", "Classical Parameters") $
 where Lagrange Multipliers $beta, f$ etc. are from the expectation values of
 quantum observables.
 
-#caution[
+#warning[
   Micro-canonical ensemble will not fit in this description because in there we
   are assigning fixed value to quantum observables. In that case,
   $ Z("Known Observable Eigenvalues", "Classical Parameters") $
@@ -426,10 +426,7 @@ form a set of independent variables.
   we get
   $ pdv((f_1,f_2), (U, S, beta, V, N)) = overbrace(
     mat(
-      1, 0, pdv(ln Z, beta^2), pdv(ln Z, V, beta), pdv(ln Z, N, beta);-k_B beta,
-        1, cancel(k_B U -k_B U),
-        - k_B pdv(ln Z, N),
-        - k_B pdv(ln Z, V)
+      1, 0, pdv(ln Z, beta^2), pdv(ln Z, V, beta), pdv(ln Z, N, beta);-k_B beta, 1, cancel(k_B U -k_B U), - k_B pdv(ln Z, N), - k_B pdv(ln Z, V)
     ), (U, S, beta, V, N),
 
   ) $
@@ -508,18 +505,32 @@ irrelevant matrix entries.
 === Useful Derivative Formulae
 
 The first "rule" is the reciprocity rule, which is really just a special case of
-chain rule. Consider the following example,
+chain rule.
 
+#thm[Reciprocity Relation][
+  Let $X, Y, Z$ be variables related by some constraints. If $(X, Z), (Y, Z)$ can
+  both act as set of independent variable,
+  $ eval(pdv(X, Y))_Z = inv(eval(pdv(Y, X))_Z) $
+]<reciprocity-relation>
+#proof[
+  $ eval(pdv(X, Y))_Z &= det(pdv((X, Z), (Y, Z))) \
+                    &= det(inv(pdv((Y, Z), (X, Z)))) \
+                    &= inv(det(pdv((Y, Z), (X, Z)))) \
+                    &= inv(eval(pdv(Y, X))_Z) $
+]
+#remark[
+  This can be easily extended to multiple variable with $Z_1, Z_2, dots$.
+]
+
+Consider the following example,
 #eg[Reciprocity Relation][
   $ pdv(S, (U, V, N)) = pdv(S, (T, V, N)) compose pdv((T, V, N), (U, V, N)) $
 
-  However,
-  $ pdv((T, V, N), (U, V, N)) = mat(pdv(T, U), 0, 0;0, 1, 0;0, 0, 1) $
-  And $(T, V, N), (U, V, N)$ both constitute independent variables by
-  @equivalence-of-var, so their derivative mapping is invertible.
-  $ pdv((T, V, N), (U, V, N)) = inv(pdv((U, V, N), (T, V, N))) = mat(inv(pdv(U, T)), 0, 0;0, 1, 0;0, 0, 1) $
-
   So
+  $ eval(pdv(S, U))_(V, N) = eval(pdv(S, T))_(V, N) eval(pdv(T, U))_(V, N) $
+
+  By @reciprocity-relation, $ eval(pdv(T, U))_(V, N) = inv(eval(pdv(U, T))_(V, N)) $
+  Thus
   $ eval(pdv(S, U))_(V, N) = eval(pdv(S, T))_(V, N) / eval(pdv(U, T))_(V, N) $
 ]<reciprocity-relation-eg>
 
@@ -537,8 +548,7 @@ We also have
   This means we can write the relation as
   $ det(pdv((X, Z), (Y, Z))) det(pdv((Y, X), (Z, X))) & det(pdv((Z, Y), (X, Y))) \
                                                     &= det(pdv((X, Z), (Y, Z))) overbrace(
-    det(pdv((Z, Y), (X, Y))) det(pdv((Y, X), (Z, X))),
-    "shifting these two",
+    det(pdv((Z, Y), (X, Y))) det(pdv((Y, X), (Z, X))), "shifting these two",
 
   ) \
                                                     &= det(

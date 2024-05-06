@@ -12,9 +12,7 @@
 
 // FIXME: Title being funny
 #show: simple.with(
-  title: [#v(1em) Tensor and Physics],
-  authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
-  disp_content: false,
+  title: [#v(1em) Tensor and Physics], authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),), disp_content: false,
 )
 
 #set heading(numbering: none)

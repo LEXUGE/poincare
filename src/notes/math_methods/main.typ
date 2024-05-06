@@ -5,8 +5,7 @@
 #import pf3: *
 
 #show: simple.with(
-  title: "Mathematical Methods",
-  authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
+  title: "Mathematical Methods", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
 
 #let unproven = text(red)[This is not proven yet.]
@@ -258,8 +257,7 @@ We have a very beautiful (yet advanced to prove) result.
   under basis ${ vb(v)^j tp vb(v)_i }$. So in fact from the perspective of tensor
   component we can also write
   $ overbrace(
-    vb(v)_j tp vb(v)^i (II) = II(vb(v)_j tp vb(v)^i),
-    "think " II "as double dual",
+    vb(v)_j tp vb(v)^i (II) = II(vb(v)_j tp vb(v)^i), "think " II "as double dual",
 
   ) = II(vb(v)_j, vb(v)^i) = vb(v)^i (vb(v)_j) = tensor(delta, -j, +i) $
   where $delta equiv II$, and $tensor(delta, -j, +i)$ is its component.
@@ -449,7 +447,7 @@ will do our best to give some insights on why it's a vector space.
                     &= |f(x)|^2 + |g(x)|^2 + 2 Re(f(x) g(x)) \
                     &lt.eq |f(x)|^2 + |g(x)|^2 + 2 |f(x)g(x)| \
                     &= |f(x)|^2 + |g(x)|^2 + 2 |f(x)||g(x)| \
-      &lt.eq |f(x)|^2 + |g(x)|^2 + |f(x)|^2 + |g(x)|^2 = 2(|f(x)|^2 + |g(x)|^2) $
+                    &lt.eq |f(x)|^2 + |g(x)|^2 + |f(x)|^2 + |g(x)|^2 = 2(|f(x)|^2 + |g(x)|^2) $
   ]
 
   Then we can just follow the reasoning in @L1-is-a-vector-space
@@ -834,15 +832,14 @@ Now, we can post-compose $L_2$ with $L_1$ to get another canonical isomorphism:
   basis of ${vb(a)_i tp (vb(b)_j tp vb(c)_k)}$:
   $ overbrace(
     L_1 underbrace(
-      vb(a)^i tp overbrace((L_1 underbrace(vb(b)^j tp vb(c)^k, W' tp Z')), (W tp Z)'),
-      V' tp (W tp Z)' = cal(L)(V, W tp Z),
+      vb(a)^i tp overbrace((L_1 underbrace(vb(b)^j tp vb(c)^k, W' tp Z')), (W tp Z)'), V' tp (W tp Z)' = cal(L)(V, W tp Z),
 
     ), (V tp (W tp Z))',
 
   ) (vb(a)_l tp (vb(b)_m tp vb(c)_n)) &= vb(a)^i tp (L_1 vb(b)^j tp vb(c)^k) (vb(a)_l, vb(b)_m tp vb(c)_n)\
-                                                                                                                                                                                                                          &= vb(a)^i (vb(a)_l) (L_1 vb(b)^j tp vb(c)^k)(vb(b)_m tp vb(c)_n) \
-                                                                                                                                                                                                                          &= tensor(delta, +i, -l) vb(b)^j tp vb(c)^k(vb(b)_m, vb(c)_n) \
-                                                                                                                                                                                                                          &= tensor(delta, +i, -l) tensor(delta, +j, -m) tensor(delta, +k, -n) $
+                                                                                                                                                                                                                  &= vb(a)^i (vb(a)_l) (L_1 vb(b)^j tp vb(c)^k)(vb(b)_m tp vb(c)_n) \
+                                                                                                                                                                                                                  &= tensor(delta, +i, -l) vb(b)^j tp vb(c)^k(vb(b)_m, vb(c)_n) \
+                                                                                                                                                                                                                  &= tensor(delta, +i, -l) tensor(delta, +j, -m) tensor(delta, +k, -n) $
 ]<explicit-construction-of-trilinear-dual>
 
 #thm[$V' tp (W' tp Z') caniso (V' tp W') tp Z' caniso cal(L)(V, W, Z)$]
@@ -999,9 +996,7 @@ easily be generalized.
   Given a tensor $Gamma in tau^r_s(V)$, define the contraction
   $ cal(C)_(i,j): tau^r_s (V) &to tau^(r-1)_(s-1) (V) \
   Gamma                     &sendto sum_k Gamma(
-    dots, underbrace(vb(a)_k, i"-th slot"),
-    dots, underbrace(vb(a)^k, j"-th slot"),
-    dots,
+    dots, underbrace(vb(a)_k, i"-th slot"), dots, underbrace(vb(a)^k, j"-th slot"), dots,
 
   ) $
   where ${vb(a)_k}$ is a (not necessarily orthonormal) basis of $V$ and $i$-th

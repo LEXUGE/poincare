@@ -57,13 +57,8 @@
       }
 
       grid(
-        columns: 2,
-        rows: 1,
-        current_step_number + "." + h(0.25em),
-        grid(
-          rows: 2,
-          row-gutter: 0.9em,
-          pfclaim(claim),
+        columns: 2, rows: 1, current_step_number + "." + h(0.25em), grid(
+          rows: 2, row-gutter: 0.9em, pfclaim(claim),
           // show this step if the proof depth is <= pfhidelevel and it hasn't been hidden manually
           if (not hide_pf and current_step_array.len() < hide_level) {
             // now that we might add substeps, add a 0 to the end of the step number array

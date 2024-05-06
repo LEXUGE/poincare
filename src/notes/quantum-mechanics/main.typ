@@ -1,13 +1,12 @@
 #import "@preview/physica:0.9.2": *
-#import "@preview/gentle-clues:0.4.0": *
+#import "@preview/gentle-clues:0.8.0": *
 #import "@preview/ctheorems:1.1.0": *
 #import "@lexuge/templates:0.1.0": *
 #import shorthands: *
 #import pf3: *
 
 #show: simple.with(
-  title: "Quantum Mechanics",
-  authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
+  title: "Quantum Mechanics", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
 #show: super-plus-as-dagger
 
@@ -571,7 +570,7 @@ their subspace projection is also orthogonal (and thus also Hermitian)!
   to collect the statistics, and survey all possible states.
 ]
 
-#caution[
+#warning[
   The condition "for any state $ket(phi)$" is necessary. Otherwise we could
   falsely prove $op(S)_x$ commutes with $op(S)_z$ in Stern-Gerlach experiments.
   Specifically, let initial state be $ket(y+)$ (eigenvector of $op(S)_y$), then
@@ -655,7 +654,7 @@ we will be working with non-relativistic space-time in this note. That means, we
   position eigenstate with eigenvalue $vb(x_0)$.
 ]
 
-#caution[
+#warning[
   As you might already know, these eigenvectors are not square-integratable. That
   is to say using integral, we cannot get $braket(x_0, x_0) = 1$. As
   $ braket(x_0, x_1) = integral_(RR^3) delta(x - x_0) delta(x - x_1) $
@@ -1200,7 +1199,7 @@ $ (cal(H)_A tp cal(H)_B) tp cal(H)_C caniso cal(H)_A tp cal(H)_B tp cal(H)_C $
 
 Since we have got Hilbert space, Schro\u{308}dinger equation and measurement
 postulate generalizes.
-#caution[
+#warning[
   With Symmetrization Postulate introduced later, we cannot use the same Hermitian
   operators for individual system to represent the measurement on part of the
   system (e.g. on one particle of the two particle system), we have to use the
@@ -1368,7 +1367,7 @@ We are at the position to state the postulate
   later.
 ]
 
-#caution[
+#warning[
   It should be clear about what this postulate actually applies to:
   indistinguishable particles.
 
@@ -1420,8 +1419,7 @@ are. For this, let's construct the $cal(H)_"phys"$ explicitly first.
   Given $cal(H) tp cal(H)$ and ${ket(alpha_i)}$ being basis fo $cal(H)$, the space $cal(H) tp cal(H)$ can
   be decomposed into dirac sum of two subspaces
   $ epsilon_"even" := span { cases(
-    ket(alpha_i) tp ket(alpha_j) "if" i=j,
-    1/sqrt(2) (ket(alpha_i) tp ket(alpha_j) + ket(alpha_j) tp ket(alpha_i)) "if" i eq.not j,
+    ket(alpha_i) tp ket(alpha_j) "if" i=j, 1/sqrt(2) (ket(alpha_i) tp ket(alpha_j) + ket(alpha_j) tp ket(alpha_i)) "if" i eq.not j,
 
   ) } $
   and
@@ -1547,8 +1545,7 @@ and the spin state of the other electron changes.
 To really have some entanglement, consider the following state (also an
 eigenstate of total angular momentum magnitude and component):
 $ ket(Psi):= 1/2 overbrace(
-  (underbrace(ket(vb(a)), "1st") underbrace(ket(vb(b)), "2nd") + ket(vb(b)) ket(vb(a))),
-  "spatial parts of two electrons",
+  (underbrace(ket(vb(a)), "1st") underbrace(ket(vb(b)), "2nd") + ket(vb(b)) ket(vb(a))), "spatial parts of two electrons",
 
 ) tp (ket(spinup) tp ket(spindown) - ket(spindown) tp ket(spinup)) $
 
@@ -1577,7 +1574,7 @@ We know that $ expval(op(S_z^(a))) = Tr(op(rho) op(S_z^vb(a))) $
   position subspace of the total system doesn't give very useful information about "spin
   of particle at specific location" either. Can we get to an elegant solution?]
 
-#idea[
+#conclusion[
   At the end of the day, all these formalism about identical particle basically
   says our $cal(H)_1 tp dots.c tp cal(H)_N$ is too large. There should be a more
   natural space to work with, and it's related to Fock's space and relativistic

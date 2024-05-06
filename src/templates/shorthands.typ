@@ -13,11 +13,7 @@
 #let remark = thmplain("remark", "Remark", base: "theorem")
 
 #let proof = thmplain(
-  "proof",
-  "Proof",
-  base: "theorem",
-  titlefmt: smallcaps,
-  bodyfmt: body => [
+  "proof", "Proof", base: "theorem", titlefmt: smallcaps, bodyfmt: body => [
     #body #h(1fr) $square$ // float a QED symbol to the right
   ],
 ).with(numbering: none)

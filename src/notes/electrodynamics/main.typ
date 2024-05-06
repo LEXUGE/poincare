@@ -5,8 +5,7 @@
 #import pf3: *
 
 #show: simple.with(
-  title: "Electromagnetism and Optics",
-  authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
+  title: "Electromagnetism and Optics", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
 #set page(margin: (y: 1cm))
 
@@ -123,8 +122,7 @@ density is derived in most books.
   $ vb(hat(n))_1 cdot vb(B)_1 + vb(hat(n))_2 cdot vb(B)_2 = 0 $
 
   #figure(
-    image("figs/boundary-condition-perpendicular.png", width: 80%),
-    caption: [The setup perpendicular boundary condition for field],
+    image("figs/boundary-condition-perpendicular.png", width: 80%), caption: [The setup perpendicular boundary condition for field],
   )<fig-bc-perp>
 
 ]<micro-boundary-condition-perp>
@@ -146,8 +144,7 @@ density is derived in most books.
   the textbook: we draw thin loop and integrate and use Green's Theorem.
 
   #figure(
-    image("figs/boundary-condition-parallel-loop1.png", width: 80%),
-    caption: [The loop 1 of setup for parallel boundary condition for field],
+    image("figs/boundary-condition-parallel-loop1.png", width: 80%), caption: [The loop 1 of setup for parallel boundary condition for field],
   )<fig-bc-para-loop1>
 
   Assuming the surface current density $vb(K)$ and field $vb(B)_(1,2)$ are uniform
@@ -164,8 +161,7 @@ density is derived in most books.
   $ vb(hat(K)) cdot mu_0 vb(K) &= hat(vb(K)) cdot (vb(hat(n))_1 times vb(B)_1 + vb(hat(n))_2 times vb(B)_2) $
 
   #figure(
-    image("figs/boundary-condition-parallel-loop2.png", width: 80%),
-    caption: [The loop 2 of setup for parallel boundary condition for field],
+    image("figs/boundary-condition-parallel-loop2.png", width: 80%), caption: [The loop 2 of setup for parallel boundary condition for field],
   )<fig-bc-para-loop2>
   If we choose another loop (see @fig-bc-para-loop2) and integrate on that, we get
   $ 0 &= vb(hat(K)_perp) cdot mu_0 vb(K) \

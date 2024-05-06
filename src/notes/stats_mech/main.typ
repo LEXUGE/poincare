@@ -466,6 +466,21 @@ In reality we almost never find/use the explicit form of implicit function. This
 is because we often use the derivative and convert independent variables of
 derivative often.
 
+And another point of view is also important to understand the logic of the
+theory correctly
+#def[State Manifold][
+  Let $Sigma$ be the set of all equilibrium states of the system,
+  $ Sigma:= {("Lagrange Multipliers", "Classical Parameters")} $
+  We assert#footnote[Don't take this assertion too literally, expect some mathematical subtleties,
+    just like @equivalence-of-var.] $Sigma$ as a $D$-dimensional manifold.
+]<state-manifold>
+#eg[
+  Think of idea gas, we can characterize it using
+  $ Sigma:= {(U, S, P, beta, V, N)} $
+  And we know it only has $D=3$ due to @var-equations, @pressure. So all
+  equilibrium states form a 3-manifold embedded in $RR^6$.
+]
+
 === Chain Rule and Differentials
 The main tool for transforming derivatives will be chain rule (the general
 version). Its use is best illustrated by example.
@@ -566,26 +581,190 @@ Later we also have Maxwell's relation. But for that we need to first establish
 the first law and some thermodynamic potentials.
 
 == First Law of Thermodynamics
-Given @var-equations, we want to find the derivative of $U(S, V, N)$.
+Given @var-equations, we want to find the derivative of $U(S, {X_i})$.
 
-By @reciprocity-relation-eg, we have
-$ eval(pdv(U, S))_(V, N) = eval(pdv(U, beta))_(V, N) / eval(pdv(S, beta))_(V, N) $
+#thm[Expression for Heat][
+  Let $Z(beta, X_1, X_2, dots.c)$ where $beta$ is the Lagrange multiplier of $U$,
+  and ${X_i}$ are used to represent other Lagrange multiplier and classical
+  parameters. We have
+  $ eval(pdv(U, S))_({X_i}) = T $
+  where we used $(S, {X_i})$ as independent variables.
+]<heat-expr>
+#proof[
+  By @reciprocity-relation, we have
+  $ eval(pdv(U, S))_({X_i}) = eval(pdv(U, beta))_({X_i}) / eval(pdv(S, beta))_({X_i}) $
 
-And differentiate $S = k_B beta U + k_B ln Z$ with respect to $beta$,
-$ eval(pdv(S, beta))_(V, N) &= k_B beta eval(pdv(U, beta))_(V, N) + k_B U + k_B overbrace(eval(pdv(ln Z, beta))_(V, N), -U) \
-                          &= k_B beta eval(pdv(U, beta))_(V, N) $
+  And differentiate $S = k_B beta U + k_B ln Z$ with respect to $beta$,
+  $ eval(pdv(S, beta))_({X_i}) &= k_B beta eval(pdv(U, beta))_({X_i}) + k_B U + k_B overbrace(eval(pdv(ln Z, beta))_({X_i}), -U) \
+                             &= k_B beta eval(pdv(U, beta))_({X_i}) $
 
-Thus
-$ eval(pdv(U, S))_(V, N) = eval(pdv(U, beta))_(V, N) / eval(pdv(S, beta))_(V, N) = 1/ (k_B beta) = T $
-by @temperature.
+  Thus
+  $ eval(pdv(U, S))_({X_i}) = eval(pdv(U, beta))_({X_i}) / eval(pdv(S, beta))_({X_i}) = 1/ (k_B beta) = T $
+  by @temperature.
+]
 
-Put together @pressure, we thus have
+Put together @pressure, for ideal gas we thus have
 $ dd(U) = T dd(S) - p dd(V) + pdv(U, N) dd(N) $
 
 In fact, this $pdv(U, N)$ will be the same as $mu$ as introduced by canonical
-ensemble.
+ensemble. That is
+$ mu equiv pdv(U, N) $
+though these two here have different definition technically: one is from
+Lagrange multiplier and constraint by partition, another is a partial
+derivative.
+
+#def[First Law of Thermodynamics][
+  Define (inexact) differential form $ var(Q):= T dd(S) $
+  as the heat.
+
+  And define work as the (inexact) form $ var(W) := dd(U) - var(Q) $
+]<1st-law>
+
+#warning[
+  Up till now, we have introduced nothing about _dynamics_. All derivatives and
+  stuff are due to dependence between variables of the system.
+
+  $var(Q)$ has nothing to do with time or process technically, integrating it
+  gives the _portion_ of change in $U$ that is due to heat. However, this can
+  later be interpreted with time dependence using the idea of quasistatic process.
+
+  The _no-time_ view in the box is important to understand why theory works for
+  non-quasistatic case (e.g. Joule expansion of ideal gas). Essentially, as long
+  as the beginning and end state of the system are in equilibrium, they are two
+  points in state manifold $Sigma$ (@state-manifold), and the change of any
+  thermal variable is a closed form (e.g. $dd(S)$) and we can integrate it along _any_ path
+  on $Sigma$ to get $difference(S)$.
+
+  Those path we used for integration by no mean corresponds to the true _process_ taken
+  by the system over time. In fact, the system may not be in equilibrium in
+  between (Joule expansion clearly is the case), and thus cannot be represented by
+  point on $Sigma$.
+]
 
 == Thermodynamic Potential
+We define a few new variables which are useful when considering equilibrium
+under constraints and in some sense naturally related to our partition
+functions.
+
+Some of these variables are specific to system with parameters like $V, N$.
+
+#def[Thermodynamic Potential (Ideal gas)][
+  For ideal gas, the thermodynamic potential is defined as
+  $
+    F(T, V, N)    &:= U - T S        && "Free Energy"\
+    H(S, P, N)    &:= U + P V        && "Helmholtz Energy"\
+    G(T, P, N)    &:= U - T S + P V  && "Gibbs Free Energy" \
+    Phi(T, V, mu) &:= U - T S - mu N && "Grand Potential"
+  $
+]<thermo-potential>
+For other non-gas system, we may define potentials analogously.
+
+Their "natural" variables are indicated, by natural we mean the potential has
+simple (or _canonical_) partial derivatives against these variables. For
+example,
+
+$ pdv(F, (T, V, N)) = pdv(F, (U, T, S)) compose pdv((U, T, S), (T, V, N)) $
+
+In matrix form this is
+
+$ mat(1, -S, -T) mat(
+  pdv(U, T), pdv(U, V), pdv(U, N);1, 0, 0;pdv(S, T), pdv(S, V), pdv(S, N)
+) $
+
+And we know by chain rule,
+$ eval(pdv(U, V))_(T, N) = eval(pdv(U, V))_(S, N) + overbrace(eval(pdv(U, S))_(V, N), "T") eval(pdv(S, V))_(T, N) + eval(pdv(U, N))_(S, V) cancel(pdv(N, V)_(T, N)) $
+
+So
+$ eval(pdv(F, V))_(T, N) &= eval(pdv(U, V))_(T, N) - T eval(pdv(S, V))_(T, N) \
+                       &= eval(pdv(U, V))_(S, N) = -P $
+
+Similar for other derivatives.
+
+Using differential form is simplifies this process significantly. This is
+because it allows us to write out more-than-independent variables in the middle
+and eliminate/change them at the end.
+
+$ dd(F) &= dd(U) - T dd(S) - S dd(T) \
+      &= T dd(S) - P dd(V) + pdv(U, N) dd(N) - T dd(S) - S dd(T) \
+      &= -S dd(T) -P dd(V) + pdv(U, N) dd(N) $
+
+#info[So it's like pretending $F$ is a function of $T, S, V, N$ and later introduce
+  the constraints between them. Differentials _automates_ this process. And
+  luckily in this case the derivative $ eval(pdv(F, S))_(T, V, N) = 0 $]
+
+This is similar for other potentials.
+
+=== Gibbs-Duhem Relation
+Another important relation is Gibbs-Duhem relation, which is specific to $(S, V, N)$ system
+(e.g. gas or fluids). To derive it we need a few definition and theorem.
+#def[Homogeneous Function][
+  Let $f: RR^N to R$ be a homogeneous function of degree/homogeneity $k$, then
+  $ f(lambda vb(x)) = lambda^k f(vb(x)) $
+  for all $lambda in RR$.
+]<homo-fn>
+
+#thm[Euler Homogeneous Function Theorem][
+  Assume $f: RR^N to R$ is homogeneous of degree $k$ and differentiable,
+  $ vb(x) dot.c grad f = k f(vb(x)) $
+]<euler-homo>
+#proof[
+  Since $f$ is homogeneous, we have
+  $ f(lambda vb(x)) = lambda^k f(vb(x)) $
+  Differentiate both side by $lambda$,
+  $ vb(x) dot.c eval(grad f)_(lambda vb(x)) = k lambda^(k-1) f(vb(x)) $
+  Sub in $lambda = 1$ gives the desired expression
+]
+
+Physically, certain quantities are intensive, certain quantities are extensive.
+This means when we double the system size (again, this concept is most
+meaningful#footnote[It's hard to argue if $B$ field will be intensive or not, yet it presents
+  naturally in $U$ for paramagnet.] for $(S, V, N)$ system). Specifically, $U(S, V, N)$ is
+a homogeneous function of degree 1. This is because scaling $S, V, N$ can be
+understood as scaling system thus scaling energy.
+
+Thus by @euler-homo, we have
+#thm[Gibbs-Duhem Relation][
+  $ T S - p V + mu N = U(S, V, N) $
+]<gibbs-duhem>
+#proof[See above.]
+#warning[
+  Gibbs-Duhem relation is quite specific to $(S, V, N)$ systems as it depends on
+  the homogeneity of $U(S, V, N)$. For paramagnet or Einstein model solids we no
+  longer have such easy homogeneity.
+]
+
+By @thermo-potential and @gibbs-duhem,
+$ G = U - T S + p V = mu N $
+Thinking of this as an expression with variable $T, S, P, V, mu, N$ all
+independent#footnote[Cancellation with $dd(U)$ in terms of $S, V, N$ leaves us luckily with only
+  three independent variables so we don't need to do any extra chain rule.], we
+may write
+$ dd(U) - S dd(T) - T dd(S) + p dd(V) + V dd(p) = mu dd(N) + N dd(mu) $
+Plug in the differential form $dd(U)$ gives
+
+$ -S dd(T) + V dd(P) - N dd(mu) = 0 $
+
+#text(
+  blue,
+)[This implies there is a function $f(T, P, mu)$ that stays constant as we "travel"
+  through the equilibrium state manifold.] In fact, this should be the *equation
+of state*, though we usually represent it in terms of $T, P, N, V$.
+
+Indeed, the function is quite evident, define $f(T, S, P, V, mu, N)$ as
+$ U - T S + P V - mu N $
+we know it's constant zero by @gibbs-duhem, so equation of the state is
+basically
+$ U - T S + P V - mu N = 0 $
+Rewrite in terms of $Phi$, we get
+#def[Equation of state for $(S, V, N)$ system][
+  $ Phi = - P V $
+]<eqn-of-state>
+
+=== Maxwell Relation
+=== Relation to partition functions
+Curiously, there is a correspondence between different partition functions of
+different ensembles and thermodynamic potentials.
+
 == Quasistatic System
 The process of interaction/dynamics could be out of equilibrium or near
 equilibrium approximately at any time $t$.

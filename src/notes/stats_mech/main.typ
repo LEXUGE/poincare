@@ -195,17 +195,21 @@ They are essentially from the same principle. The second one can be exactly
 derived from the first one. The first one could also be derived from the second,
 but requires _several little fudges_.
 
+=== Labeling Eigenstates<label-eigenstates>
 Before we start, let's fix some notation which we shall use throughout the note.
 
 We would need to label energy eigenstates. Let ${op(O)_i}$ be some (finite
-number of) mutually commuting operators that also commute with Hamiltonian. Then
-in the simultaneous eigenbasis of all those operators, each eigenstate $ket(E)$ can
-be labeled using a tuple
-$ alpha = (E, O_1, O_2, dots) $
+number of) mutually commuting operators that also commute with Hamiltonian. Let ${B_j}$ be
+some classical variables (e.g. volume for gas), so they are constant and
+deterministic for all states. Then in the simultaneous eigenbasis of all those
+operators, each eigenstate $ket(E)$ can be labeled using a tuple
+$ alpha = (E, O_1, O_2, dots, B_1, B_2, dots) $
 where $O_i$ are eigenvalues of $op(O)_i$ for state $ket(E)$.
 
 When we write $sum_alpha$ it means to permute over all values of $O_i$, so
 $ sum_alpha equiv sum_O_1 sum_O_2 dots.c $
+where we don't vary over ${B_j}$ because they are fixed values and don't need to
+be permuted over.
 
 Let $p_alpha$ be the eigenvalue of $op(rho)$ corresponding to the eigenstate
 (labeled by) $alpha$, then we have entropy
@@ -221,7 +225,7 @@ case to avoid notation clutter. Instead, we do the case where energy expectation
 given (i.e. canonical ensemble).
 
 Define auxiliary function
-$ G = -k_B sum_alpha p_alpha ln p_alpha + k_B lambda (1 - sum_alpha p_alpha) + k_B beta (U - sum_alpha p _alpha E_alpha ) $
+$ G_"Gibbs" = -k_B sum_alpha p_alpha ln p_alpha + k_B lambda (1 - sum_alpha p_alpha) + k_B beta (U - sum_alpha p _alpha E_alpha ) $<canonical-ensemble-multiplier>
 
 And differentiate with respect to $p_alpha, lambda, beta$ and set to zero to get
 critical point.
@@ -229,9 +233,43 @@ critical point.
 This gives eventually
 
 $ p_alpha = exp(- beta E_alpha) / Z(beta) $
-where $ Z(beta) = sum_alpha exp(- beta E_alpha) $
-is the *partition function* for canonical ensemble. Having more Lagrange
-multiplier essentially introduces for free parameters.
+where $ Z(beta, {B_j}) = sum_alpha exp(- beta E_alpha ({B_j})) $
+is the *partition function* for canonical ensemble. Notice $E_alpha$ still
+depends on ${B_j}$ after being summed over. We may later suppress this
+dependency when understood.
+
+It turns out the Lagrange multiplier $beta$ is equivalent to temperature.
+#def[Temperature][
+  Define temperature in Kelvin as
+  $ T := 1 / (k_B beta) $
+  where $k_B$ is Boltzmann constant.
+
+  From now on we may use $beta, T$ interchangeably. They are understood as if they
+  are the same variable.
+]<temperature>
+
+==== Generalized Gibbs Ensemble
+Having more Lagrange multiplier essentially introduces more free parameters. If
+we have another parameter $X$ (so some observable $op(X)$ whose mean value is $X$),
+then the auxiliary function becomes
+$ G = G_"Gibbs" - k_B beta f (X - sum_alpha p_alpha X_alpha) $
+where $G_"Gibbs"$ is from @canonical-ensemble-multiplier and we introduced the
+Lagrange multiplier $f$.
+
+This gives
+$ p_alpha         &= exp(- beta (E_alpha - f X_alpha)) / Z(beta) \
+cal(Z)(beta, f) &= sum_alpha exp(- beta (E_alpha - f X_alpha)) $
+
+where $cal(Z)$ is also called generalized partition function.
+
+$
+  pdv(ln(cal(Z)), f)      &= beta X \
+  - pdv(ln(cal(Z)), beta) &= U - f X
+$
+
+A common example of generalized Gibbs ensemble is *grand canonical ensemble*
+when $X = N$, the total number of particle, and $f = mu$, the chemical
+potential.
 
 === State Counting (Micro-canonical Ensemble)
 Again use energy as an simple example.
@@ -264,6 +302,7 @@ give the same result.
 
 Another interesting fact is that different "ensembles" are naturally linked to
 different thermodynamic potentials. For example,
+- micro-canonical ensemble relates to $S$ (entropy)
 - canonical ensemble relates to $F$ (free energy)
 - grand canonical ensemble relates to $Phi$ ("grand potential")
 - pressure ensemble relates to $G$ (Gibbs free energy)
@@ -297,14 +336,259 @@ $ S_(A B) &= -k_B sum_alpha p_alpha_A p_alpha_B (ln p_alpha_A + ln p_alpha_B) \
 After we use $sum_alpha_i p_alpha_i = 1, sum_alpha = sum_alpha_A sum_alpha_B$.
 
 So for non-coupled (or "product") system, extremizing the collective entropy is
-the same as extremizing individual subsystem entropy (with the same $beta$) and
-add together.
+the same as extremizing individual subsystem entropy (_with the same $beta$_)
+and add together.
+
+This can be extended to grand canonical potential as well.
+
+#idea[
+  In general we see *all Lagrange multiplier should be the same for subsystems
+  when their total
+  non-interacting system is in thermal equilibrium*.
+]
 
 = Thermodynamics
-== Quasistatic System
-== First Law and Second Law
-=== Reversible Process
+Thermodynamics study how thermal or non-thermal systems interact (thus
+dynamics). And also the calculus of different thermodynamic variables.
+
+== Variable Dependence
+We need to know first what are the variables in thermodynamics. In previous
+sections, we see the partition function is of the form
+$ Z("Lagrange Multipliers", "Classical Parameters") $
+where Lagrange Multipliers $beta, f$ etc. are from the expectation values of
+quantum observables.
+
+#caution[
+  Micro-canonical ensemble will not fit in this description because in there we
+  are assigning fixed value to quantum observables. In that case,
+  $ Z("Known Observable Eigenvalues", "Classical Parameters") $
+  would be the form.
+
+  Notice we used "known", which means we could (and should) left out unknown
+  observable eigenvalues, over which states are summed over to give a bigger
+  entropy.
+
+  Classical Parameters should usually be _all_ known because they could take real
+  (uncountable) value and give uncountable number of compatible states, which give
+  infinite $W$ if summed over.
+]
+
+We define the "degree of freedom" or "dimension" of a thermodynamic system as
+#def[Dimension of Thermal System][
+  For a given thermal system described by (generalized) canonical ensemble,
+  dimension $D$ is defined by
+  $ D = "Number of Lagrange Multipliers" + "Classical Parameters" $
+  If described by micro-canonical ensemble, dimension $D$ is defined by
+  $ D = "Number of Known Observable Eigenvalues" + "Classical Parameters" $
+]<dimension>
+#info[
+  Upon the first look, the dimension seems to be specific to the ensemble. For
+  example, for ideal gas we could have an ensemble that has no observable
+  constraints and thus zero Lagrange multiplier, then the system only has $D=2$ with
+  variables $V, N$, which is less then the canonical ensemble $D=3$ and $beta, V, N$.
+
+  However, most cases any _meaningful_ ensemble describing the system will give
+  the same dimension. For ideal gas, the grand canonical ensemble has $D=3$ with $beta, mu, V$,
+  transforming classical $N$ into Lagrange multiplier $mu$. And the
+  micro-canonical ensemble also has $D=3$ with $U, V, N$ where $U$ is exact
+  energy.
+]
+
+Partition function is enough to give the full thermodynamics. For example, for
+canonical ensemble (only $beta$ as a lagrange multiplier) with classical
+parameter $V,N$,
+$ U &= - eval(pdv(ln Z, beta))_(V,N) \
+S &= k_B ln Z + k_B beta U $<var-equations>
+where the second equation is given by plugging in $p_alpha$ to $S = - k_B sum_alpha p_alpha ln p_alpha$.
+
+Notice @var-equations _doesn't_ constrain the variables $beta, V, N$ as given in
+the dependence of $Z$. Instead, it relates $beta, V, N$ to "new" variables $U, S$.
+
+In fact it turns out, here $beta, V, N$ actually constitutes the minimal degree
+of freedom of this thermodynamic system. The reason is simple, all together we
+have $beta, V, N, S, U$ total of five variables and @var-equations gives two
+constraints between these five variables.
+
+Implicit function theorem allows us to select three variables _with suitable condition_ to
+form a set of independent variables.
+
+#info[
+  Luckily, for ideal gas these condition are satisfied for any choice of
+  independent variable (neglecting the possibility of singularity of partial
+  derivative).
+
+  For ideal gas, the partition function as we later discover is
+  $ Z_1^N / N!, Z_1 = V / (lambda_"th" (beta)) $<ideal-partition-func>
+
+  And if we write out the derivative linear map for our constraint functions
+  $ f_1(U, S, beta, V, N) &= U + eval(pdv(ln Z, beta))_(V,N) \
+  f_2(U, S, beta, V, N) &= S - k_B ln Z - k_B beta U $
+  we get
+  $ pdv((f_1,f_2), (U, S, beta, V, N)) = overbrace(
+    mat(
+      1, 0, pdv(ln Z, beta^2), pdv(ln Z, V, beta), pdv(ln Z, N, beta);-k_B beta,
+        1, cancel(k_B U -k_B U),
+        - k_B pdv(ln Z, N),
+        - k_B pdv(ln Z, V)
+    ), (U, S, beta, V, N),
+
+  ) $
+
+  Implicit function theorem requires us to choose _dependent_ variable such that
+  the submatrix corresponding to them is invertible. The only _possible_ non-invertible
+  part is on $V, N$ (equivalent to $beta, S, U$ being independent variable).
+
+  Specifically,
+  $ mat(
+    pdv(ln Z, V, beta), pdv(ln Z, N, beta);- k_B pdv(ln Z, V), - k_B pdv(ln Z, N)
+  ) $<N-V-mat>
+
+  However, if we differentiate @ideal-partition-func we find two rows are not
+  proportional to each other. This is because of $N$ features as an exponential in $Z = Z_1^N$.
+
+  In fact, later as we calculate the entropy, we should explicitly see how $U, S, beta$ gives
+  the other variables.
+]
+
+For ideal gas, $U, S, beta, V, N$ are unfortunately not the full list of most
+used (independent) variables. We also have
+#def[Pressure][
+  Pressure is defined as
+  $ P = - eval(pdv(U, V))_(S, N) $
+  where we used the $S, V, N$ as independent variables.
+]<pressure>
+
+Again, luckily, for ideal gas, we can choose any three variables among the six $U, S, P, beta, V, N$ as
+independent variables to generate other three.
+
+And we may _assume_ from now on
+#postl[Equivalence of Variables][For most thermodynamic systems, any choice of variables with the correct
+  dimension (@dimension) constitutes a set of independent variable.]<equivalence-of-var>
+
+In reality we almost never find/use the explicit form of implicit function. This
+is because we often use the derivative and convert independent variables of
+derivative often.
+
+=== Chain Rule and Differentials
+The main tool for transforming derivatives will be chain rule (the general
+version). Its use is best illustrated by example.
+
+#eg[For ideal gas, we know#footnote[Remember @temperature.] $U, V, N$ and $T,P,N$ can
+  both be independent variables. And in practice we want to find the derivatives
+  of $S(T, P, N)$ given $S(U, V, N)$. More specifically, we want to find $eval(pdv(S, T))_(P, N)$.
+
+  By chain rule, we know (under suitable condition),
+
+  $ pdv(S, (T, P, N)) = pdv(S, (U, V, N)) compose pdv((U, V, N), (T, P, N)) $<chain-rule-eg-abstract>
+
+  where we used the notation
+  $ pdv(S, (T, P, N)):= jmat(S;T, P, N) $
+
+  So @chain-rule-eg-abstract means
+  $ jmat(S;T, P, N) = jmat(S;U, V, N) jmat(U, V, N;T, P, N) $
+]<ideal-gas-chain-rule-eg>
+
+This can often be done easier using "differentials" as it allows us to omit
+irrelevant matrix entries.
+
+#eg[
+  Continuing @ideal-gas-chain-rule-eg, but using differentials. We can write
+
+  $ dd(S)= pdv(S, U) dd(U) + pdv(S, V) dd(V) + pdv(S, N) dd(N) $
+
+  And $ dd(U) &= pdv(U, T) dd(T) + pdv(U, P) dd(P) + pdv(U, N) dd(N) \
+  dd(V) &= pdv(V, T) dd(T) + dots.c \
+  dd(N) &= pdv(N, T) dd(T) + dots.c $
+  And "substituting back gives the $pdv(S, T)$.
+
+  Mathematically, this is just a shorthand for @ideal-gas-chain-rule-eg. But it's
+  more economic and convenient.
+]
+
+=== Useful Derivative Formulae
+
+The first "rule" is the reciprocity rule, which is really just a special case of
+chain rule. Consider the following example,
+
+#eg[Reciprocity Relation][
+  $ pdv(S, (U, V, N)) = pdv(S, (T, V, N)) compose pdv((T, V, N), (U, V, N)) $
+
+  However,
+  $ pdv((T, V, N), (U, V, N)) = mat(pdv(T, U), 0, 0;0, 1, 0;0, 0, 1) $
+  And $(T, V, N), (U, V, N)$ both constitute independent variables by
+  @equivalence-of-var, so their derivative mapping is invertible.
+  $ pdv((T, V, N), (U, V, N)) = inv(pdv((U, V, N), (T, V, N))) = mat(inv(pdv(U, T)), 0, 0;0, 1, 0;0, 0, 1) $
+
+  So
+  $ eval(pdv(S, U))_(V, N) = eval(pdv(S, T))_(V, N) / eval(pdv(U, T))_(V, N) $
+]<reciprocity-relation-eg>
+
+We also have
+#thm[Cyclic Relation][
+  Given $X, Y, Z$ with constraints such that any two variables of the three
+  constitute a set of independent variables. Then
+  $ eval(pdv(X, Y))_Z eval(pdv(Y, Z))_X eval(pdv(Z, X))_Y = -1 $
+]<cyclic-relation>
+#proof[
+  Notice $ det(pdv((X, Z), (Y, Z))) = eval(pdv(X, Y))_Z $
+  And $ det(pdv((X, Z), (Z, Y))) = det(pdv((Z, X), (Y, Z))) = - det(pdv((X, Z), (Y, Z))) $ as
+  determinant inverts sign as we permute rows/columns.
+
+  This means we can write the relation as
+  $ det(pdv((X, Z), (Y, Z))) det(pdv((Y, X), (Z, X))) & det(pdv((Z, Y), (X, Y))) \
+                                                    &= det(pdv((X, Z), (Y, Z))) overbrace(
+    det(pdv((Z, Y), (X, Y))) det(pdv((Y, X), (Z, X))),
+    "shifting these two",
+
+  ) \
+                                                    &= det(
+    pdv((X, Z), (Y, Z)) compose pdv((Z, Y), (X, Y)) compose pdv((Y, X), (Z, X))
+  ) $
+
+  Now, $ pdv((X, Z), (Y, Z)) compose pdv((Z, Y), (X, Y)) compose & pdv((Y, X), (Z, X)) \
+                                                          &= - pdv((X, Z), (Z, Y)) compose - pdv((Z, Y), (Y, X)) compose - pdv((Y, X), (X, Z)) \
+                                                          &= - pdv((X, Z), (Y, X)) compose pdv((Y, X), (X, Z)) = - II $
+  By $det(-II) = -1$ we get the required relation.
+]
+#remark[This can be easily extended to more than three variables.]
+
+Later we also have Maxwell's relation. But for that we need to first establish
+the first law and some thermodynamic potentials.
+
+== First Law of Thermodynamics
+Given @var-equations, we want to find the derivative of $U(S, V, N)$.
+
+By @reciprocity-relation-eg, we have
+$ eval(pdv(U, S))_(V, N) = eval(pdv(U, beta))_(V, N) / eval(pdv(S, beta))_(V, N) $
+
+And differentiate $S = k_B beta U + k_B ln Z$ with respect to $beta$,
+$ eval(pdv(S, beta))_(V, N) &= k_B beta eval(pdv(U, beta))_(V, N) + k_B U + k_B overbrace(eval(pdv(ln Z, beta))_(V, N), -U) \
+                          &= k_B beta eval(pdv(U, beta))_(V, N) $
+
+Thus
+$ eval(pdv(U, S))_(V, N) = eval(pdv(U, beta))_(V, N) / eval(pdv(S, beta))_(V, N) = 1/ (k_B beta) = T $
+by @temperature.
+
+Put together @pressure, we thus have
+$ dd(U) = T dd(S) - p dd(V) + pdv(U, N) dd(N) $
+
+In fact, this $pdv(U, N)$ will be the same as $mu$ as introduced by canonical
+ensemble.
+
 == Thermodynamic Potential
+== Quasistatic System
+The process of interaction/dynamics could be out of equilibrium or near
+equilibrium approximately at any time $t$.
+
+Consider the latter case, for any thermal system we could ascribe a
+time-dependent entropy $S(t)$ to it as entropy is well-defined for
+thermal-system in equilibrium. The same thing might be done for any expectation
+value for observables (e.g. $U(t), N(t)$ for grand canonical ensemble).
+
+== SecondLaw of Thermodynamics
+
+=== Reversible Process
+== Extrmization of Thermodynamic Potentials
 
 = Simple Systems
 == Localized Harmonic Oscillator (Einstein Model of Solid)

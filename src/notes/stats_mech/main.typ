@@ -167,10 +167,11 @@ water is thermal, no matter how you stir it first#footnote[ignore the heating du
 == Maximum Entropy Principle
 
 To find entropy, we adopt the following postulate
-#postl[Maximum Entropy Principle][For a thermal system under equilibrium, the entropy is maximized such that
+#postl[Maximum Entropy Principle][For an _isolated_ thermal system under equilibrium, the entropy is maximized
+  such that
   - $op(rho)$ corresponding to the maximum $S(op(rho))$ satisfies $[op(rho), op(H)] = 0$.
-  - constraints of expectation value of conserved quantities (i.e. the operators $[op(O), op(H)] = 0$)
-    are satisfied]<mep>
+  - _all_ constraints of expectation value of conserved quantities (i.e. the
+    operators $[op(O), op(H)] = 0$) are satisfied]<mep>
 
 #info[
   The first requirement seems unnatural. A usual motivation is such commuting $op(rho)$ doesn't
@@ -186,6 +187,21 @@ To find entropy, we adopt the following postulate
   In other words, _we expect_ if local extremums are isolated then evolving
   density matrix should be prohibited. Thus under _good simple cases_, a commuting $op(rho)$ should
   be required.
+]
+
+#warning[
+  Isolated thermal system is required for @mep to apply. The simple reason is
+  non-isolated system implies energy is not conserved. However, we must have $[op(H), op(H)] = 0$ and
+  should thus conserve the energy while maximization if we follow the @mep. Thus
+  it's self-contradictory.
+
+  The actual physical reason is non-isolated system implies interaction and our
+  Hamiltonian doesn't model that#footnote[In fact, to model interaction we need the total space of the other system that
+    we are _interacting with_.]. Thus nonphysical result is expected.
+
+  One way as we later see is to apply @mep to the compound system comprising both
+  parties of interaction. And the compound system is isolated. The interaction
+  Hamiltonian can be ignored provided it's weak.
 ]
 
 To use @mep, there are mainly two ways:
@@ -309,47 +325,94 @@ different thermodynamic potentials. For example,
 
 These will be detailed later.
 
-== Basic Properties of Entropy
-Remember von Neumann entropy is subadditive. That is
+== Compound System
+Remember von Neumann entropy is subadditive. That is, for subsystems $A, B$,
 $ S(hat(rho)_(A B)) lt.eq S(hat(rho)_A) + S(hat(rho)_B) $
+
 This is equal if and only if $hat(rho)_(A B) = hat(rho)_A tp hat(rho)_B$. For
 certain cases $hat(rho)_(A B) eq.not hat(rho)_A tp hat(rho)_B$, for example the
 collective density matrix of two identical ideal gas particle due to
 symmetrization would be different from $hat(rho)_A tp hat(rho)_B$. And
 subadditivity is the solution to Gibb's paradox!
 
-However, in most times, for weakly interacting systems, we assume $op(rho)_A tp op(rho)_B$ is
-the collective density matrix. This assumption leads to
-$ alpha_(A B) = (alpha_A, alpha_B), E_(A B) = E_A + E_B $
-And if we extremizes the total system's entropy#footnote[Notice if we extremize collectively, then we naturally must only have one
-  parameter $beta$ for the total system.], we get
-$ Z_(A B)(beta) &= sum_alpha exp(- beta E_alpha_A - beta E_alpha_B) \
-              &= sum_alpha_A exp(-beta E_alpha_A) sum_alpha_B exp(-beta E_alpha_B) \
-              &= Z_A (beta) Z_B (beta) $<Z-product>
-And
-$ p_alpha = exp(-beta E_alpha_A - beta E_alpha_B) / (Z_A Z_B) = p_alpha_A p_alpha_B $
+However, in most times, for weakly interacting systems, *we can ignore the
+interaction*, so
+$ op(H)_(A B):= op(H)_A + op(H)_B + op(H)_"int" approx op(H)_A + op(H)_B $
 
-From which we get also
-$ S_(A B) &= -k_B sum_alpha p_alpha_A p_alpha_B (ln p_alpha_A + ln p_alpha_B) \
-        &= -k_B sum_alpha_A p_alpha_A ln p_alpha_A - -k_B sum_alpha_B p_alpha_B ln p_alpha_B \
-        &= S_A + S_B $
-After we use $sum_alpha_i p_alpha_i = 1, sum_alpha = sum_alpha_A sum_alpha_B$.
+Thus the eigenstates of the compound system is just the tensor products of
+individual eigenstates of $A, B$.
 
-So for non-coupled (or "product") system, extremizing the collective entropy is
-the same as extremizing individual subsystem entropy (_with the same $beta$_)
-and add together.
+This gives an important result on weakly-interacting compound isolated system
+under equilibrium.
+#thm[Weakly-interacting equilibrium has separable density operator][
+  For an isolated compound system described Hilbert space $cal(H)_A tp cal(H)_B$ with
+  Hamiltonian
+  $ op(H)_(A B):= op(H)_A + op(H)_B + op(H)_"int" approx op(H)_A + op(H)_B $
+  and $[op(H)_A, op(H)_"int"] eq.not 0, [op(H)_B, op(H)_"int"] eq.not 0$, then
+  @mep with canonical ensemble implies
+  - Equilibrium density operator $op(rho)_(A B) = op(rho)_A tp op(rho)_B$ for some $op(rho)_A, op(rho)_B$
+  - $op(rho)_A, op(rho)_B$ are equilibrium operators for system $A, B$ respectively
+    with the same $beta$
+  - Entropy is additive.
+]<weak-coupling-is-separable>
+#proof[
+  #pfstep[
+    $alpha_(A B) = (alpha_A, alpha_B), E_(A B) = E_A + E_B$
+  ][
+    Under approximation $op(H)_(A B) approx op(H)_A + op(H)_B $, the eigenstates are
+    separable, and thus the labeling and eigenvalues are also separable.
 
-This can be extended to grand canonical potential as well.
+    Thus $alpha_(A B) = (alpha_A, alpha_B), E_(A B) = E_A + E_B$.
+  ]
 
-#conclusion[
-  In general we see *all Lagrange multiplier should be the same for subsystems
-  when their total
-  non-interacting system is in thermal equilibrium*.
+  #pfstep(
+    finished: true,
+  )[
+    The only constraint we should consider is the constraint on energy $U$ for the
+    compound system.
+  ][
+    We assume $[op(H)_A, op(H)_"int"] eq.not 0, [op(H)_B, op(H)_"int"] eq.not 0$, so
+    it implies we should#footnote[This is somewhat arbitrary consider we are assuming $op(H)_"int"$ negligible.
+      However, not assuming this would make our model identical to individually
+      isolated subsystem $A, B$.] not consider individual $op(H)_A, op(H)_B$ as
+    conserved (and thus not constraints).
+  ]
+
+  And if we extremizes the total system's entropy#footnote[Notice if we extremize collectively, then we naturally must only have one
+    parameter $beta$ for the total system.] under
+  $ 0 = U - sum_alpha p_alpha E_alpha $
+  we get
+  $ Z_(A B)(beta) &= sum_alpha exp(- beta E_alpha_A - beta E_alpha_B) \
+                &= sum_alpha_A exp(-beta E_alpha_A) sum_alpha_B exp(-beta E_alpha_B) \
+                &= Z_A (beta) Z_B (beta) $<Z-product>
+  And
+  $ p_alpha = exp(-beta E_alpha_A - beta E_alpha_B) / (Z_A Z_B) = p_alpha_A p_alpha_B $<compound-system-prob>
+
+  where
+  $ p_alpha_A = exp(-beta E_alpha_A) / Z_A, p_alpha_B = exp(-beta E_alpha_B) / Z_B $
+  Note this is the same as canonical ensemble distribution if we individually
+  maximizes entropy for subsystem $A, B$ (but _with the same $beta$_).
+
+  From @compound-system-prob we get also
+  $ S_(A B) &= -k_B sum_alpha p_alpha_A p_alpha_B (ln p_alpha_A + ln p_alpha_B) \
+          &= -k_B sum_alpha_A p_alpha_A ln p_alpha_A - -k_B sum_alpha_B p_alpha_B ln p_alpha_B \
+          &= S_A + S_B $
+  After we use $sum_alpha_i p_alpha_i = 1, sum_alpha = sum_alpha_A sum_alpha_B$.
+]
+#remark[
+  This can be generalized to other ensembles to allow particle exchange or volume
+  exchange. But the problem with volume is we cannot quantize it easily.
 ]
 
-= Thermodynamics
-Thermodynamics study how thermal or non-thermal systems interact (thus
-dynamics). And also the calculus of different thermodynamic variables.
+The same density matrix (or ${p_alpha_A}, {p_alpha_B}$) could also be reached if
+we find the equilibrium for each system under constraints $U_A, U_B$ for each
+system to get $S_A, S_B$ and extremizes $S = S_A + S_B$ under the constraint $U_A + U_B = U$.
+This is proven in @weak-coupling-second-maximization as we need to know more
+about variable dependence.
+
+= Thermal Relations
+In this part we study the calculus of different thermodynamic variables. We will
+see these variable describe equilibrium states on a state manifold.
 
 == Variable Dependence
 We need to know first what are the variables in thermodynamics. In previous
@@ -458,9 +521,90 @@ used (independent) variables. We also have
 Again, luckily, for ideal gas, we can choose any three variables among the six $U, S, P, beta, V, N$ as
 independent variables to generate other three.
 
+However, things get slightly different when we consider
+#def[Chemical Potential][
+  Chemical potential is defined as
+  $ mu = eval(pdv(U, N))_(S, V) $
+  where we used the $S, V, N$ as independent variables.
+]<chemical-potential>
+
+#thm[Chemical Potential in terms of canonical ensemble partition function][
+  $ mu = - 1/ beta eval(pdv(ln Z, N))_(beta, V) $
+]<chemical-potential-partition-function>
+#proof[
+  By chain rule,
+  $ eval(pdv(U, N))_(S, V) &= eval(pdv(U, N))_(beta, V) + eval(pdv(U, beta))_(N, V) eval(pdv(beta, N))_(S, V) $
+
+  And by @cyclic-relation,
+  $ eval(pdv(beta, N))_(S, V) = - eval(pdv(S, N))_(beta, V) / eval(pdv(S, beta))_(N, V) $
+
+  By @pdv-S-beta, $ eval(pdv(S, beta))_(N, V) = k_B beta eval(pdv(U, beta))_(N, V) $
+
+  And differentiating @var-equations gives
+  $ eval(pdv(S, N))_(beta, V) = k_B eval(pdv(ln Z, N))_(beta, V) + k_B beta eval(pdv(U, N))_(beta, V) $
+
+  Thus
+
+  $ eval(pdv(U, beta))_(N, V) eval(pdv(beta, N))_(S, V) &= - cancel(eval(pdv(U, beta))_(N, V)) (k_B eval(pdv(ln Z, N))_(beta, V) + k_B beta eval(pdv(U, N))_(beta, V)) / (k_B beta cancel(eval(pdv(U, beta))_(N, V))) \
+                                                      &= - 1/ beta (eval(pdv(ln Z, N))_(beta, V) + beta eval(pdv(U, N))_(beta, V)) $
+
+  So together
+  $ eval(pdv(U, N))_(S, V) &= eval(pdv(U, N))_(beta, V) - 1/ beta (eval(pdv(ln Z, N))_(beta, V) + beta eval(pdv(U, N))_(beta, V)) \
+                         &= -1 /beta eval(pdv(ln Z, N))_(beta, V) $
+]
+
+#thm[Pressure in terms of canonical ensemble partition function][
+  $ P = 1/beta eval(pdv(ln Z, V))_(beta, N) $
+]<pressure-partition-function>
+#proof[Exactly analogous to @chemical-potential-partition-function. Notice the sign
+  difference as @pressure is defined with a minus sign. ]
+
+And we cannot use $mu, T, P$ or $mu, beta, P$ as independent variables for the
+system.
+
+#thm[Purely intensive variables set are non-independent][
+  For ideal gas, $mu, beta, P$ cannot serve as a set of independent variable to
+  obtain $U, S, V, N$.
+]
+#proof[
+  The relevant constraints are, by @chemical-potential-partition-function,
+  @pressure-partition-function,
+  $ f_1 &= mu+ 1/ beta eval(pdv(ln Z, N))_(beta, V) \
+  f_2 &= P - 1/beta eval(pdv(ln Z, V))_(beta, N) $
+  So the derivative is
+  $ pdv((f_1, f_2), (beta, mu, P, V, N)) $
+
+  And we need to look at the $V, N$ part of the derivative, which is
+  $ 1/beta mat(pdv(ln Z, N, V), pdv(ln Z, N, 2);- pdv(ln Z, V, 2), - pdv(ln Z, V, N)) $<det-mat>
+
+  And plug in the partition function
+  $ Z = (V/ lambda_"th"^3)^N / (N!) $
+
+  Take $ln$,
+  $ ln Z approx N (ln V - 3 ln lambda_"th" (beta) ) - N ln N + N $
+
+  Since all derivatives are second-derivative and $lambda$ depends on $beta$ only,
+  we can safely neglect $lambda$,
+
+  And calculation yieds,
+
+  $ pdv(ln Z, N, V) &= 1 / V \
+  pdv(ln Z, N, 2) &= - 1/ N \
+  pdv(ln Z, V, 2) &= N / V^2 $
+  And this makes @det-mat singular. Thus $beta, P, mu$ cannot be used as a set of
+  independent variable.
+]
+#remark[
+  This is a rather "head-on" proof. This can alternatively been seen using
+  @gibbs-duhem, or by the simple physical argument that these parameters stays the
+  same as system scales, therefore cannot determine $V, N$ as the system with $2V, 2N, beta$ gives
+  the same $beta, P, mu$.
+]
+
 And we may _assume_ from now on
 #postl[Equivalence of Variables][For most thermodynamic systems, any choice of variables with the correct
-  dimension (@dimension) constitutes a set of independent variable.]<equivalence-of-var>
+  dimension (@dimension) constitutes a set of independent variable, *as long as
+  not all variables chosen are intensive*.]<equivalence-of-var>
 
 In reality we almost never find/use the explicit form of implicit function. This
 is because we often use the derivative and convert independent variables of
@@ -583,7 +727,7 @@ the first law and some thermodynamic potentials.
 == First Law of Thermodynamics
 Given @var-equations, we want to find the derivative of $U(S, {X_i})$.
 
-#thm[Expression for Heat][
+#thm[
   Let $Z(beta, X_1, X_2, dots.c)$ where $beta$ is the Lagrange multiplier of $U$,
   and ${X_i}$ are used to represent other Lagrange multiplier and classical
   parameters. We have
@@ -596,7 +740,7 @@ Given @var-equations, we want to find the derivative of $U(S, {X_i})$.
 
   And differentiate $S = k_B beta U + k_B ln Z$ with respect to $beta$,
   $ eval(pdv(S, beta))_({X_i}) &= k_B beta eval(pdv(U, beta))_({X_i}) + k_B U + k_B overbrace(eval(pdv(ln Z, beta))_({X_i}), -U) \
-                             &= k_B beta eval(pdv(U, beta))_({X_i}) $
+                             &= k_B beta eval(pdv(U, beta))_({X_i}) $<pdv-S-beta>
 
   Thus
   $ eval(pdv(U, S))_({X_i}) = eval(pdv(U, beta))_({X_i}) / eval(pdv(S, beta))_({X_i}) = 1/ (k_B beta) = T $
@@ -614,19 +758,28 @@ Lagrange multiplier and constraint by partition, another is a partial
 derivative.
 
 #def[First Law of Thermodynamics][
-  Define (inexact) differential form $ var(Q):= T dd(S) $
-  as the heat.
-
-  And define work as the (inexact) form $ var(W) := dd(U) - var(Q) $
+  First Law of Thermodynamics is essentially the derivative of $U$. For $(S, V, N)$ thermal
+  system,
+  $ dd(U) = T dd(S) - p dd(V) + pdv(U, N) dd(N) $
 ]<1st-law>
+
+#warning[
+  Often times first law is written as
+  $ dd(U) = var(Q) + var(W) $
+  where $var(Q)$ is the differential form for heat.
+
+  This statement alone is not useful as it doesn't give an expression for $var(Q), var(W)$.
+  In fact, integration of $var(Q), var(W)$ are path-dependent in the sense that it
+  depends on the path on the _product state manifold of both system and environment_.
+  More on this later with second law.
+
+  In contrast, variables like $U, P, T, S, V, N$ are path independent and doesn't
+  dependent on environment as well.
+]
 
 #warning[
   Up till now, we have introduced nothing about _dynamics_. All derivatives and
   stuff are due to dependence between variables of the system.
-
-  $var(Q)$ has nothing to do with time or process technically, integrating it
-  gives the _portion_ of change in $U$ that is due to heat. However, this can
-  later be interpreted with time dependence using the idea of quasistatic process.
 
   The _no-time_ view in the box is important to understand why theory works for
   non-quasistatic case (e.g. Joule expansion of ideal gas). Essentially, as long
@@ -639,6 +792,33 @@ derivative.
   by the system over time. In fact, the system may not be in equilibrium in
   between (Joule expansion clearly is the case), and thus cannot be represented by
   point on $Sigma$.
+]
+
+We can now find an alternative route to derive the equilibrium for isolated
+weakly-interacting compound system.
+#thm[Weakly-interacting isolated compound system equilibrium by second maximization][
+  Let $S_A (U_A, V_A, N_A), S_B (U_B, V_B, N_B)$ be the entropy of system
+  subsystem $A, B$.
+
+  The maximization of compound system entropy $S = S_A + S_B$ under $U_A + U_B = U$ constraint
+  with $V_A, V_B, N_A, N_B$ fixed implies
+  - $beta_A = beta_B = beta$
+  - $beta$ is the same as obtained in @weak-coupling-is-separable.
+]<weak-coupling-second-maximization>
+#proof[
+  Use Lagrange Multiplier, we can write,
+  $ G = S_A (U_A) + S_B (U_B) + lambda (U - U_A -U_B) $
+  Differentiation gives
+  $ k_B beta_A = eval(pdv(S_A, U_A))_(V_A, N_A) = -lambda = eval(pdv(S_B, U_B))_(V_B, N_B) = k_B beta_B $
+  by @heat-expr and @reciprocity-relation.
+
+  And we also need to satisfy the constraints
+  $ U_A + U_B = - pdv(ln Z_A, beta) - pdv(ln Z_B, beta) = U $
+  But
+  $ - pdv(ln Z_A, beta) - pdv(ln Z_B, beta) = - pdv(, beta) (ln Z_A (beta) Z_B (beta)) $
+  and $Z_A (beta) Z_B (beta)$ is the same as the partition function $Z_(A B) (beta)$ in
+  @weak-coupling-is-separable. Thus we recover the same constraint for $beta$, and
+  thus the same value for $beta$.
 ]
 
 == Thermodynamic Potential
@@ -765,19 +945,169 @@ Rewrite in terms of $Phi$, we get
 Curiously, there is a correspondence between different partition functions of
 different ensembles and thermodynamic potentials.
 
-== Quasistatic System
-The process of interaction/dynamics could be out of equilibrium or near
+#pagebreak()
+= Thermodynamics
+Up until now we have done nothing with "process" or time. Dynamics is inherently _not_ in
+equilibrium and different thermal systems may interact with one another.
+
+#text(
+  blue,
+)[In order to say anything meaningful about the process, we _must_ have entropy at
+  least sensible defined at the beginning and the end of the process.] Entropy
+may or may not get defined in the middle of the process.
+
+Notice the only tool we have on finding entropy is @mep. We can extend the
+definition of entropy a little by defining entropy for "pseudo-equilibrium"
+states of compound system.
+
+#def[Extended entropy for weakly-interacting compound system][
+  For two weakly-interacting thermal system with entropy defined $S_A, S_B$, we
+  define their compound system entropy as
+  $ S:= S_A + S_B $
+  Note this agrees in particular with @weak-coupling-is-separable when compound
+  system is isolated and in equilibrium.
+]<extended-entropy>
+
+#eg[
+  Consider a bottle of water in a gas. Gas and water are initial isolated and each
+  in equilibrium with $S_"gas", S_"water"$. At the moment we relieve the
+  isolation, we define the total system entropy as $S_"gas" + S_"water"$.
+
+  The total system without isolation is not in equilibrium by @mep unless
+  temperature of gas and water agree.
+]
+
+This can definition naturally include the case of three subsystems but consider
+any two as another compound system.
+
+Note the entropy by @extended-entropy will in general *not* agree with that
+given by @mep because the compound system may not be in equilibrium.
+
+== Quasistatic Process
+We first define the notion of "pseudo-equilibrium".
+
+#def[Pseudo Equilibrium][
+  Consider a compound system consisting of $n$ subsystems, if each subsystem $i$ is
+  in equilibrium (i.e. on a point of their state manifold $Sigma_i$), then we say
+  the total system is in pseudo equilibrium. The state of such compound system is
+  described by product space $Sigma_1 times dots.c times Sigma_n$.
+]
+#eg[
+  Given a cold water and hot ambient, the water is insulated from the environment.
+  Right after removal of insulation, the water and ambient hot air are in pseudo
+  equilibrium.
+]
+
+The process of interaction/dynamics could be out of equilibrium or near (pseudo)
 equilibrium approximately at any time $t$.
 
-Consider the latter case, for any thermal system we could ascribe a
-time-dependent entropy $S(t)$ to it as entropy is well-defined for
-thermal-system in equilibrium. The same thing might be done for any expectation
-value for observables (e.g. $U(t), N(t)$ for grand canonical ensemble).
+Define quasistatic process as
+#def[Quasistatic Process][
+  A process is quasistatic if at any time $t$ the system is approximated by some
+  pseudo equilibrium state.
 
-== SecondLaw of Thermodynamics
+  The relative structure of subsystems should not change. This means we can always
+  identify the same constituent subsystems.
+]
 
-=== Reversible Process
+We are now able to state the second law.
+
+== Second Law of Thermodynamics
+Second law requires the notion of an "adiabatic" process. We define "adiabatic"
+process as a process with no exchange of heat#footnote[We take heat as primitive, as we have to characterize heat using Clausius
+  inequality which is based on second law.].
+
+#postl[Second Law of Thermodynamics][
+  For any adiabatic process (i.e. process with no heat exchange with outside),
+  $ difference(S) gt.eq 0 $
+  Note here entropy only needs to be defined for the start and end of the process,
+  and they are allowed to be defined using @extended-entropy.
+]<second-law>
+
+#info[
+  Second law is applicable as long as we can define the initial and final entropy,
+  and process is _adiabatic_. The process doesn't have to be quasistatic.
+
+  An example is Joule expansion, the process is adiabatic and the initial and
+  final entropy is well-defined, yet the process is not quasistatic.
+]
+
+We define a device, called "heat source".
+
+#def[Heat Source (Heat Reservoir)][
+  A thermal system with all coordinates other than $S$ fixed is a heat source.
+
+  Sometimes it's approximated to take $T$ as a constant.
+]<heat-source>
+
+We now have Clausius inequality which characterizes the heat for a quasistatic
+process.
+
+#thm[Clausius Inequality][
+  Consider a system $cal(S)$ with heat provided solely by a heat source $cal(H)$ (@heat-source).
+
+  Assume the process is quasistatic for the compound $(cal(S), cal(H))$, then
+  $ var(Q) lt.eq T_"src" dd(S) $
+  where $T_"src"$ is the temperature of the heat source#footnote[Heat source is a single non-compound thermal system, so pseudo equilibrium for $(cal(S), cal(H))$ implies
+    the equilibrium of $cal(H)$ and thus well-defined temperature for $cal(H)$.].
+]<clausius-inequality>
+
+#proof[
+  Since the compound system $(cal(S), cal(H))$ together can be understood as an
+  adiabatic system, we can apply the second law
+  $ dd(S)_"src" + dd(S) gt.eq 0 $
+  along the process on the product manifold $Sigma_cal(S) times Sigma_cal(H)$ #footnote[$Sigma_cal(S)$ can indeed be another product manifold, as we don't assume
+    anything on the system other than it's in pseudo equilibrium.].
+
+  Thus
+  $ T_"src" dd(S)_"src" + T_"src" dd(S) &gt.eq 0 \
+  T_"src" dd(S)                       &gt.eq - T_"src" dd(S)_"src" = - dd(U)_"src" $
+  as temperature is positive.
+
+  Since the only energy transfer between heat source and the system is heat, $dd(U)_"src" = var(Q)_"src" = - var(Q) $.
+  And
+  $ T_"src" dd(S) &gt.eq var(Q) $
+]
+
+#info[
+  For quasistatic process, we could ascribe a time-dependent entropy $S(t)$ to the
+  system (or $S_i (t)$ for each subsystem) as entropy is well-defined for
+  thermal-system in equilibrium. The same thing might be done for any expectation
+  value for observables (e.g. $U(t), N(t)$ for grand canonical ensemble).
+
+  Therefore, under quasistatic approximation, differentials can be understood as "rate
+  of ...". For example, the formula for @clausius-inequality
+
+  $ var(Q) lt.eq T_"src" dd(S) $
+
+  can be understood as
+
+  $ H(t) lt.eq T_"src" (t) S'(t) $
+  where $H(t)$ is the rate of heat input on the system. So integrating both side
+  with respect to $t$ gives
+  $ Q lt.eq integral_(t_i)^(t_f) T_"src" (t) S'(t) dd(t) $
+
+  In fact, this is implicitly used when we are integrating $var(Q)$. Because the
+  value of $var(Q)$ is actually dependent on the path taken by compound system
+  (i.e. system and heat source), so it's not a differential form on $Sigma_cal(S)$ but
+  on $Sigma_cal(S) times Sigma_cal(H)$.
+
+  This is also evident as $T_"src" dd(S)$ is a differential from on $Sigma_cal(S) times Sigma_cal(H)$ as $T_"src"$ is
+  on space $Sigma_cal(H)$.
+]
+
+#warning[
+  It's incorrect to claim from @clausius-inequality without further assumption
+  that
+]
+
 == Extrmization of Thermodynamic Potentials
+#thm[Enthalpy Minimization]
+#proof[
+
+]
+
+== Maximized Entropy Principle as a Stability Guarantee
 
 = Simple Systems
 == Localized Harmonic Oscillator (Einstein Model of Solid)

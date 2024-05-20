@@ -19,6 +19,8 @@
 #let implies = $=>$
 #let spinup = $arrow.t$
 #let spindown = $arrow.b$
+#let pm = $plus.minus$
+#let mp = $minus.plus$
 
 #pagebreak()
 
@@ -782,8 +784,8 @@ $ braket(vb(p), vb(p')) = delta(vb(p) - vb(p')) $
 But $ integral_(RR^3) exp(-ii vb(p) cdot vb(x) /hbar) exp(ii vb(p') cdot vb(x) /hbar) dd(vb(x), 3) &= hbar^3 integral_(RR^3) exp(-ii vb(p) cdot vb(x) /hbar) exp(ii vb(p') cdot vb(x) /hbar) dd(vb(x)/hbar, 3) \
                                                                                              &= hbar^3 ft(exp(ii vb(p') cdot vb(u)), vb(p)) $
 where $vb(u) = vb(x) / hbar$. Notice
-$ integral_RR^3 exp(ii vb(p) cdot vb(u)) delta(vb(p) - vb(p')) dd(vb(p), 3) &= exp(ii vb(p') cdot vb(u)) \
-                                                                          &= (2pi)^3 invft(delta(vb(p)- vb(p')), vb(u)) $
+$ integral_(RR^3) exp(ii vb(p) cdot vb(u)) delta(vb(p) - vb(p')) dd(vb(p), 3) &= exp(ii vb(p') cdot vb(u)) \
+                                                                            &= (2pi)^3 invft(delta(vb(p)- vb(p')), vb(u)) $
 So
 $ hbar^3 ft(exp(ii vb(p') cdot vb(u)), vb(p)) &= (2pi hbar)^3 ft(invft(delta(vb(p)- vb(p')), vb(u)), vb(p)) \
                                             &= (h)^3 delta(vb(p)- vb(p')) $
@@ -1142,7 +1144,7 @@ $ ii [hat(vb(alpha)) cdot vecop(J), op(v)_i] = (dv(R, alpha))_(i,j) op(v)_j $
 Now, set $hat(vb(alpha)) = hat(vb(x)), hat(vb(y)), hat(vb(z))$ one at a time
 gives the commutation relation (just plug in and verify)
 
-$ [op(J)_i, op(v)_j] = ii epsilon_(i,j,k) op(v)_k $
+$ [op(J)_i, op(v)_j] = ii epsilon_(i,j,k) op(v)_k $<vecop-commutation-relation>
 
 #info[
   The outline of a logical derivation for angular momentum is actually:
@@ -1167,9 +1169,223 @@ $ [op(J)_i, op(v)_j] = ii epsilon_(i,j,k) op(v)_k $
 ]
 
 == Adding Electromagnetic Fields, Gauge Invariance
+
 = Angular Momentum
+For translation, the generator and observable are closely related by
+$ op(U)(vb(a)) = exp(- ii 1/ hbar vb(a) cdot vecop(p)) $
+
+And for rotation, this _turns out_ to be the same. Given the generator $vecop(J)$,
+we can define angular momentum observable $hbar vecop(J)$#footnote[Remember $hbar$ is in the unit of angular momentum.].
+
+#warning[
+  We use $vecop(J)$ as the rotation generator, not angular momentum operator. This
+  is the same as usage in @binney but different from majority of the
+  text/references. The advantage of such writing is to write fewer $hbar$ as we
+  will indeed be dealing with _generator_ for the most of the time.
+
+  However, whether observable or generator is used should be clear from
+  context/unit.
+]
+
 == Common Commutation Relations and Spectrum
+Up until now, we have obtained nothing about $vecop(J)$ other than the
+@vecop-commutation-relation. In particular, we have
+$ [op(J)_i, op(J)_j] = ii epsilon_(i,j,k) op(J)_k $<Ji-Jj-commutation>
+
+#def[Angular momentum magnitude][
+  Define the *angular momentum magnitude* operator $vecop(J)^2$ by
+  $ vecop(J)^2 := vecop(J) cdot vecop(J) equiv sum_i op(J)_i compose op(J)_i $
+
+  In three dimension this is
+  $ vecop(J)^2 = op(J)_x^2 + op(J)_y^2 + op(J)_z^2 $
+]
+
+$vecop(J)^2$ has some nice commutation relations.
+
+#thm[$ [vecop(J)^2, op(J)_i] = 0 $]<J2-Ji-commutation>
+#proof[
+  $ [vecop(J)^2, op(J)_i] &= sum_j [op(J)_j^2, op(J)_i] \
+                        &= sum_j op(J)_j [ op(J)_j, op(J)_i ] + [ op(J)_j, op(J)_i ] op(J)_j \
+                        &= sum_(j,k) ii epsilon_(j,i,k) (op(J)_j op(J)_k + op(J)_k op(J)_j) \
+                        &= ii sum_(j,k) epsilon_(i,k,j) (op(J)_j op(J)_k + op(J)_k op(J)_j) \
+                        &= ii sum_(j,k) epsilon_(i,k,j) (- op(J)_k op(J)_j + op(J)_k op(J)_j) = 0 $
+]
+#remark[
+  This wouldn't work _in general_ for other vector operators. Although it does
+  work for spin and orbital angular momentum as seen later.
+]
+
+@Ji-Jj-commutation and @J2-Ji-commutation gives us a nice way to work out the
+spectrum of $vecop(J)^2, op(J)_k$.
+
+Without loss of generality, we can choose $k=z$, and we have $vecop(J)^2, op(J)_z$ commuting.
+By @commutative-sim-eigenspaces, we know we can label the _eigenspaces_#footnote[Not eigenstates! Since we are not sure if $vecop(J)^2, op(J)_z$ is a CSCO. In
+  fact it's not: orbital and spin angular momentum will also give some additional
+  commutation relation.] as
+$ E_(beta, m) $
+
+And let
+$ ket((beta,m)) in E_(beta, m) $
+denote some arbitrary eigenvector in $E_(beta, m)$ where $ vecop(J)^2 ket((beta, m)) = beta ket((beta, m)), op(J)_z ket((beta, m)) = m ket((beta, m)) $
+
+#def[Ladder Operator][
+  Define ladder operators for $op(J)_z$ as
+  $ op(J)_pm = op(J)_x pm ii op(J)_y $
+  Notice
+  $ (op(J)_pm)^+ = op(J)_mp $
+  This can be similarly defined for $op(J)_x, op(J)_y$ as well,
+  $ op(J)_pm^x &= op(J)_y pm ii op(J)_z \
+  op(J)_pm^y &= op(J)_z pm ii op(J)_x $
+]
+
+#thm[Ladder Operator commutation][
+  $ [ op(J)_z, op(J)_pm ]    &= pm op(J)_pm \
+  [ op(J)_+, op(J)_- ]     &= 2 op(J)_z \
+  [ vecop(J)^2, op(J)_pm ] &= 0 $
+]<J-ladder-commutation>
+#proof[
+  $ [ op(J)_z, op(J)_pm ] &= [ op(J)_z, op(J)_x ] pm ii [ op(J)_z, op(J)_y ] \
+                        &= ii op(J)_y pm ii (- ii ) op(J)_x \
+                        &= pm (op(J)_x pm ii op(J)_y) = pm op(J)_pm $
+  Notice $ op(J)_+ op(J)_- &= op(J)_x^2 + op(J)_y^2 + ii op(J)_y op(J)_x - ii op(J)_x op(J)_y \
+                  &= op(J)_x^2 + op(J)_y^2 + ii [ op(J)_y, op(J)_x ] \
+                  &= op(J)_x^2 + op(J)_y^2 + op(J)_z $
+  And similarly, $ op(J)_- op(J)_+ = op(J)_x^2 + op(J)_y^2 - op(J)_z $
+  Thus,
+  $ [ op(J)_+, op(J)_- ] &= 2 op(J)_z $
+
+  And $ [ vecop(J)^2, op(J)_+ ] &= [ op(J)_+ op(J)_- - op(J)_z + op(J)_z^2, op(J)_+ ] \
+                          &= - 2 op(J)_+ op(J)_z - [op(J)_z, op(J)_+] + {[op(J)_z, op(J)_+], op(J)_z} \
+                          &= - 2 op(J)_+ op(J)_z - [op(J)_z, op(J)_+] + {op(J)_+, op(J)_z} \
+                          &= - {op(J)_+, op(J)_z} + {op(J)_+, op(J)_z} = 0 $
+  Similarly, $[ vecop(J)^2, op(J)_- ] = 0$.
+]
+Let $ket((beta, m))$ be an eigenvector in the eigenspace $E_(beta, m)$.
+@J-ladder-commutation gives,
+$ op(J)_z op(J)_pm ket((beta, m)) &= ([op(J)_z, op(J)_pm] + op(J)_pm op(J)_z) ket((beta, m)) \
+                                &= (pm op(J)_pm + op(J)_pm op(J)_z ) ket((beta, m)) \
+                                &= op(J)_pm (pm II + op(J)_z) ket((beta, m)) \
+                                &= (m pm 1) op(J)_pm ket((beta, m)) $
+Thus as long as $op(J)_pm ket((beta, m)) eq.not 0 $, it's in eigenspace $E_(beta, m pm 1)$.
+Here $beta$ doesn't change since $[vecop(J)^2, op(J)_pm] = 0$.
+
+The case when $op(J)_pm ket((beta, m)) = 0 $ is very important. In fact, it must
+happen.
+
+#thm[Spectrum of $vecop(J)^2, op(J)_z$][
+  The spectrum is such that
+  $ 0 lt.eq beta = m_0 (m_0 + 1), 0 lt.eq m_0 in NN/2 $
+  And
+  $ ker op(J)_+ = E_(beta, m_0), ker op(J)_- = E_(beta, m_1) $
+  where $m_1 = - m_0$
+]<angular-momentum-spectrum>
+#proof[
+  #pfstep[$beta gt.eq 0$][
+    $ beta &= expval(vecop(J)^2, (beta, m)) = expval(op(J)_x^2 + op(J)_y^2 + op(J)_z^2, (beta, m)) \
+         &= norm(op(J)_x ket((beta, m)))^2 + norm(op(J)_y ket((beta, m)))^2 + norm(op(J)_z ket((beta, m)))^2 gt.eq 0 $<beta-positive>
+  ]
+  #pfstep[$beta = m_0(m_0 + 1)$ for some $m_0$, and $op(J)_+ E_(beta, m_0)= {0}$.][
+    $ norm(op(J)_+ ket((beta, m)))^2 &= expval(J_- J_+, (beta,m)) \
+                                   &= expval(vecop(J)^2 - op(J)_z^2 - op(J)_z, (beta, m)) \
+                                   &= beta - m^2 - m gt.eq 0 $ <J-plus-bound>
+
+    #pfstep[$op(J)_+ E_(beta, m_0) = {0}$ for some $m_0$][
+      We must first have a non-trivial eigenspace $E_(beta, m') eq.not {0}$ otherwise
+      all statements are vacuous.
+
+      Suppose $op(J)_+ ket((beta, m)) eq.not 0$ for all $m$. Then we can keep apply $op(J)_+$ to $ket((beta, m'))$ to
+      generate $ket((beta, m))$ for arbitrarily large $m$. Since $m^2 + m$ is
+      unbounded, this means @J-plus-bound is violated.
+
+      Thus $op(J)_+$ must annihilates $ket((beta, m_0)) eq.not 0$ for some $m_0$.
+      Later we will see such $m_0$ is unique.
+    ]
+
+    Such annihilation would require $ norm(op(J)_+ ket((beta, m_0)))^2 = beta - m_0(m_0 + 1) = 0 $
+  ]
+  #pfstep[$beta = m_1(m_1 - 1)$ for some $m_1$, and $op(J)_- E_(beta, m_1) = {0}$.][
+    Similar to above,
+    $ norm(op(J)_- ket((beta, m)))^2 &= expval(J_+ J_-, (beta,m)) \
+                                   &= expval(vecop(J)^2 - op(J)_z^2 + op(J)_z, (beta, m)) \
+                                   &= beta - m^2 + m gt.eq 0 $
+    And there must some $m_1$ such that
+    $ norm(op(J)_- ket((beta, m_1)))^2 = beta - m_1(m_1 - 1) = 0 $
+  ]
+  #pfstep[$m_1 = -m_0, m_0 gt.eq 0$ and $m_0, m_1$ are unique given $beta$.][
+    #pfstep[$m_1 = -m_0$][
+      $ m_0(m_0+1) = beta = m_1 (m_1 - 1) $
+      We can solve $m_1$ in terms of $m_0$ to get $m_1 = -m_0$ or $m_1 = m_0 + 1$. The
+      latter case is impossible. This is because we can solve separately for $m_0, m_1$ in
+      terms of $beta$ to get
+      $ m_0 = (-1 pm sqrt(1 + 4 beta)) / 2, m_1 = (1 pm sqrt(1 + 4 beta)) / 2 $
+      And in order for $m_0 +1 = m_1$ we must have
+      $ sqrt(1+4beta) &= 1 - sqrt(1 + 4beta) \
+      beta          &= -3/16 < 0 $
+      which contradicts with @beta-positive. Therefore, $m_0 = -m_1$.
+    ]
+    #pfstep[$m_0 gt.eq 0$ and $m_0, m_1$ are unique given $beta$][This gives two pairs of solutions
+      $ cases(
+        m_0 = (-1 + sqrt(1 + 4 beta)) / 2 gt.eq 0, m_1 = (1 - sqrt(1 + 4 beta)) / 2,
+
+      ) "or" cases(
+        m_0 = (-1 - sqrt(1 + 4 beta)) / 2 < 0, m_1 = (1 + sqrt(1 + 4 beta)) / 2,
+
+      ) $<m0-m1-cases>
+
+      Suppose $m_0< 0$, then we know $E_(beta, m_0 - 1) eq.not emptyset$ because we
+      can obtain one#footnote[As $m_1 eq.not m_0$, otherwise $m_1 = m_0 = 0$ and we automatically excluded $m_0 < 0$ case.] by $op(J)_- ket((beta, m_0))$.
+      And this means we can act $op(J)_+$ on some $ket((beta, m_0 - 1))$,
+      $ norm(op(J)_+ ket((beta, m_0 - 1)))^2 = beta - (m_0 - 1)^2 - m_0 + 1 = 2m_0 gt.eq 0 $
+      which contradicts with $m_0<0$. Thus only one case in @m0-m1-cases is possible,
+      and thus $m_0, m_1$ are unique given $beta$.]
+  ]
+  #pfstep[$ker op(J)_+ = E_(beta, m_0), ker op(J)_- = E_(beta, m_1)$][
+    $ ket((beta, m)) in ker op(J)_+ iff norm(op(J)_+ ket((beta, m)))^2 = beta - m(m + 1) = 0 $
+    And we proved $beta = m_0(m_0+1)$ and $m_0$ is unique. Thus $ker op(J)_+ = E_(beta, m_0)$.
+
+    Similar for $ker op(J)_- = E_(beta, m_1)$.
+  ]
+  #pfstep(
+    finished: true,
+  )[$m_0 in NN / 2$][
+    Starting from $E_(beta, m_1)$, applying repeatedly $op(J)_+$ must reach $E_(beta,m_0)$ as $ker op(J)_+ = E_(beta, m_0)$.
+    Since each time $op(J)_+$ moves $m$ to $m+1$, there exists $n in NN$ such that
+    $ m_1 + n = m_0 => n = 2 m_0 => m_0 = n/2 in NN / 2 $
+  ]
+]
+#remark[
+  $m_0$ is also known as $j$ or *angular momentum magnitude quantum number*. We
+  will label $E_(beta=j(j+1),m)$ using $ E_(j,m) $ from now on.
+]
+#remark[
+  This theorem also tells us that $op(J)_pm$ are nil-potent on $E_(j, m)$.
+]
+
+#thm[$op(J)_pm$ moves between eigenspaces][
+  For $-j+1 lt.eq m lt.eq j-1$,
+  $ op(J)_pm E_(j, m) = E_(j, m pm 1) $
+]
+#proof[
+  For $-j lt.eq m lt.eq j-1$,
+  $ op(J)_+ E_(j, m)   &subset.eq E_(j, m+1) \
+  op(J)_- E_(j, m+1) &subset.eq E_(j, m) $<J-ladder-inclusion>
+
+  And this means
+  $ (vecop(J)^2 - op(J)_z^2 + op(J)_z) E_(j, m+1) = op(J)_+ op(J)_- E_(j, m+1) &subset.eq op(J)_+ E_(j, m) $
+
+  But $E_(j, m+1)$ is an eigenspace of $(vecop(J)^2 - op(J)_z^2 + op(J)_z)$, so $(vecop(J)^2 - op(J)_z^2 + op(J)_z) E_(j, m+1) = E_(j, m+1)$.
+  Thus
+
+  $ E_(j, m+1) subset.eq op(J)_+ E_(j, m) $
+  And with @J-ladder-inclusion,
+  $ op(J)_+ E_(j, m) = E_(j, m+1) $
+
+  Similarly, one can prove, if $-j +1 lt.eq m lt.eq j$
+  $ op(J)_- E_(j, m) = E_(j, m-1) $
+]
+
 == Spin and Orbital Angular Momentum
+== Adding Angular Momentum
 == Spherical Harmonics
 
 = Composite Systems and Identical Particles

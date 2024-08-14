@@ -70,13 +70,13 @@
                 shellcheck.enable = true;
                 shfmt.enable = true;
 
-                typstfmt = mkForce {
-                  enable = true;
-                  name = "Typst Format";
-                  entry = "${pkgs.typstfmt}/bin/typstfmt";
-                  files = "\\.(typ)$";
-                  excludes = [ "CO25/main.typ" ];
-                };
+                # typstfmt = mkForce {
+                #   enable = true;
+                #   name = "Typst Format";
+                #   entry = "${pkgs.typstfmt}/bin/typstfmt";
+                #   files = "\\.(typ)$";
+                #   excludes = [ "CO25/main.typ" ];
+                # };
               };
             };
           } // packages;

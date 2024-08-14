@@ -3,6 +3,7 @@ src/private
 *.pdf
 result
 _region_.tex
+.direnv
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

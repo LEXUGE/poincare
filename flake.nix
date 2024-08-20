@@ -7,8 +7,8 @@
       url = "github:LEXUGE/typst2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dirac = {
-      url = "github:LEXUGE/dirac";
+    typzk = {
+      url = "github:LEXUGE/typzk";
       inputs.typst2nix.follows = "typst2nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -17,7 +17,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, utils, typst2nix, dirac, pre-commit-hooks }:
+  outputs = { self, nixpkgs, utils, typst2nix, typzk, pre-commit-hooks }:
     with utils.lib;
     with nixpkgs.lib;
     with typst2nix.helpers;
@@ -29,7 +29,8 @@
             inherit system;
             overlays = [
               typst2nix.overlays.default
-              dirac.overlays.default
+              typst2nix.overlays.utils
+              typzk.overlays.default
               self.overlays.default
             ];
           };
@@ -82,7 +83,7 @@
           } // packages;
 
           packages = attrsets.mapAttrs
-            (n: p: (buildTypst rec {
+            (n: p: (buildTypstDoc rec {
               inherit pkgs;
               # project root
               src = p;

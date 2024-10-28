@@ -1,12 +1,12 @@
-#import "@preview/physica:0.9.2": *
-#import "@preview/gentle-clues:0.4.0": *
-#import "@lexuge/templates:0.1.0": *
-#import shorthands: *
-#import pf3: *
+#import "/templates/main.typ": simple, preamble, thm_vanilla
+#import preamble: *
+#import thm_vanilla: *
 
 #show: simple.with(
   title: "Mathematical Methods", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
+#show: setup
+#show: thm_setup
 
 #let unproven = text(red)[This is not proven yet.]
 #let unfinished = text(red)[This is not finished yet.]

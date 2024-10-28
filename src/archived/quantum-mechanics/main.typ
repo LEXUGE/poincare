@@ -1,26 +1,14 @@
-#import "@preview/physica:0.9.2": *
-#import "@preview/gentle-clues:0.8.0": *
-#import "@preview/ctheorems:1.1.0": *
-#import "@lexuge/templates:0.1.0": *
-#import shorthands: *
-#import pf3: *
-
+#import "/templates/main.typ": simple, preamble, thm_vanilla
+#import preamble: *
+#import thm_vanilla: *
 #show: simple.with(
   title: "Quantum Mechanics", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
-#show: super-plus-as-dagger
+#show: setup
+#show: thm_setup
 
-#let op(body) = $hat(body)$
-#let vecop(body) = $underline(hat(body))$
-#let ft(body, out) = $cal(F)[body](out)$
-#let invft(body, out) = $cal(F)^(-1)[body](out)$
-#let inv(body) = $body^(-1)$
 #let iff = $<==>$
 #let implies = $=>$
-#let spinup = $arrow.t$
-#let spindown = $arrow.b$
-#let pm = $plus.minus$
-#let mp = $minus.plus$
 
 #pagebreak()
 

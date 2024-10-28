@@ -1,10 +1,8 @@
 // Get Polylux from the official package repository
 #import "@preview/polylux:0.3.1": *
-#import "@preview/physica:0.9.2": *
-#import "@preview/gentle-clues:0.4.0": *
-#import "@lexuge/templates:0.1.0": *
-#import shorthands: *
-#import pf3: *
+#import "/templates/main.typ": simple, preamble, thm_vanilla
+#import preamble: *
+#import thm_vanilla: *
 
 // Make the paper dimensions fit for a presentation and the text larger
 #set page(paper: "presentation-16-9", margin: (y: 6pt))
@@ -14,6 +12,9 @@
 #show: simple.with(
   title: [#v(1em) Tensor and Physics], authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),), disp_content: false,
 )
+
+#show: setup
+#show: thm_setup
 
 #set heading(numbering: none)
 #set math.equation(numbering: none)

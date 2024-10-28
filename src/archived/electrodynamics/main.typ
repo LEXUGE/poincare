@@ -1,12 +1,12 @@
-#import "@preview/physica:0.9.2": *
-#import "@preview/gentle-clues:0.4.0": *
-#import "@lexuge/templates:0.1.0": *
-#import shorthands: *
-#import pf3: *
+#import "/templates/main.typ": simple, preamble, thm_vanilla
+#import preamble: *
+#import thm_vanilla: *
 
 #show: simple.with(
   title: "Electromagnetism and Optics", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
+#show: setup
+#show: thm_setup
 #set page(margin: (y: 1cm))
 
 #let hl = highlight
@@ -197,7 +197,7 @@ density is derived in most books.
 #remark[As exemplified in @fig-bc-para-loop1, *this is a vector difference* across the
   boundary.]
 
-#caution[
+#warning[
   There are two intricacies/deficiencies for @micro-boundary-condition-perp and
   @micro-boundary-condition-para:
   1. We are assuming the field and current/charge density are uniform. This means the
@@ -221,8 +221,8 @@ density is derived in most books.
 === Boundary Condition for Potentials
 Potentials are even more regular than fields. Indeed, I _suspect_ such a "regularity
 hierarchy":
-$ phi, vb(A) gt.curly vb(E), vb(B) gt.curly rho, vb(J) $
-where $gt.curly$ means "more regular than". The reason being "derivative" of
+$ phi, vb(A) succ vb(E), vb(B) succ rho, vb(J) $
+where $succ$ means "more regular than". The reason being "derivative" of
 potential gives rise to fields whose derivative gives rise to sources. And
 integration "smoothes" things out (think of fundamental theorem of calculus).
 

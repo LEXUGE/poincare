@@ -1,9 +1,6 @@
-#import "@preview/ctheorems:1.1.0": *
-
 #let simple(title: "", authors: (), disp_content: true, body) = {
   // Set document metadata
   set document(author: authors.map(x => x.name), title: title)
-  show: thmrules
   // Number the headings
   set heading(numbering: "1.1.")
   // Break the word at the end of each line
@@ -30,6 +27,8 @@
       #link("mailto:" + author.email)
     ]))
   ]
+
+  show link: set text(fill: rgb("#0000FF"))
 
   if disp_content { outline(fill: none, indent: true) }
 

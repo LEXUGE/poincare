@@ -1,15 +1,16 @@
-#import "@preview/physica:0.9.0": *
-#import "@preview/gentle-clues:0.4.0": *
-#import "@lexuge/templates:0.1.0": *
-#import "@preview/fletcher:0.5.1" as fletcher: diagram, node, edge
-#import shorthands: *
+#import "/templates/main.typ": simple, preamble, thm_vanilla
+#import "@preview/fletcher:0.5.2" as fletcher: diagram, node, edge
 
 #show: simple.with(
   title: "ARTIQ Diagnostic Streaming Project Report",
   authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
   disp_content: true,
 )
+#import preamble: *
+#import thm_vanilla: eg, thm_setup
+#show: setup
 #show figure: set block(breakable: true)
+#show: thm_setup
 
 #pagebreak()
 
@@ -47,7 +48,7 @@ diagram(
 caption: [Basic setup]
 )<fig:basic-setup>
 
-#note[Currently, only the `master` variant of Kasli is supported.]
+#info[Currently, only the `master` variant of Kasli is supported.]
 
 == Basic Idea<sec:basic-idea>
 #figure(

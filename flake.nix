@@ -29,7 +29,6 @@
             inherit system;
             overlays = [
               typst2nix.overlays.default
-              typst2nix.overlays.utils
               typzk.overlays.default
               self.overlays.default
             ];
@@ -40,6 +39,7 @@
             strings.concatStrings (strings.intersperse "/"
               (lists.drop level (splitString "/" (toString path))));
 
+          # This function lists all valid typst build targets (directory with "main.typ") under `dir` (including itself if it satisfies the criteria for a build target as well.)
           listTypstRecursive = dir:
             let
               filtered = listToAttrs (filter ({ name, value }: value == "directory") (attrsToList (readDir dir)));
@@ -53,7 +53,7 @@
                   [ (nameValuePair (pathToName (pathToRelative 5 path)) path) ]
                 else
                   listTypstRecursive path)
-              filtered));
+              filtered)) ++ (if pathExists (dir + "/main.typ") then [ (nameValuePair (pathToName (pathToRelative 5 dir)) dir) ] else [ ]);
         in
         rec {
           # nix develop
@@ -83,15 +83,15 @@
           } // packages;
 
           packages = attrsets.mapAttrs
-            (n: p: (buildTypstDoc rec {
+            (n: p: (buildTypstDoc {
               inherit pkgs;
               # project root
-              src = p;
-              path = "main.typ";
+              src = ./src;
+              path = "${pathToRelative 5 p}/main.typ";
               version = "git";
               pname = n;
             }))
-            (listToAttrs ((listTypstRecursive ./src/notes) ++ (listTypstRecursive ./src/reports) ++ (listTypstRecursive ./src/slides)));
+            (listToAttrs ((listTypstRecursive ./src/memo) ++ (listTypstRecursive ./src/notes) ++ (listTypstRecursive ./src/archived) ++ (listTypstRecursive ./src/reports) ++ (listTypstRecursive ./src/slides)));
         }) // {
       overlays.default = (final: prev: {
         typst2nix.registery = recursiveUpdate (prev.typst2nix.registery or { }) {

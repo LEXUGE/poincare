@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        name: [ "notes+electrodynamics", "notes+quantum-mechanics", "notes+math_methods", "reports+CO25", "slides+tensor-and-physics", "notes+stats_mech", "reports+artiq" ]
+        name: [ "archived+electrodynamics", "archived+quantum-mechanics", "archived+math_methods", "reports+CO25", "slides+tensor-and-physics", "archived+stats_mech", "reports+artiq" ]
     if: (needs.create-release.outputs.log-num > 0)
     needs: create-release
     runs-on: ubuntu-latest

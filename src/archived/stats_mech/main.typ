@@ -1,17 +1,16 @@
-#import "@preview/physica:0.9.2": *
-#import "@preview/gentle-clues:0.8.0": *
-#import "@lexuge/templates:0.1.0": *
-#import shorthands: *
-#import pf3: *
+#import "/templates/main.typ": simple, preamble, thm_vanilla
+#import preamble: *
+#import thm_vanilla: *
 
 #show: simple.with(
   title: "Statistical Mechanics, Thermodynamics, and Kinetic Theory", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
-#show: gentle-clues.with(breakable: true)
+#show: setup
+#show: thm_setup
 #set page(margin: (y: 1cm))
 
 #let op(body) = $hat(body)$
-#let adia = sym.lt.curly
+#let adia = sym.prec
 
 = Introduction
 As a word of caution, my personal take is that the theory of statistical

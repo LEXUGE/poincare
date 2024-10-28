@@ -43,9 +43,8 @@
     return x
   })
 
-  locate(
-    loc => {
-      let current_step_array = current_step.at(loc) // current step number array
+  context {
+      let current_step_array = current_step.get() // current step number array
 
       // corresponding formatted step number
       let current_step_number = {
@@ -79,6 +78,5 @@
           },
         ),
       )
-    },
-  )
+    }
 }

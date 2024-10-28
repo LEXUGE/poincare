@@ -1,13 +1,14 @@
-#import "@preview/physica:0.9.0": *
-#import "@preview/gentle-clues:0.4.0": *
-#import "@lexuge/templates:0.1.0": *
-#import shorthands: *
+#import "/templates/main.typ": simple, preamble, thm_vanilla
+#import preamble: *
+#import thm_vanilla: *
 
 #show: simple.with(
   title: "CO25: Laplace Equations",
   authors: ((name: "Kanyang Ying", email: "worc6206@worc.ox.ac.uk"),),
   disp_content: false,
 )
+#show: setup
+#show: thm_setup
 
 = Abstract
 Solving Laplace and Poisson's equations is of paramount importance in various
@@ -342,7 +343,7 @@ function solve_poisson(init_ψ::Matrix, fixed_ψ::Matrix, source::Matrix, N_iter
 		local within_criterion = true
 		for (indices, _) in pairs(ψ)
 			(i, j) = Tuple(indices)
-			if checkbounds(Bool, ψ, i-1, j-1) && checkbounds(Bool, ψ, i+1, j+1) && fixed_ψ[i,j] == 0 
+			if checkbounds(Bool, ψ, i-1, j-1) && checkbounds(Bool, ψ, i+1, j+1) && fixed_ψ[i,j] == 0
 				# Generate our R in m-th interation. Since R and psi has the same dimension, we may reuse the i,j to index
 				R[i,j] = ψ[i,j+1] + ψ[i,j-1] + ψ[i-1, j] + ψ[i+1,j] - source[i, j] * δ^2 - 4ψ[i,j]
 				if abs(R[i,j]) >= criterion

@@ -7,13 +7,14 @@
 #let postl = mkThmNode(__postl)
 #let def = mkThmNode(__def)
 #let thm = mkThmNode(__thm)
-#let eg = mkThmNode(__eg)
-#let ex = mkThmNode(__ex)
-#let sol = mkThmNode(__sol)
-#let remark = mkThmNode(__remark)
-#let proof = mkThmNode(__proof)
+#let eg = __eg
+#let ex = __ex
 
-#let gen_section_graph() = figure(render_graph(path: heading_to_path()), caption: [#link(label(heading_to_label()))[Section] Subgraph])
+#let sol = __sol
+#let remark = __remark
+#let proof = __proof
+
+#let gen_section_graph(s: 100%) = figure(scale(render_graph(path: heading_to_path()), s), caption: [#link(label(heading_to_label()))[Section] Subgraph])
 
 #let thm_setup(body) = {
   show: thmrules

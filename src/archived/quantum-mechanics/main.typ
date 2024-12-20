@@ -4,7 +4,7 @@
 #show: simple.with(
   title: "Quantum Mechanics", authors: ((name: "Kanyang Ying", email: "kanyang.ying@worc.ox.ac.uk"),),
 )
-#show: setup
+#show: setup.with(dagger: true)
 #show: thm_setup
 
 #let iff = $<==>$
